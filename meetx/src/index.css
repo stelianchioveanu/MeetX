@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.react-input-emoji--button svg {
+  fill: #d8ddeb !important
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.font {
+  font-family: "Poppins" !important;
+}
+
+.aspect-feature {
+  aspect-ratio: 1.4/1;
+}
+
+.shadow-feature {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.shadow-app {
+  filter:drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+.bg-feature {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.auth-form-bg {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.bg-title-feature {
+  background: linear-gradient(
+    to right,
+    rgb(126, 34, 206) 0%,
+    rgb(126, 34, 206) 8px,
+    rgba(0, 0, 0, 0) 8px,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.bg-auth {
+  background: rgb(17,20,28);
+  background: linear-gradient(90deg, rgba(17,20,28,1) 0%, rgba(126,34,206,1) 100%);
+}
+
+.text {
+  background: linear-gradient(
+    130deg,
+    hsl(346deg 83% 64%) 0%,
+    hsl(341deg 80% 63%) 5%,
+    hsl(335deg 75% 62%) 9%,
+    hsl(330deg 70% 61%) 14%,
+    hsl(323deg 63% 60%) 18%,
+    hsl(315deg 54% 59%) 23%,
+    hsl(304deg 45% 58%) 27%,
+    hsl(290deg 46% 59%) 32%,
+    hsl(277deg 50% 61%) 36%,
+    hsl(263deg 54% 64%) 41%,
+    hsl(249deg 58% 65%) 45%,
+    hsl(234deg 63% 65%) 50%,
+    hsl(217deg 77% 60%) 55%,
+    hsl(206deg 85% 52%) 59%,
+    hsl(200deg 100% 47%) 64%,
+    hsl(196deg 100% 46%) 68%,
+    hsl(193deg 100% 45%) 73%,
+    hsl(189deg 100% 44%) 77%,
+    hsl(186deg 75% 49%) 82%,
+    hsl(182deg 62% 56%) 86%,
+    hsl(176deg 57% 63%) 91%,
+    hsl(167deg 56% 70%) 95%,
+    hsl(156deg 55% 76%) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+ 
+    --primary: 24 9.8% 10%;
+    --primary-foreground: 60 9.1% 97.8%;
+ 
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+ 
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+ 
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 20 14.3% 4.1%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+ 
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+ 
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+ 
+    --primary: 60 9.1% 97.8%;
+    --primary-foreground: 24 9.8% 10%;
+ 
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+ 
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+ 
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+ 
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 24 5.7% 82.9%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
