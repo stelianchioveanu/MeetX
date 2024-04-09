@@ -1,21 +1,23 @@
-import { useState } from "react";
 import ChatInput from "./chat-input";
 import ChatTopBar from "./chat-top-bar";
-import GroupUsers from "./group-users";
-import { useDetectClickOutside } from 'react-detect-click-outside';
+import GroupUsers from "@/components/users-tab/group-users";
+import { useState } from "react";
 
 const ChatFrame = (props:{topic: any}) => {
     const [usersOpened, setUsersOpened] = useState(true);
-    const ref = useDetectClickOutside({ onTriggered: () => setUsersOpened(false) });
 
     return (
-    <div className="grow h-full p-4 flex flex-col relative">
-        <ChatTopBar topic={props.topic} setUsersOpened={setUsersOpened} />
-        <ChatInput/>
-        { usersOpened ?
-            <GroupUsers innerRef={ref}/> :
-            null
-        }
+    <div className="grow h-full flex flex-col">
+        <ChatTopBar topic={props.topic} setUsersOpened={setUsersOpened} usersOpened={usersOpened} />
+        <div className="flex w-full h-[calc(100%-48px)]">
+            <div className="flex grow p-4">
+                <ChatInput/>
+            </div>
+            {usersOpened ?
+                <GroupUsers/> :
+                null
+            }
+        </div>
     </div> );
 }
  

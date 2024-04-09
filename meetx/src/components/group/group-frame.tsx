@@ -12,14 +12,18 @@ const GroupFrame = (props : {id: Number}) => {
         <AddTopic/>
         <Separator className="bg-neutral-600 w-4/5"/>
         <div className="flex w-full flex-col p-2 overflow-auto no-scrollbar">
-            #Recent topics
+            <div className="min-h-12 flex items-center mb-2 px-2">
+                #Recent topics
+            </div>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
-            #Your topics
+            <div className="min-h-12 flex items-center mb-2 px-2">
+                #Your topics
+            </div>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>

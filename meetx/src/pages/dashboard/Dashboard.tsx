@@ -12,11 +12,11 @@ const Dashboard = () => {
     <div className="w-full h-screen flex bg-[#272d3d] font">
         <NavigationBar setSelectedId={setSelectedId} selectedId={selectedId} groups={groups}/>
         { selectedId !== 0 ?
-        <GroupFrame id={selectedId}/> : 
-        null}
+            <GroupFrame id={selectedId}/> : 
+            null}
         { selectedId !== 0 ? 
-        <ChatFrame topic={topic}/> :
-        null
+            <ChatFrame topic={topic}/> :
+            null
         }
     </div>
     );
