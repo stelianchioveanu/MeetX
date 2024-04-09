@@ -4,7 +4,7 @@ import stelicas from "../../pages/home/sections/img/stelian.jpeg"
 const GroupUsers = () => {
 
     return (
-    <div className="w-60 max-h-full bg-[#171b25]
+    <div className="w-60 min-w-60 max-h-full bg-[#171b25]
     flex items-center flex-col py-6 overflow-auto no-scrollbar">
         <p className="w-52 min-h-12 flex items-center mb-2">
             #Me

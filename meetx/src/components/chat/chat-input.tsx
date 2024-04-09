@@ -27,7 +27,7 @@ const ChatInput = () => {
 
     return (
     <div className="max-h-[45px] bg-[#68738f] rounded-md flex
-    items-center px-3 gap-2 mt-auto relative w-full">
+    items-center px-3 gap-2 relative w-full">
         <PlusCircle fill="#68738f" className="w-7 h-7 text-[#d8ddeb]" />
         <input className=" h-[45px] text-[#d8ddeb] bg-transparent
         focus-visible:outline-none grow" placeholder="#Type here"
