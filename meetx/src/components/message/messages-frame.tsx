@@ -1,29 +1,31 @@
-import MessageItem from "./message-item";
+import MessageItem, { UserMessage } from "./message-item";
 import stelicas from "../../pages/home/sections/img/stelian.jpeg"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const MessagesFrame = () => {
-    const message1 = "salutare prieteni, sunteti cei mai tari, abia astept sa cream jnnsknnrjnsnrnn nsngkrn njnj kjn kjn n jknj kjn kjn k jkn bhkb hbh hbjhb vbgbjhg vhg  jknf uniurn uern ue nurei n" 
-    const message = "salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme" 
-    return ( 
-        <div className="w-full h-fit overflow-auto
-        no-scrollbar flex flex-col gap-3 mt-auto">
-            <MessageItem img={stelicas} username={"stelicas"} message={message1} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={message} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-            <MessageItem img={stelicas} username={"stelicas"} message={"hello"} files={null}/>
-        </div>
+    const userMessage: UserMessage = {
+        username: "stelicas",
+        message: "salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme",
+        files: null,
+        messageDate:"10/25/2022 12:56 AM",
+        email: "stelian.chioveanu@yahoo.com",
+        img: stelicas,
+        date: "February 17, 2024",
+        status: true
+    }
+    
+        return ( 
+        <ScrollArea className="w-full h-fit">
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+            <MessageItem userMessage={userMessage}/>
+        </ScrollArea>
      );
 }
  

@@ -5,7 +5,7 @@ import GroupUsers from "@/components/users-tab/group-users";
 import { useState } from "react";
 
 const ChatFrame = (props:{topic: any}) => {
-    const [usersOpened, setUsersOpened] = useState(true);
+    const [usersOpened, setUsersOpened] = useState(false);
 
     return (
     <div className="w-[calc(100%-304px)] h-full flex flex-col">

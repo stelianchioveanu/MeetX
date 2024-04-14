@@ -2,6 +2,7 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import GroupTopic from "./group-topic";
 import AddTopic from "./add-topic";
+import { ScrollArea } from "../ui/scroll-area";
 
 const GroupFrame = (props : {id: Number}) => {
     const group = {name: "Cel mai tare grup", id: 1, color: "#FF0000"}
@@ -11,7 +12,7 @@ const GroupFrame = (props : {id: Number}) => {
         <div className="w-full h-12 shadow-lg flex items-center p-3 text-white">{group.name}</div>
         <AddTopic/>
         <Separator className="bg-neutral-600 w-4/5"/>
-        <div className="flex w-full flex-col p-2 overflow-auto no-scrollbar">
+        <ScrollArea className="flex w-full flex-col p-2">
             <div className="min-h-12 flex items-center mb-2 px-2">
                 #Recent topics
             </div>
@@ -38,7 +39,7 @@ const GroupFrame = (props : {id: Number}) => {
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
             <GroupTopic></GroupTopic>
-        </div>
+        </ScrollArea>
         <Separator className="bg-neutral-600 w-4/5"/>
         <Button className="w-3/4 mb-4
         bg-red-700 text-white

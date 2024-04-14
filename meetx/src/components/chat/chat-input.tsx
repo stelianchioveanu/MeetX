@@ -2,10 +2,14 @@ import { PlusCircle, SmileIcon, X } from "lucide-react";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import data from '@emoji-mart/data'
 import Picker  from '@emoji-mart/react'
+import FilesUpload from "./files-upload";
+import { useDetectClickOutside } from 'react-detect-click-outside';
 
 const ChatInput = () => {
     const [input, setInput] = useState("");
     const [emojiOpened, setEmojiOpened] = useState(false);
+    const [uploaderOpened, setUploaderOpened] = useState(false);
+    const ref = useDetectClickOutside({ onTriggered: () => setUploaderOpened(false) });
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setInput(event.target.value);
@@ -20,15 +24,31 @@ const ChatInput = () => {
         setEmojiOpened(false)
     }
 
+    const closeUploader = () => {
+        setUploaderOpened(false);
+    }
+
     const openPicker = (e:MouseEvent) => {
         e.stopPropagation();
         setEmojiOpened(true);
     }
 
+    const openUploader = (e:MouseEvent) => {
+        e.stopPropagation();
+        setUploaderOpened(true);
+    }
+
     return (
     <div className="max-h-[45px] bg-[#68738f] rounded-md flex
     items-center px-3 gap-2 relative w-full">
-        <PlusCircle fill="#68738f" className="w-7 h-7 text-[#d8ddeb]" />
+        {
+            uploaderOpened !== true ?
+            <PlusCircle fill="#68738f" className="w-7 h-7 text-[#d8ddeb]" onClick={openUploader}/> :
+            <>
+                <X className="w-7 h-7 text-[#d8ddeb]" onClick={closeUploader}/>
+                <FilesUpload innerRef={ref}/>
+            </>
+        }
         <input className=" h-[45px] text-[#d8ddeb] bg-transparent
         focus-visible:outline-none grow" placeholder="#Type here"
         value={input} onChange={handleChange} />
