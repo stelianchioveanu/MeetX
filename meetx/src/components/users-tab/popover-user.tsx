@@ -6,11 +6,13 @@ import {
 import { ReactNode } from "react";
 import UserAvatar from "./user-avatar";
 import { Input } from "../ui/input";
-import { User } from "./user";
 
-export interface UserInfo extends User{
+export interface UserInfo{
     date: string;
     status: boolean;
+    username: string;
+    img: any;
+    email: string;
 }
 
 const PopoverUser = (props: {children: ReactNode, user: UserInfo, side: any}) => {
