@@ -25,7 +25,7 @@ const PopoverUser = (props: {children: ReactNode, user: UserInfo, side: any}) =>
             w-64 flex flex-col bg-[#171b25] p-0 rounded-md overflow-hidden">
                 <div className="bg-purple-700 w-full h-14"></div>
                 <div className="w-52 h-14 relative">
-                    <UserAvatar user={props.user} className="w-20 h-20 absolute bottom-4 left-3"/>
+                    <UserAvatar user={props.user} className="w-20 h-20 absolute bottom-4 left-3" status="visible"/>
                 </div>
                 <div className="flex flex-col p-3 gap-1">
                     <p className=" text-purple-700 text-xl font-semibold">

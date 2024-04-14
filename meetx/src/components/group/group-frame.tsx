@@ -4,7 +4,7 @@ import GroupTopic from "./group-topic";
 import AddTopic from "./add-topic";
 import { ScrollArea } from "../ui/scroll-area";
 
-const GroupFrame = (props : {id: Number}) => {
+const GroupFrame = (props : {id: Number, setSelectedTopicId: any}) => {
     const group = {name: "Cel mai tare grup", id: 1, color: "#FF0000"}
 
     return (
@@ -16,29 +16,25 @@ const GroupFrame = (props : {id: Number}) => {
             <div className="min-h-12 flex items-center mb-2 px-2">
                 #Recent topics
             </div>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
             <div className="min-h-12 flex items-center mb-2 px-2">
                 #Your topics
             </div>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
-            <GroupTopic></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
+            <GroupTopic setSelectedTopicId={props.setSelectedTopicId}></GroupTopic>
         </ScrollArea>
         <Separator className="bg-neutral-600 w-4/5"/>
         <Button className="w-3/4 mb-4

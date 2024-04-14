@@ -16,8 +16,8 @@ const TopicItem = () => {
 
     return (
     <div className="absolute top-0 left-0 bg-[#68738f]
-    h-1/2 max-h-[50%] w-full z-[50] shadow-lg p-3">
-        <ScrollArea className="w-full h-full px-2">
+    h-1/2 max-h-[50%] w-full z-[50] shadow-lg p-4">
+        <ScrollArea className="w-full h-full">
             <MessageItem userMessage={userMessage} className="hover:bg-transparent"/>
         </ScrollArea>
     </div> );

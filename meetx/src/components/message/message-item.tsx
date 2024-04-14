@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import PopoverUser, { UserInfo } from "../users-tab/popover-user";
+import UserAvatar from "../users-tab/user-avatar";
 
 export interface UserMessage extends UserInfo {
     message: string,
@@ -11,7 +12,7 @@ export interface UserMessage extends UserInfo {
 const MessageItem = (props: {userMessage: UserMessage, className?: string}) => {
     return (
     <div className={cn("w-full h-fit py-2 hover:bg-[#00000020] flex gap-3 p-2", props.className)}>
-        <img className="w-10 h-10 rounded-full" src={props.userMessage.img}/>
+        <UserAvatar status="hidden" user={props.userMessage} className="h-10 min-w-10"/>
         <div className="flex w-full flex-col">
             <div className="flex items-center gap-2">
                 <PopoverUser user={props.userMessage} side="right">
