@@ -4,7 +4,7 @@ import GroupTopic from "./group-topic";
 import AddTopic from "./add-topic";
 import { ScrollArea } from "../ui/scroll-area";
 
-const GroupFrame = (props : {id: Number, setSelectedTopicId: any}) => {
+const GroupFrame = (props : {setSelectedTopicId: any}) => {
     const group = {name: "Cel mai tare grup", id: 1, color: "#FF0000"}
 
     return (
