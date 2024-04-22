@@ -27,7 +27,7 @@ public class UserFileService : IUserFileService
         _fileRepository = fileRepository;
     }
 
-    public async Task<ServiceResponse> SaveFile(IFormFile file, Product currProduct, UserDTO requestingUser, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> SaveFile(IFormFile file, UserDTO requestingUser, CancellationToken cancellationToken = default)
     {
         var fileName = _fileRepository.SaveFile(file, GetFileDirectory(requestingUser.Id));
 
@@ -40,7 +40,6 @@ public class UserFileService : IUserFileService
         {
             Name = file.FileName,
             Path = fileName.Result,
-            ProductId = currProduct.Id
         }, cancellationToken);
 
         return ServiceResponse.ForSuccess();

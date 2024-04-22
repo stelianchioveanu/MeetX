@@ -13,7 +13,7 @@ public interface IUserFileService
 {
     public const string UserFilesDirectory = "UserFiles";
 
-    public Task<ServiceResponse> SaveFile(IFormFile file, Product currProduct, UserDTO requestingUser, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse> SaveFile(IFormFile file, UserDTO requestingUser, CancellationToken cancellationToken = default);
 
     public ServiceResponse DeleteFile(UserFile file, UserDTO requestingUser, CancellationToken cancellationToken = default);
 }

@@ -7,6 +7,6 @@ public class UserFile : BaseEntity
 {
     public string Path { get; set; } = default!;
     public string Name { get; set; } = default!;
-    public Product Product { get; set; } = default!;
-    public Guid ProductId { get; set; }
+    public User User { get; set; } = default!;
+    public Guid UserId { get; set; }
 }
