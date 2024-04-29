@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Responses;
@@ -34,5 +35,23 @@ public class AuthorizationController : ControllerBase // The controller must inh
     public async Task<ActionResult<RequestResponse>> Register([FromBody] RegisterDTO register)
     {
         return this.FromServiceResponse(await _userService.Register(register));
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<RequestResponse>> RequestReset([FromBody] RequestResetDTO request)
+    {
+        return this.FromServiceResponse(await _userService.RequestReset(request));
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<RequestResponse>> ResetPassword([FromBody] ResetPasswordDTO reset)
+    {
+        return this.FromServiceResponse(await _userService.ResetPassword(reset));
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<RequestResponse<RefreshResponseDTO>>> RefreshToken()
+    {
+        return this.FromServiceResponse(await _userService.RefreshToken());
     }
 }

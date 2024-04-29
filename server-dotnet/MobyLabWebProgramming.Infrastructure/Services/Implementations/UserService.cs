@@ -1,4 +1,11 @@
-﻿using System.Net;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
+using Ardalis.Specification;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using MobyLabWebProgramming.Core.Constants;
@@ -10,6 +17,7 @@ using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Authorization;
+using MobyLabWebProgramming.Infrastructure.Configurations;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
@@ -22,29 +30,41 @@ public class UserService : IUserService
     private readonly IRepository<WebAppDatabaseContext> _repository;
     private readonly ILoginService _loginService;
     private readonly IMailService _mailService;
+    private readonly IValidationService _validationService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly RefreshJwtConfiguration _jwtConfiguration;
 
-    /// <summary>
-    /// Inject the required services through the constructor.
-    /// </summary>
-    public UserService(IRepository<WebAppDatabaseContext> repository, ILoginService loginService, IMailService mailService)
+    public UserService(IRepository<WebAppDatabaseContext> repository, ILoginService loginService, IMailService mailService, IValidationService validationService, IHttpContextAccessor httpContextAccessor, IOptions<RefreshJwtConfiguration> jwtConfiguration)
     {
         _repository = repository;
         _loginService = loginService;
         _mailService = mailService;
+        _validationService = validationService;
+        _httpContextAccessor = httpContextAccessor;
+        _jwtConfiguration = jwtConfiguration.Value;
     }
 
     public async Task<ServiceResponse<UserDTO>> GetUser(Guid id, CancellationToken cancellationToken = default)
     {
-        var result = await _repository.GetAsync(new UserProjectionSpec(id), cancellationToken); // Get a user using a specification on the repository.
+        var result = await _repository.GetAsync(new UserProjectionSpec(id), cancellationToken);
 
         return result != null ? 
             ServiceResponse<UserDTO>.ForSuccess(result) : 
-            ServiceResponse<UserDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+            ServiceResponse<UserDTO>.FromError(CommonErrors.UserNotFound);
+    }
+
+    public async Task<ServiceResponse<User>> GetUserNotDTO(Guid id, CancellationToken cancellationToken = default)
+    {
+        var result = await _repository.GetAsync(new UserSpec(id), cancellationToken);
+
+        return result != null ?
+            ServiceResponse<User>.ForSuccess(result) :
+            ServiceResponse<User>.FromError(CommonErrors.UserNotFound);
     }
 
     public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
     {
-        var result = await _repository.PageAsync(pagination, new UserProjectionSpec(pagination.Search), cancellationToken); // Use the specification and pagination API to get only some entities from the database.
+        var result = await _repository.PageAsync(pagination, new UserProjectionSpec(pagination.Search), cancellationToken);
 
         return ServiceResponse<PagedResponse<UserDTO>>.ForSuccess(result);
     }
@@ -53,12 +73,12 @@ public class UserService : IUserService
     {
         var result = await _repository.GetAsync(new UserSpec(login.Email), cancellationToken);
 
-        if (result == null) // Verify if the user is found in the database.
+        if (result == null)
         {
-            return ServiceResponse<LoginResponseDTO>.FromError(CommonErrors.UserNotFound); // Pack the proper error as the response.
+            return ServiceResponse<LoginResponseDTO>.FromError(CommonErrors.UserNotFound);
         }
 
-        if (result.Password != login.Password) // Verify if the password hash of the request is the same as the one in the database.
+        if (result.Password != login.Password)
         {
             return ServiceResponse<LoginResponseDTO>.FromError(new(HttpStatusCode.BadRequest, "Wrong password!", ErrorCodes.WrongPassword));
         }
@@ -71,10 +91,38 @@ public class UserService : IUserService
             Role = result.Role
         };
 
+        var entity = await _repository.GetAsync(new RefreshTokenSpec(user.Id), cancellationToken);
+
+        if (entity != null)
+        {
+            entity.Token = _loginService.GetToken(user, DateTime.UtcNow, new(7, 0, 0, 0), TokenTypeEnum.Refresh);
+            await _repository.UpdateAsync(entity, cancellationToken);
+        } else
+        {
+            entity = await _repository.AddAsync(new RefreshToken
+            {
+                Token = _loginService.GetToken(user, DateTime.UtcNow, new(7, 0, 0, 0), TokenTypeEnum.Refresh),
+                UserId = user.Id,
+            }, cancellationToken);
+        }
+
+        if (_httpContextAccessor.HttpContext != null)
+        {
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("MeetxRefresh", entity.Token,
+            new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
+        }
+
         return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
         {
             User = user,
-            Token = _loginService.GetToken(user, DateTime.UtcNow, new(7, 0, 0, 0)) // Get a JWT for the user issued now and that expires in 7 days.
+            Token = _loginService.GetToken(user, DateTime.UtcNow, new(0, 0, 15, 0), TokenTypeEnum.Auth)
         });
     }
 
@@ -83,7 +131,7 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> AddUser(UserAddDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) // Verify who can add the user, you can change this however you se fit.
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add users!", ErrorCodes.CannotAdd));
         }
@@ -101,47 +149,45 @@ public class UserService : IUserService
             Name = user.Name,
             Role = user.Role,
             Password = user.Password
-        }, cancellationToken); // A new entity is created and persisted in the database.
+        }, cancellationToken);
 
-        await _mailService.SendMail(user.Email, "Welcome!", MailTemplates.UserAddTemplate(user.Name), true, "My App", cancellationToken); // You can send a notification on the user email. Change the email if you want.
+        //await _mailService.SendMail(user.Email, "Welcome!", MailTemplates.UserAddTemplate(user.Name), true, "My App", cancellationToken);
 
         return ServiceResponse.ForSuccess();
     }
 
     public async Task<ServiceResponse> UpdateUser(UserUpdateDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != user.Id) // Verify who can add the user, you can change this however you se fit.
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != user.Id)
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
         }
 
         var entity = await _repository.GetAsync(new UserSpec(user.Id), cancellationToken);
 
-        if (entity != null) // Verify if the user is not found, you cannot update an non-existing entity.
+        if (entity != null)
         {
             entity.Name = user.Name ?? entity.Name;
             entity.Password = user.Password ?? entity.Password;
 
-            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+            await _repository.UpdateAsync(entity, cancellationToken);
         }
-
-        return ServiceResponse.ForSuccess();
-    }
-
-    public async Task<ServiceResponse> DeleteUser(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
-    {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the user!", ErrorCodes.CannotDelete));
-        }
-
-        await _repository.DeleteAsync<User>(id, cancellationToken); // Delete the entity.
 
         return ServiceResponse.ForSuccess();
     }
 
     public async Task<ServiceResponse> Register(RegisterDTO register, CancellationToken cancellationToken = default)
     {
+        if (!_validationService.VerifyEmail(register.Email))
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Email is not valid!", ErrorCodes.WrongInputs));
+        }
+
+        if (_validationService.VerifyPassword(register.Password))
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Password is not valid!", ErrorCodes.WrongInputs));
+        }
+
         var result = await _repository.GetAsync(new UserSpec(register.Email), cancellationToken);
 
         if (register == null || register.Email.IsNullOrEmpty() || register.Name.IsNullOrEmpty() || register.Password.IsNullOrEmpty())
@@ -162,6 +208,157 @@ public class UserService : IUserService
             Password = PasswordUtils.HashPassword(register.Password)
         }, cancellationToken);
 
+        //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken + " " + "id"), true, "MeetX", cancellationToken);
+
         return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse> RequestReset(RequestResetDTO requestReset, CancellationToken cancellationToken = default)
+    {
+        if (!_validationService.VerifyEmail(requestReset.Email))
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Email is not valid!", ErrorCodes.WrongInputs));
+        }
+
+        var entity = await _repository.GetAsync(new UserSpec(requestReset.Email), cancellationToken);
+
+        if (entity == null)
+        {
+            return ServiceResponse.ForSuccess();
+        }
+
+        var token = await _repository.GetAsync(new ResetTokenSpec(entity.Id, SpecEnum.ByUserId), cancellationToken);
+
+        var resetToken = _loginService.GetRandomToken();
+
+        if (token == null)
+        {
+            await _repository.AddAsync(new ResetToken
+            {
+                Token = resetToken,
+                UserId = entity.Id,
+            }, cancellationToken);
+        } else
+        {
+            token.Token = resetToken ?? token.Token;
+
+            await _repository.UpdateAsync(token, cancellationToken);
+        }
+
+        //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken + " " + "id"), true, "MeetX", cancellationToken);
+
+        return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse> ResetPassword(ResetPasswordDTO reset, CancellationToken cancellationToken = default)
+    {
+        var token = await _repository.GetAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
+
+        if (token == null || token.Token != reset.Token)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Unauthorized, "Token expired!", ErrorCodes.TokenExpired));
+        }
+
+        var user = await _repository.GetAsync(new UserSpec(token.UserId), cancellationToken);
+
+        if (user == null)
+        {
+            await _repository.DeleteAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
+            return ServiceResponse.FromError(new(HttpStatusCode.Unauthorized, "Token expired!", ErrorCodes.TokenExpired));
+        }
+
+        if (token.UpdatedAt.AddMinutes(30) < DateTime.UtcNow)
+        {
+            await _repository.DeleteAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
+            return ServiceResponse.FromError(new(HttpStatusCode.Unauthorized, "Token expired!", ErrorCodes.TokenExpired));
+        } 
+
+        if (_validationService.VerifyPassword(reset.Password))
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Password is not valid!", ErrorCodes.WrongInputs));
+        }
+
+        await _repository.DeleteAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
+        user.Password = PasswordUtils.HashPassword(reset.Password) ?? user.Password;
+        await _repository.UpdateAsync(user, cancellationToken);
+
+        //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken), true, "MeetX", cancellationToken);
+
+        return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse<RefreshResponseDTO>> RefreshToken(CancellationToken cancellationToken = default)
+    {
+
+        if (_httpContextAccessor.HttpContext != null)
+        {
+            var token = _httpContextAccessor.HttpContext.Request.Cookies["MeetxRefresh"];
+           
+            if (token != null)
+            {
+                var entity = await _repository.GetAsync(new RefreshTokenSpec(token), cancellationToken);
+
+                if (entity != null)
+                {
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var key = Encoding.ASCII.GetBytes(_jwtConfiguration.Key);
+                    try
+                    {
+                        tokenHandler.ValidateToken(token, new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(key),
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidAudience = _jwtConfiguration.Audience,
+                            ValidIssuer = _jwtConfiguration.Issuer,
+                            ClockSkew = TimeSpan.Zero
+                        }, out SecurityToken validatedToken);
+
+                        var jwtToken = (JwtSecurityToken)validatedToken;
+                        var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "nameid").Value);
+
+                        var user = await _repository.GetAsync(new UserSpec(userId), cancellationToken);
+
+                        if (user != null)
+                        {
+                            var userDTO = new UserDTO
+                            {
+                                Id = user.Id,
+                                Email = user.Email,
+                                Name = user.Name,
+                                Role = user.Role
+                            };
+
+                            entity.Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(7, 0, 0, 0), TokenTypeEnum.Refresh);
+                            await _repository.UpdateAsync(entity, cancellationToken);
+
+                            if (_httpContextAccessor.HttpContext != null)
+                            {
+                                _httpContextAccessor.HttpContext.Response.Cookies.Append("MeetxRefresh", entity.Token,
+                                new CookieOptions
+                                {
+                                    Expires = DateTime.UtcNow.AddDays(7),
+                                    HttpOnly = true,
+                                    Secure = true,
+                                    IsEssential = true,
+                                    SameSite = SameSiteMode.None
+                                });
+                            }
+
+                            return ServiceResponse<RefreshResponseDTO>.ForSuccess(new()
+                            {
+                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 0, 15, 0), TokenTypeEnum.Auth)
+                            });
+                        }
+                    }
+                    catch
+                    {
+                        return ServiceResponse<RefreshResponseDTO>.FromError(new(HttpStatusCode.Unauthorized, "Refresh token expired!", ErrorCodes.TokenExpired));
+                    }
+                }
+            }
+        }
+        return ServiceResponse<RefreshResponseDTO>.FromError(new(HttpStatusCode.Unauthorized, "Refresh token expired!", ErrorCodes.TokenExpired));
     }
 }

@@ -6,22 +6,30 @@ using System.Security.Claims;
 using System.Text;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
+using System.Security.Cryptography;
+using MobyLabWebProgramming.Core.Enums;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
 public class LoginService : ILoginService
 {
     private readonly JwtConfiguration _jwtConfiguration;
+    private readonly RefreshJwtConfiguration _refreshJwtConfiguration;
 
-    /// <summary>
-    /// Inject the required service configuration from the application.json or environment variables.
-    /// </summary>
-    public LoginService(IOptions<JwtConfiguration> jwtConfiguration) => _jwtConfiguration = jwtConfiguration.Value;
+    public LoginService(IOptions<JwtConfiguration> jwtConfiguration, IOptions<RefreshJwtConfiguration> refreshJwtConfiguration)
+    {
+        _jwtConfiguration = jwtConfiguration.Value;
+        _refreshJwtConfiguration = refreshJwtConfiguration.Value;
+    }
 
-    public string GetToken(UserDTO user, DateTime issuedAt, TimeSpan expiresIn)
+    public string GetToken(UserDTO user, DateTime issuedAt, TimeSpan expiresIn, TokenTypeEnum type)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_jwtConfiguration.Key); // Use the configured key as the encryption key to sing the JWT.
+        var key = Encoding.ASCII.GetBytes(_jwtConfiguration.Key);
+        if (type == TokenTypeEnum.Refresh)
+        {
+            key = Encoding.ASCII.GetBytes(_refreshJwtConfiguration.Key);
+        }
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }), // Set the user ID as the "nameid" claim in the JWT.
@@ -29,7 +37,7 @@ public class LoginService : ILoginService
             {
                 { ClaimTypes.Name, user.Name },
                 { ClaimTypes.Email, user.Email },
-                { "Role", user.Role.Value}
+                { ClaimTypes.Role, user.Role.Value }
             },
             IssuedAt = issuedAt, // This sets the "iat" claim to indicate then the JWT was emitted.
             Expires = issuedAt.Add(expiresIn), // This sets the "exp" claim to indicate when the JWT expires and cannot be used.
@@ -40,4 +48,13 @@ public class LoginService : ILoginService
 
         return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor)); // Create the token.
     }
+
+    public string GetRandomToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
 }

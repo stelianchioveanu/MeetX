@@ -20,5 +20,9 @@ public enum ErrorCodes
     MailSendFailed,
     TagAlreadyExists,
     WrongTag,
-    WrongInputs
+    WrongInputs,
+    TokenExpired,
+    GroupAlreadyExists,
+    NotAnAdmin,
+    NotAMember
 }

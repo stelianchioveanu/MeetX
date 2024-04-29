@@ -48,6 +48,7 @@ public class UserController : AuthorizedController // Here we use the Authorized
                                                                                                                                          // the PaginationSearchQueryParams properties to the object in the method parameter.
     {
         var currentUser = await GetCurrentUser();
+        Console.WriteLine(currentUser.Result);
 
         return currentUser.Result != null ?
             this.FromServiceResponse(await UserService.GetUsers(pagination)) :
@@ -83,21 +84,6 @@ public class UserController : AuthorizedController // Here we use the Authorized
             {
                 Password = !string.IsNullOrWhiteSpace(user.Password) ? PasswordUtils.HashPassword(user.Password) : null
             }, currentUser.Result)) :
-            this.ErrorMessageResult(currentUser.Error);
-    }
-
-    /// <summary>
-    /// This method implements the Delete operation (D from CRUD) on a user.
-    /// Note that in the HTTP RFC you cannot have a body for DELETE operations.
-    /// </summary>
-    [Authorize]
-    [HttpDelete("{id:guid}")] // This attribute will make the controller respond to a HTTP DELETE request on the route /api/User/Delete/<some_guid>.
-    public async Task<ActionResult<RequestResponse>> Delete([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
-    {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await UserService.DeleteUser(id)) :
             this.ErrorMessageResult(currentUser.Error);
     }
 }

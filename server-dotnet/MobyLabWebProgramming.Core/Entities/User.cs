@@ -1,5 +1,4 @@
 ﻿using MobyLabWebProgramming.Core.Enums;
-using System.Reflection.Metadata;
 
 namespace MobyLabWebProgramming.Core.Entities;
 
@@ -14,4 +13,9 @@ public class User : BaseEntity
     public UserRoleEnum Role { get; set; } = default!;
     public ICollection<UserFile> UserFiles { get; set; } = default!;
     public RefreshToken? RefreshToken { get; set; }
+    public ResetToken? ResetToken { get; set; }
+    public ICollection<Topic> MyTopics { get; set; } = default!;
+    public ICollection<Group> MyCreatedGroups { get; set; } = default!;
+    public ICollection<Group> MyGroups { get; set; } = default!;
+    public ICollection<Group> Groups { get; set; } = default!;
 }

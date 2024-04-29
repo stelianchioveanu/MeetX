@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-
-namespace MobyLabWebProgramming.Core.Entities;
+﻿namespace MobyLabWebProgramming.Core.Entities;
 
 public class RefreshToken : BaseEntity
 {

@@ -1,4 +1,5 @@
 ﻿using MobyLabWebProgramming.Core.DataTransferObjects;
+using MobyLabWebProgramming.Core.Enums;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
@@ -7,8 +8,7 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 /// </summary>
 public interface ILoginService
 {
-    /// <summary>
-    /// GetToken returns a JWT token string for a user with an issue date and and expiration interval after issue.
-    /// </summary>
-    public string GetToken(UserDTO user, DateTime issuedAt, TimeSpan expiresIn);
+    public string GetToken(UserDTO user, DateTime issuedAt, TimeSpan expiresIn, TokenTypeEnum type);
+
+    public string GetRandomToken();
 }

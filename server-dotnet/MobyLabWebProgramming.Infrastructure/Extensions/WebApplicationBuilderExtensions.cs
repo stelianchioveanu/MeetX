@@ -166,14 +166,19 @@ public static class WebApplicationBuilderExtensions
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection(nameof(JwtConfiguration)));
+        builder.Services.Configure<RefreshJwtConfiguration>(builder.Configuration.GetSection(nameof(RefreshJwtConfiguration)));
         builder.Services.Configure<FileStorageConfiguration>(builder.Configuration.GetSection(nameof(FileStorageConfiguration)));
         builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection(nameof(MailConfiguration)));
+        builder.Services.AddHttpContextAccessor();
         builder.Services
             .AddTransient<IUserService, UserService>()
             .AddTransient<ILoginService, LoginService>()
             .AddTransient<IFileRepository, FileRepository>()
             .AddTransient<IUserFileService, UserFileService>()
-            .AddTransient<IMailService, MailService>();
+            .AddTransient<IMailService, MailService>()
+            .AddTransient<IValidationService, ValidationService>()
+            .AddTransient<IGroupService, GroupService>()
+            .AddTransient<ITopicService, TopicService>();
 
         return builder;
     }
