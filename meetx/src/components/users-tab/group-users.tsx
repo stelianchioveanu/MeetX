@@ -1,15 +1,13 @@
 import UserButton from "./user-button";
-import stelicas from "../../pages/home/sections/img/stelian.jpeg"
 import { ScrollArea } from "../ui/scroll-area";
-import PopoverUser, { UserInfo } from "./popover-user";
+import PopoverUser from "./popover-user";
 import UserAvatar from "./user-avatar";
+import { UserDTO } from "../../../openapi/requests/types.gen";
 
 const GroupUsers = () => {
-    const users:UserInfo[] = [{username: "stelicas",
-    email: "stelian.chioveanu@yahoo.com", date: "February 17, 2024",
-    status: true, img: stelicas}, {username: "mihai",
-    email: "mihai.chioveanu@yahoo.com", date: "February 20, 2024",
-    status: false, img: stelicas}];
+    const users:UserDTO[] = [{name: "stelicas",
+    email: "stelian.chioveanu@yahoo.com"}, {name: "mihai",
+    email: "mihai.chioveanu@yahoo.com"}];
 
     return (
     <div className="min-w-60 h-full flex justify-center bg-[#171b25]">
@@ -21,7 +19,7 @@ const GroupUsers = () => {
                 <UserButton variant={"ghost"}
                 className="w-52 h-12 hover:bg-neutral-600 gap-2 flex justify-start group">
                     <UserAvatar user={users[0]} className="w-10 h-10" status="visible"/>
-                    {users[0].username}
+                    {users[0].name}
                 </UserButton>
             </PopoverUser>
             <p className="w-52 min-h-12 flex items-center my-2">
@@ -34,7 +32,7 @@ const GroupUsers = () => {
                             <UserButton variant={"ghost"}
                             className="w-52 h-12 hover:bg-neutral-600 gap-2 flex justify-start group">
                                 <UserAvatar user={user} className="w-10 h-10" status="visible"/>
-                                {user.username}
+                                {user.name}
                             </UserButton>
                         </PopoverUser>
                     );

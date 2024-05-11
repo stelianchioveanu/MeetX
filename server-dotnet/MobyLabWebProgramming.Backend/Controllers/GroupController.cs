@@ -55,12 +55,6 @@ public class GroupController : AuthorizedController
             this.ErrorMessageResult<GroupLinkResponse>(currentUser.Error);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<RequestResponse<GroupDTO>>> GetGroupDetails([FromQuery] Guid id)
-    {
-        return this.FromServiceResponse(await _groupService.GetGroupDetails(id));
-    }
-
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<RequestResponse>> JoinGroup([FromBody] JoinGroupDTO joinGroup)

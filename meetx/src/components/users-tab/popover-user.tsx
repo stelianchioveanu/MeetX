@@ -6,16 +6,9 @@ import {
 import { ReactNode } from "react";
 import UserAvatar from "./user-avatar";
 import { Input } from "../ui/input";
+import { UserDTO } from "../../../openapi/requests/types.gen";
 
-export interface UserInfo{
-    date: string;
-    status: boolean;
-    username: string;
-    img: any;
-    email: string;
-}
-
-const PopoverUser = (props: {children: ReactNode, user: UserInfo, side: any}) => {
+const PopoverUser = (props: {children: ReactNode, user?: UserDTO, side: any}) => {
     return ( 
         <Popover>
             <PopoverTrigger asChild>
@@ -29,13 +22,13 @@ const PopoverUser = (props: {children: ReactNode, user: UserInfo, side: any}) =>
                 </div>
                 <div className="flex flex-col p-3 gap-1">
                     <p className=" text-purple-700 text-xl font-semibold">
-                        {props.user.username}
+                        {props.user?.name}
                     </p>
                     <p className="text-sm">
-                        {props.user.email}
+                        {props.user?.email}
                     </p>
                     <p className="text-xs text-[#5c6682]">
-                        Registered since: {props.user.date}
+                        Registered since: 
                     </p>
                 </div>
                 <div className="p-3">

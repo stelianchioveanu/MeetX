@@ -55,6 +55,28 @@ public class TopicController : AuthorizedController
     }
 
     [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<PagedResponse<TopicDTO>>>> GetMyTopics([FromQuery] PaginationSearchQueryParams pagination, [FromQuery] Guid groupId)
+    {
+        var currentUser = await GetCurrentUserNotDTO();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _topicService.GetMyTopics(pagination, groupId, currentUser.Result)) :
+            this.ErrorMessageResult<PagedResponse<TopicDTO>>(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<PagedResponse<TopicDTO>>>> GetRecentTopics([FromQuery] PaginationSearchQueryParams pagination, [FromQuery] Guid groupId)
+    {
+        var currentUser = await GetCurrentUserNotDTO();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _topicService.GetRecentTopics(pagination, groupId, currentUser.Result)) :
+            this.ErrorMessageResult<PagedResponse<TopicDTO>>(currentUser.Error);
+    }
+
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<RequestResponse>> DeleteTopic([FromBody] TopicDeleteDTO topic)
     {

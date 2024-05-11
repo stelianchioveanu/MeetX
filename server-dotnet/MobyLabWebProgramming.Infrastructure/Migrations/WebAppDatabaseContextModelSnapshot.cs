@@ -59,6 +59,11 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("character varying(7)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -69,6 +74,11 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(4095)
                         .HasColumnType("character varying(4095)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -272,6 +282,33 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("UserFile");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserRecentTopics", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("TopicId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TopicId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRecentTopics");
+                });
+
             modelBuilder.Entity("GroupUser", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Group", null)
@@ -376,6 +413,25 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserRecentTopics", b =>
+                {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Topic", "Topic")
+                        .WithMany("RecentTopicUsers")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
+                        .WithMany("MyRecentTopics")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Topic");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Group", b =>
                 {
                     b.Navigation("LinkGroup")
@@ -384,9 +440,16 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("Topics");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Topic", b =>
+                {
+                    b.Navigation("RecentTopicUsers");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.User", b =>
                 {
                     b.Navigation("MyCreatedGroups");
+
+                    b.Navigation("MyRecentTopics");
 
                     b.Navigation("MyTopics");
 

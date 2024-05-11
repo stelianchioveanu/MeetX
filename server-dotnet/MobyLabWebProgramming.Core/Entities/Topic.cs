@@ -10,4 +10,5 @@ public class Topic : BaseEntity
     public Guid GroupId { get; set; } = default!;
     public User User { get; set; } = default!;
     public Guid UserId { get; set; } = default!;
+    public ICollection<UserRecentTopics> RecentTopicUsers { get; set; } = default!;
 }

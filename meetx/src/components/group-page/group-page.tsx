@@ -1,28 +1,35 @@
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
-import { TopicInfo } from "./topic";
-import stelicas from "../../pages/home/sections/img/stelian.jpeg"
 import TopicScrollItem from "./topic-scroll-item";
+import { TopicDTO } from "../../../openapi/requests/types.gen";
+import { useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
+import { TopicService } from "../../../openapi/requests/services.gen";
+import { toast } from "react-toastify";
+import { useRefreshToken } from "@/hooks/useRefreshToken";
+import { useAppSelector } from "@/application/store";
 
-const GroupPage = (props: {setSelectedTopicId: (newValue: number) => void}) => {
-    const topic:TopicInfo = {
-        title: "Hello guy whats the problem",
-        //message: "salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme",
-        message: "hello",
-        answers: 4,
-        user: {username: "stelicas",
-        email: "stelian.chioveanu@yahoo.com", date: "February 17, 2024",
-        status: true, img: stelicas}
-    }
-    const topic1:TopicInfo = {
-        title: "Hello guy whats the problem",
-        message: "salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme salutare prieteni, sunteti cei mai tari, abia astept sa cream o comunitate faina si fara probleme",
-        //message: "hello",
-        answers: 0,
-        user: {username: "stelicas",
-        email: "stelian.chioveanu@yahoo.com", date: "February 17, 2024",
-        status: true, img: stelicas}
-    }
+const GroupPage = () => {
+    const {refresh} = useRefreshToken();
+    const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+    const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
+
+    const {data} = useQuery({
+        queryKey: [useTopicServiceGetApiTopicGetTopicsKey, selectedGroupId],
+        queryFn: () => {
+            return TopicService.getApiTopicGetTopics({groupId: selectedGroupId ? selectedGroupId : undefined});
+        },
+        retry(failureCount, error) {
+            if (failureCount > 0) {
+                toast("Get topics failed! Please try again later!");
+                return false;
+            }
+            refresh();
+            return true;
+        },
+        retryDelay: 0
+    });
+
     return ( 
     <div className="w-[calc(100%-304px)] h-full flex flex-col p-10 gap-5">
         <div className="flex flex-col gap-2">
@@ -30,18 +37,13 @@ const GroupPage = (props: {setSelectedTopicId: (newValue: number) => void}) => {
             <Input className="bg-transparent"/>
         </div>
         <ScrollArea className="w-full h-full">
-            <TopicScrollItem topic={topic} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic1} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic1} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic1} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic1} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic1} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic} setSelectedTopicId={props.setSelectedTopicId}/>
-            <TopicScrollItem topic={topic1} setSelectedTopicId={props.setSelectedTopicId}/>
+            {
+                data?.response?.data?.map(function(topic : TopicDTO){
+                    return (
+                        <TopicScrollItem key={topic.id} topic={topic}/>
+                    )
+                })
+            }
         </ScrollArea>
     </div>
     );

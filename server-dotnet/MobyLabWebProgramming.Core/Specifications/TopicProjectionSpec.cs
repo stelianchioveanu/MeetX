@@ -21,7 +21,8 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
             Email = e.User.Email,
             Name = e.User.Name,
             Role = e.User.Role
-        }
+        },
+        NumberAnswers = 2
     };
 
     public TopicProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -30,7 +31,7 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
 
     public TopicProjectionSpec(Guid Id)
     {
-        Query.Where(e => e.Id == Id);
+        Query.Where(e => e.Id == Id).OrderByDescending(x => x.CreatedAt, true);
     }
 
     public TopicProjectionSpec(string? search, Guid groupId)
@@ -39,11 +40,17 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
 
         if (search == null)
         {
+            Query.Where(e => e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true);
             return;
         }
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => (EF.Functions.ILike(e.Title, searchExpr) || EF.Functions.ILike(e.Description, searchExpr)) && e.GroupId == groupId);
+        Query.Where(e => (EF.Functions.ILike(e.Title, searchExpr) || EF.Functions.ILike(e.Description, searchExpr)) && e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true);
+    }
+
+    public TopicProjectionSpec(string? search, Guid groupId, Guid userId)
+    {
+        Query.Where(e => e.GroupId == groupId && e.UserId == userId).OrderByDescending(x => x.CreatedAt, true);
     }
 }

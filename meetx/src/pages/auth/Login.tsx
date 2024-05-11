@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useAuthorizationServicePostApiAuthorizationLogin } from "../../../openapi/queries/queries";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -11,21 +12,27 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Linkedin } from "lucide-react"
+import { Linkedin, Loader2 } from "lucide-react"
 import { Link } from "react-router-dom"
+import { LoginDTO } from "openapi/requests/types.gen";
+import { useAppDispatch } from "@/application/store";
+import { setToken } from "@/application/state-slices";
+import { toast } from "react-toastify";
+import { useAppRouter } from "@/hooks/useAppRouter";
 
 const loginFormSchema = z.object({
-    email: z
-      .string({
-        required_error: "Email is required",
-      }),
-    password: z
-      .string({
-        required_error: "Message is required"
-      })
+    email: z.string().min(1, {
+        message: "This field has to be filled.",
+    }),
+    password: z.string().min(1, {
+        message: "This field has to be filled.",
+    }),
   });
 
 const Login = () => {
+    const dispatch = useAppDispatch();
+    const { redirectToHome } = useAppRouter();
+
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
@@ -34,16 +41,35 @@ const Login = () => {
         },
       })
 
-    function onSubmit(values: z.infer<typeof loginFormSchema>) {
-        console.log(values)
-    }
+    const { mutate, isPending } = useAuthorizationServicePostApiAuthorizationLogin({
+        onError: (error : any) => {
+            form.setError('password', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
+        },
+        onSuccess: (result : any) => {
+            dispatch(setToken(result.response?.token ?? ''));
+            toast("Congrats");
+            redirectToHome();
+        }
+      });
+
+    const handleSubmit = (user : { email: string, password: string }) => {
+        const { email, password } = user;
+        const loginData: LoginDTO = {
+            email,
+            password
+        };
+        const dataToSend = {
+            requestBody: loginData
+        };
+        mutate(dataToSend);
+    };
     
     return (
     <div className="w-full h-full bg flex justify-center items-center bg-auth">
         <div className="h-fit backdrop-blur-3xl auth-form-bg rounded-2xl box-border px-10 py-12 flex justify-center items-center flex-col gap-10 w-96 shadow-xl shadow-neutral-900">
-            <div className="text-white text-4xl font-semibold">Login</div>
+            <div className="text-white text-4xl font-semibold text-center">Login</div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6 w-full">
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 gap-6 w-full">
                     <FormField
                     control={form.control}
                     name="email"
@@ -68,7 +94,10 @@ const Login = () => {
                         </FormItem>
                     )}
                     />
-                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 ">Login</Button>
+                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
+                        {isPending ? <Loader2 className="animate-spin"></Loader2> :
+                        "Login"}
+                    </Button>
                     <Link to="/resetPassword" className="text-white hover:text-purple-800 hover:cursor-pointer font text-xs -mt-3 w-fit justify-self-end">Forgot password?</Link>
                 </form>
             </Form>

@@ -3,53 +3,69 @@ import GroupPage from "@/components/group-page/group-page";
 import GroupFrame from "@/components/group/group-frame";
 import NavigationBar from "@/components/navigation/navigation-bar";
 import PrivateFrame from "@/components/private-chats/private-frame";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
+import { GroupService } from "../../../openapi/requests/services.gen";
+import { useRefreshToken } from "@/hooks/useRefreshToken";
+import { toast } from "react-toastify";
+import { useAppSelector } from "@/application/store";
 
 const Dashboard = () => {
-    const [selectedGroupId, setSelectedGroupId] = useState(0);
-    const [selectedTopicId, setSelectedTopicId] = useState(0);
-    const [selectedConvId, setSelectedConvId] = useState(0);
+    const {refresh} = useRefreshToken();
+    const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+    const { selectedConvId } = useAppSelector(x => x.selectedReducer);
+    const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
 
-    const [groups, setGroups] = useState([{name: "CN", id: 1, color: "#FF0000"}, {name: "CL", id: 2, color: "#00FF00"}, {name: "CB", id: 3, color: "#0000ff"}]);
+    const {data} = useQuery({
+        queryKey: [useGroupServiceGetApiGroupGetGroupsKey],
+        queryFn: () => {
+            return GroupService.getApiGroupGetGroups();
+        },
+        retry(failureCount, error) {
+            if (failureCount > 0) {
+                toast("Get groups failed! Please try again later!");
+                return false;
+            }
+            refresh();
+            return true;
+        },
+        retryDelay: 0
+    });
+
     const topic = {name: "# Topic 1", id: 1}
     const user1 = {name: "stelicas", id: 1}
 
-    const setGroupId = (id: any) => {
-        setSelectedGroupId(id);
-        setSelectedTopicId(0);
-        setSelectedConvId(0);
-    }
-
-    return ( 
+    return (
     <div className="w-full h-screen flex bg-[#272d3d] font">
-        <NavigationBar setSelectedId={setGroupId} selectedId={selectedGroupId} groups={groups}/>
-        {
-            selectedGroupId === 0 ?
+        <NavigationBar groups={data?.response?.data}/>
+        {/* {
+            selectedGroupId === "0" ?
                 <PrivateFrame setSelectedConvId={setSelectedConvId}/> :
                 null
         }
         {
-            selectedGroupId === 0 && selectedConvId !== 0 ?
+            selectedGroupId === "0" && selectedConvId !== "0" ?
                 <ChatFrame topText={user1} isGroup={false}/> :
                 null
         }
         {
-            selectedGroupId === 0 && selectedConvId === 0 ?
+            selectedGroupId === "0" && selectedConvId === "0" ?
                 <GroupPage setSelectedTopicId={setSelectedTopicId}/> :
                 null
+        } */}
+        {
+            selectedGroupId !== "0" ?
+                <GroupFrame/> : 
+                null
         }
-        {
-            selectedGroupId !== 0 ?
-                <GroupFrame setSelectedTopicId={setSelectedTopicId}/> : 
-                null}
-        {
-            selectedGroupId !== 0 && selectedTopicId !== 0 ? 
+        {/* {
+            selectedGroupId !== "0" && selectedTopicId !== "0" ? 
                 <ChatFrame topText={topic} isGroup={true}/> :
                 null
-        }
+        } */}
         {
-            selectedGroupId !== 0 && selectedTopicId === 0 ?
-                <GroupPage setSelectedTopicId={setSelectedTopicId}/> :
+            selectedGroupId !== "0" && selectedTopicId === "0" ?
+                <GroupPage/> :
                 null
         }
     </div>

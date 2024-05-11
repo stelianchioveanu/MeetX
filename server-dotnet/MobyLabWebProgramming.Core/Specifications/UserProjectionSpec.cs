@@ -42,7 +42,7 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)); // This is an example on who database specific expressions can be used via C# expressions.
+        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)).OrderByDescending(x => x.CreatedAt, true); // This is an example on who database specific expressions can be used via C# expressions.
                                                                                            // Note that this will be translated to the database something like "where user.Name ilike '%str%'".
     }
 }

@@ -12,8 +12,6 @@ public interface IGroupService
 
     public Task<ServiceResponse<GroupLinkResponse>> GenerateLink(Guid groupId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 
-    public Task<ServiceResponse<GroupDTO>> GetGroupDetails(Guid groupId, CancellationToken cancellationToken = default);
-
     public Task<ServiceResponse> JoinGroup(JoinGroupDTO joinGroup, User? requestingUser = default, CancellationToken cancellationToken = default);
 
     public Task<ServiceResponse> ChangeRole(ChangeRoleDTO change, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);

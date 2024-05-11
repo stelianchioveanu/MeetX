@@ -2,6 +2,7 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Web;
 using Ardalis.Specification;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -75,12 +76,12 @@ public class UserService : IUserService
 
         if (result == null)
         {
-            return ServiceResponse<LoginResponseDTO>.FromError(CommonErrors.UserNotFound);
+            return ServiceResponse<LoginResponseDTO>.FromError(CommonErrors.BadCredentials);
         }
 
         if (result.Password != login.Password)
         {
-            return ServiceResponse<LoginResponseDTO>.FromError(new(HttpStatusCode.BadRequest, "Wrong password!", ErrorCodes.WrongPassword));
+            return ServiceResponse<LoginResponseDTO>.FromError(CommonErrors.BadCredentials);
         }
 
         var user = new UserDTO
@@ -115,8 +116,11 @@ public class UserService : IUserService
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.Lax
             });
+        } else
+        {
+            Console.WriteLine("nu e ok");
         }
 
         return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
@@ -178,6 +182,11 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> Register(RegisterDTO register, CancellationToken cancellationToken = default)
     {
+        if (register == null || register.Email.IsNullOrEmpty() || register.Name.IsNullOrEmpty() || register.Password.IsNullOrEmpty())
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Every input should have at least 1 character!", ErrorCodes.WrongInputs));
+        }
+
         if (!_validationService.VerifyEmail(register.Email))
         {
             return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Email is not valid!", ErrorCodes.WrongInputs));
@@ -189,11 +198,6 @@ public class UserService : IUserService
         }
 
         var result = await _repository.GetAsync(new UserSpec(register.Email), cancellationToken);
-
-        if (register == null || register.Email.IsNullOrEmpty() || register.Name.IsNullOrEmpty() || register.Password.IsNullOrEmpty())
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Every input should have at least 1 character!", ErrorCodes.WrongInputs));
-        }
 
         if (result != null)
         {
@@ -233,7 +237,7 @@ public class UserService : IUserService
 
         if (token == null)
         {
-            await _repository.AddAsync(new ResetToken
+            token = await _repository.AddAsync(new ResetToken
             {
                 Token = resetToken,
                 UserId = entity.Id,
@@ -244,7 +248,8 @@ public class UserService : IUserService
 
             await _repository.UpdateAsync(token, cancellationToken);
         }
-
+        var email = $"http://localhost:5173/resetPassword?token={HttpUtility.UrlEncode(token.Token)}&id={token.Id}";
+        Console.WriteLine(email);
         //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken + " " + "id"), true, "MeetX", cancellationToken);
 
         return ServiceResponse.ForSuccess();
@@ -252,6 +257,7 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> ResetPassword(ResetPasswordDTO reset, CancellationToken cancellationToken = default)
     {
+        Console.WriteLine(reset.Token);
         var token = await _repository.GetAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
 
         if (token == null || token.Token != reset.Token)

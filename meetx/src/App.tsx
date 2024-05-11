@@ -6,22 +6,44 @@ import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ResetPassword';
 import Dashboard from './pages/dashboard/Dashboard';
 import { ThemeProvider } from './components/themes/theme-provider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Reset from './pages/auth/Reset';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const queryClient = new QueryClient();
 
 function App() {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-          <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          <Route path="resetPassword" element={<ForgotPassword />} />
-          <Route path="dashboard" element={<Dashboard/>} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+              <ToastContainer // Create the toast container to enable the notification visualization.
+              position="top-left"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              limit={1}
+              />
+          <Routes>
+            <Route path="/">
+            <Route index element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="requestResetPassword" element={<ForgotPassword />} />
+            <Route path="resetPassword" element={<Reset/>} />
+            <Route path="dashboard" element={<Dashboard/>} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
     </ThemeProvider>
   )
 }

@@ -6,6 +6,7 @@ namespace MobyLabWebProgramming.Core.Errors;
 public static class CommonErrors
 {
     public static ErrorMessage UserNotFound => new(HttpStatusCode.NotFound, "User doesn't exist!", ErrorCodes.EntityNotFound);
+    public static ErrorMessage BadCredentials => new(HttpStatusCode.NotFound, "Invalid email or password!", ErrorCodes.WrongInputs);
     public static ErrorMessage FileNotFound => new(HttpStatusCode.NotFound, "File not found on disk!", ErrorCodes.PhysicalFileNotFound);
     public static ErrorMessage TechnicalSupport => new(HttpStatusCode.InternalServerError, "An unknown error occurred, contact the technical support!", ErrorCodes.TechnicalError);
     public static ErrorMessage UserAlreadyExists => new(HttpStatusCode.Conflict, "User already exists!", ErrorCodes.UserAlreadyExists);
@@ -16,5 +17,8 @@ public static class CommonErrors
     public static ErrorMessage NotCreator => new(HttpStatusCode.Unauthorized, "You can't modify the the group's creator rights!", ErrorCodes.CannotUpdate);
     public static ErrorMessage NotMember => new(HttpStatusCode.Unauthorized, "Your are not part of the group!", ErrorCodes.NotAMember);
     public static ErrorMessage TopicNotFound => new(HttpStatusCode.NotFound, "Topic doesn't exist!", ErrorCodes.EntityNotFound);
+    public static ErrorMessage BadRequets => new(HttpStatusCode.BadRequest, "You need to fill every field!", ErrorCodes.WrongInputs);
+    public static ErrorMessage BadGroupName => new(HttpStatusCode.BadRequest, "The name should have at least two different characters other than space!", ErrorCodes.WrongInputs);
+    public static ErrorMessage BadTopicInput => new(HttpStatusCode.BadRequest, "The fields should have at least one character other than space!", ErrorCodes.WrongInputs);
 
 }

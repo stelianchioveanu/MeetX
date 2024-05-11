@@ -7,4 +7,5 @@ public class TopicDTO
     public string Description { get; set; } = default!;
     public DateTime CreatedDate { get; set; }
     public UserDTO User { get; set; } = default!;
+    public int NumberAnswers { get; set; } = default!;
 }

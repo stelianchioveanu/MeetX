@@ -1,4 +1,5 @@
-﻿using MobyLabWebProgramming.Core.DataTransferObjects;
+﻿using Microsoft.IdentityModel.Tokens;
+using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
@@ -9,6 +10,7 @@ using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 using System.Net;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
 public class GroupService : IGroupService
@@ -29,6 +31,18 @@ public class GroupService : IGroupService
             return ServiceResponse.FromError(CommonErrors.UserNotFound);
         }
 
+        if (group == null || group.Name.IsNullOrEmpty())
+        {
+            return ServiceResponse.FromError(CommonErrors.BadRequets);
+        }
+
+        group.Name = group.Name.Trim();
+
+        if (group.Name.Length < 2)
+        {
+            return ServiceResponse.FromError(CommonErrors.BadGroupName);
+        }
+
         var result = await _repository.GetAsync(new GroupSpec(group.Name, requestingUser.Id), cancellationToken);
 
         if (result != null)
@@ -36,12 +50,18 @@ public class GroupService : IGroupService
             return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "A group made by you with the same name already exists!", ErrorCodes.GroupAlreadyExists));
         }
 
+        List<string> colors = new List<string> { "#e03f4f", "#c16ca8", "#a86cc1", "#6ca8c1", "#98fb98", "#3fe0d0", "#26abff" };
+        Random random = new Random();
+        int randomIndex = random.Next(0, colors.Count);
+
         var newGroup = new Group
         {
             Name = group.Name,
             FirstAdminId = requestingUser.Id,
             Admins = new List<User>(),
-            Users = new List<User>()
+            Users = new List<User>(),
+            ShortName = group.Name.Split(' ').Length > 1 ? $"{group.Name.Split(' ')[0][0]}{group.Name.Split(' ')[1][0]}" : group.Name.Substring(0, 2),
+            Color = colors[randomIndex]
         };
 
         newGroup.Admins.Add(requestingUser);
@@ -51,7 +71,6 @@ public class GroupService : IGroupService
 
         return ServiceResponse.ForSuccess();
     }
-
     public async Task<ServiceResponse<PagedResponse<GroupDTO>>> GetGroups(PaginationQueryParams pagination, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
         if (requestingUser == null)
@@ -106,18 +125,6 @@ public class GroupService : IGroupService
         return ServiceResponse<GroupLinkResponse>.ForSuccess(new GroupLinkResponse { Link = link });
     }
 
-    public async Task<ServiceResponse<GroupDTO>> GetGroupDetails(Guid groupId, CancellationToken cancellationToken = default)
-    {
-        var entity = await _repository.GetAsync(new GroupProjectionSpec(groupId, SpecEnum.ByGroupId), cancellationToken);
-
-        if (entity == null)
-        {
-            return ServiceResponse<GroupDTO>.FromError(CommonErrors.GroupNotFound);
-        }
-
-        return ServiceResponse<GroupDTO>.ForSuccess(entity);
-    }
-
     public async Task<ServiceResponse> JoinGroup(JoinGroupDTO joinGroup, User? requestingUser = default, CancellationToken cancellationToken = default)
     {
         if (requestingUser == null)
@@ -166,6 +173,28 @@ public class GroupService : IGroupService
 
         group.Users.Remove(requestingUser);
         group.Admins.Remove(requestingUser);
+        
+        if (group.Admins.Count == 0)
+        {
+            if (group.Users.Count == 0)
+            {
+                await _repository.DeleteAsync(new GroupSpec(group.Id), cancellationToken);
+                return ServiceResponse.ForSuccess();
+            }
+
+            var users = group.Users.ToArray();
+
+            foreach ( var user in users )
+            {
+                var newAdmin = await _repository.GetAsync(new UserSpec(user.Id), cancellationToken);
+                if (newAdmin != null)
+                {
+                    group.Admins.Add(newAdmin);
+                    break;
+                }
+            }
+        }
+
         await _repository.UpdateAsync(group, cancellationToken);
 
         return ServiceResponse.ForSuccess();
@@ -349,7 +378,7 @@ public class GroupService : IGroupService
                 return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
             }
 
-            if (group.Users.Any(e => e.Id == group.FirstAdminId) && group.FirstAdminId != requestingUser.Id)
+            if (group.Admins.Any(e => e.Id == group.FirstAdminId))
             {
                 return ServiceResponse.FromError(CommonErrors.NotCreator);
             }

@@ -22,7 +22,7 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
 
     public GroupMemberProjectionSpec(Guid groupId)
     {
-        Query.Where(e => e.Groups.Any(u => u.Id == groupId));
+        Query.Where(e => e.Groups.Any(u => u.Id == groupId)).OrderByDescending(x => x.CreatedAt, true);
     }
 
     public GroupMemberProjectionSpec(string? search)
@@ -36,6 +36,6 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr));
+        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)).OrderByDescending(x => x.CreatedAt, true);
     }
 }
