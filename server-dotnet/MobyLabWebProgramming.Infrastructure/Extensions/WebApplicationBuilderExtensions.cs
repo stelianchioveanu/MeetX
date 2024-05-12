@@ -170,6 +170,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.Configure<FileStorageConfiguration>(builder.Configuration.GetSection(nameof(FileStorageConfiguration)));
         builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection(nameof(MailConfiguration)));
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddSignalR();
         builder.Services
             .AddTransient<IUserService, UserService>()
             .AddTransient<ILoginService, LoginService>()
@@ -178,6 +179,7 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IMailService, MailService>()
             .AddTransient<IValidationService, ValidationService>()
             .AddTransient<IGroupService, GroupService>()
+            .AddTransient<IMessageService, MessageService>()
             .AddTransient<ITopicService, TopicService>();
 
         return builder;

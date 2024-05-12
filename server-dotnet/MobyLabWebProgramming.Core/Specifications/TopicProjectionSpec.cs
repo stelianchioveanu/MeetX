@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using Ardalis.Specification;
 using Microsoft.EntityFrameworkCore;
 using MobyLabWebProgramming.Core.DataTransferObjects;
@@ -14,7 +15,7 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
         Id = e.Id,
         Title = e.Title,
         Description = e.Description,
-        CreatedDate = e.CreatedAt,
+        CreatedDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         User = new UserDTO
         {
             Id = e.User.Id,
@@ -22,7 +23,7 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
             Name = e.User.Name,
             Role = e.User.Role
         },
-        NumberAnswers = 2
+        NumberAnswers = e.Messages.Count,
     };
 
     public TopicProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -40,17 +41,17 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
 
         if (search == null)
         {
-            Query.Where(e => e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true);
+            Query.Where(e => e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
             return;
         }
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => (EF.Functions.ILike(e.Title, searchExpr) || EF.Functions.ILike(e.Description, searchExpr)) && e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true);
+        Query.Where(e => (EF.Functions.ILike(e.Title, searchExpr) || EF.Functions.ILike(e.Description, searchExpr)) && e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
     }
 
     public TopicProjectionSpec(string? search, Guid groupId, Guid userId)
     {
-        Query.Where(e => e.GroupId == groupId && e.UserId == userId).OrderByDescending(x => x.CreatedAt, true);
+        Query.Where(e => e.GroupId == groupId && e.UserId == userId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
     }
 }

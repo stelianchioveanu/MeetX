@@ -9,7 +9,7 @@ export const useRefreshToken = () => {
     const dispatch = useAppDispatch();
     const { mutate } = useAuthorizationServicePostApiAuthorizationRefreshToken({
         onError: () => {
-            redirectToLogin();
+            //redirectToLogin();
             toast("Refresh Token expired, please login again!");
         },
         onSuccess: (result : any) => {

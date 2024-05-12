@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AdminService.Middleware;
+using Microsoft.AspNetCore.Builder;
 using MobyLabWebProgramming.Infrastructure.Middlewares;
 using Serilog;
 
@@ -16,6 +17,7 @@ public static class WebApplicationExtensions
             .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MobyLab Web App v1")) // Add the swagger UI with the application name.
             .UseCors() // Sets to use the CORS configuration.
             .UseRouting() // Adds routing.
+            .UseMiddleware<WebSocketsMiddleware>()
             .UseAuthentication() // Adds authentication.
             .UseSerilogRequestLogging() // Adds advanced logging using the Serilog NuGets.
             .UseAuthorization(); // Adds authorization to verify the JWT.

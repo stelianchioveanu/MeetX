@@ -19,4 +19,5 @@ public class User : BaseEntity
     public ICollection<Group> MyGroups { get; set; } = default!;
     public ICollection<Group> Groups { get; set; } = default!;
     public ICollection<UserRecentTopics> MyRecentTopics { get; set; } = default!;
+    public ICollection<Message> Messages { get; set; } = default!;
 }

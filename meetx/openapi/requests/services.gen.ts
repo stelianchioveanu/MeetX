@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
+import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiMessageGetMessagesData, GetApiMessageGetMessagesResponse, DeleteApiMessageDeleteMessageData, DeleteApiMessageDeleteMessageResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
 
 export class AuthorizationService {
     /**
@@ -239,6 +239,48 @@ export class GroupService {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Group/DeleteGroup',
+            body: data.requestBody,
+            mediaType: 'application/json'
+        });
+    }
+    
+}
+
+export class MessageService {
+    /**
+     * @param data The data for the request.
+     * @param data.search
+     * @param data.page
+     * @param data.pageSize
+     * @param data.groupId
+     * @param data.topicId
+     * @returns MessageDTOPagedResponseRequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiMessageGetMessages(data: GetApiMessageGetMessagesData = {}): CancelablePromise<GetApiMessageGetMessagesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Message/GetMessages',
+            query: {
+                Search: data.search,
+                Page: data.page,
+                PageSize: data.pageSize,
+                GroupId: data.groupId,
+                TopicId: data.topicId
+            }
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns RequestResponse Success
+     * @throws ApiError
+     */
+    public static deleteApiMessageDeleteMessage(data: DeleteApiMessageDeleteMessageData = {}): CancelablePromise<DeleteApiMessageDeleteMessageResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/Message/DeleteMessage',
             body: data.requestBody,
             mediaType: 'application/json'
         });

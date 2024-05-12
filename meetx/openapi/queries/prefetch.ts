@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.3.0 
 
 import { type QueryClient } from "@tanstack/react-query";
-import { GroupService, TopicService, UserService } from "../requests/services.gen";
+import { GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -49,6 +49,23 @@ export const prefetchUseGroupServiceGetApiGroupGetGroupMembers = (queryClient: Q
 export const prefetchUseGroupServiceGetApiGroupGetGroup = (queryClient: QueryClient, { groupId }: {
   groupId?: string;
 } = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupKey, [{ groupId }]], queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @param data.groupId
+* @param data.topicId
+* @returns MessageDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const prefetchUseMessageServiceGetApiMessageGetMessages = (queryClient: QueryClient, { groupId, page, pageSize, search, topicId }: {
+  groupId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useMessageServiceGetApiMessageGetMessagesKey, [{ groupId, page, pageSize, search, topicId }]], queryFn: () => MessageService.getApiMessageGetMessages({ groupId, page, pageSize, search, topicId }) });
 /**
 * @param data The data for the request.
 * @param data.groupId

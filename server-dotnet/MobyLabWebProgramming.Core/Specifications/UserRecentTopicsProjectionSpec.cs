@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using Ardalis.Specification;
 using Microsoft.EntityFrameworkCore;
 using MobyLabWebProgramming.Core.DataTransferObjects;
@@ -20,7 +21,7 @@ public sealed class UserRecentTopicsProjectionSpec : BaseSpec<UserRecentTopicsPr
         Id = e.TopicId,
         Title = e.Topic.Title,
         Description = e.Topic.Description,
-        CreatedDate = e.Topic.CreatedAt,
+        CreatedDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         User = new UserDTO
         {
             Id = e.User.Id,

@@ -16,9 +16,11 @@ public static class CommonErrors
     public static ErrorMessage UserAlreadyInGroup => new(HttpStatusCode.Conflict, "User is already in group!", ErrorCodes.UserAlreadyExists);
     public static ErrorMessage NotCreator => new(HttpStatusCode.Unauthorized, "You can't modify the the group's creator rights!", ErrorCodes.CannotUpdate);
     public static ErrorMessage NotMember => new(HttpStatusCode.Unauthorized, "Your are not part of the group!", ErrorCodes.NotAMember);
+    public static ErrorMessage NotMessageCreator => new(HttpStatusCode.Unauthorized, "Your are not the message's creator!", ErrorCodes.CannotDelete);
     public static ErrorMessage TopicNotFound => new(HttpStatusCode.NotFound, "Topic doesn't exist!", ErrorCodes.EntityNotFound);
+    public static ErrorMessage MessageNotFound => new(HttpStatusCode.NotFound, "Message doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage BadRequets => new(HttpStatusCode.BadRequest, "You need to fill every field!", ErrorCodes.WrongInputs);
     public static ErrorMessage BadGroupName => new(HttpStatusCode.BadRequest, "The name should have at least two different characters other than space!", ErrorCodes.WrongInputs);
-    public static ErrorMessage BadTopicInput => new(HttpStatusCode.BadRequest, "The fields should have at least one character other than space!", ErrorCodes.WrongInputs);
+    public static ErrorMessage BadInput => new(HttpStatusCode.BadRequest, "The fields should have at least one character other than space!", ErrorCodes.WrongInputs);
 
 }

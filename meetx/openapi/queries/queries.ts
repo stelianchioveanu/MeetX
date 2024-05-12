@@ -1,8 +1,8 @@
 // generated with @7nohe/openapi-react-query-codegen@1.3.0 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, TopicService, UserService } from "../requests/services.gen";
-import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicAddDTO, TopicDeleteDTO, UserAddDTO, UserUpdateDTO } from "../requests/types.gen";
+import { AuthorizationService, GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
+import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicAddDTO, TopicDeleteDTO, UserAddDTO, UserUpdateDTO } from "../requests/types.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -50,6 +50,23 @@ export const useGroupServiceGetApiGroupGetGroupMembers = <TData = Common.GroupSe
 export const useGroupServiceGetApiGroupGetGroup = <TData = Common.GroupServiceGetApiGroupGetGroupDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @param data.groupId
+* @param data.topicId
+* @returns MessageDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useMessageServiceGetApiMessageGetMessages = <TData = Common.MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, page, pageSize, search, topicId }: {
+  groupId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetMessagesKeyFn({ groupId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetMessages({ groupId, page, pageSize, search, topicId }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.groupId
@@ -276,6 +293,17 @@ export const useGroupServiceDeleteApiGroupDeleteGroup = <TData = Common.GroupSer
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody?: string;
 }, TContext>({ mutationFn: ({ requestBody }) => GroupService.deleteApiGroupDeleteGroup({ requestBody }) as unknown as Promise<TData>, ...options });
+/**
+* @param data The data for the request.
+* @param data.requestBody
+* @returns RequestResponse Success
+* @throws ApiError
+*/
+export const useMessageServiceDeleteApiMessageDeleteMessage = <TData = Common.MessageServiceDeleteApiMessageDeleteMessageMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody?: MessageDeleteDTO;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody?: MessageDeleteDTO;
+}, TContext>({ mutationFn: ({ requestBody }) => MessageService.deleteApiMessageDeleteMessage({ requestBody }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody

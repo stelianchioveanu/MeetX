@@ -26,7 +26,7 @@ public class TopicService : ITopicService
     {
         if (requestingUser == null)
         {
-            return ServiceResponse<GroupGetDTO>.FromError(CommonErrors.UserNotFound);
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
         }
 
         if (topic == null || topic.Title.IsNullOrEmpty() || topic.Description.IsNullOrEmpty())
@@ -39,19 +39,19 @@ public class TopicService : ITopicService
 
         if (topic.Title.Length < 1 || topic.Description.Length < 1)
         {
-            return ServiceResponse.FromError(CommonErrors.BadTopicInput);
+            return ServiceResponse.FromError(CommonErrors.BadInput);
         }
 
         var entity = await _repository.GetAsync(new GroupSpec(topic.GroupId), cancellationToken);
 
         if (entity == null)
         {
-            return ServiceResponse<GroupGetDTO>.FromError(CommonErrors.GroupNotFound);
+            return ServiceResponse.FromError(CommonErrors.GroupNotFound);
         }
 
         if (!entity.Users.Contains(requestingUser))
         {
-            return ServiceResponse<GroupGetDTO>.FromError(CommonErrors.NotMember);
+            return ServiceResponse.FromError(CommonErrors.NotMember);
         }
 
         var newTopic = new Topic

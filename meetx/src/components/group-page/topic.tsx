@@ -14,7 +14,7 @@ const Topic = (props: {topic: TopicDTO}) => {
                         {props.topic?.user?.name}
                     </Button>
                 </PopoverUser>
-                <p className="text-gray-500 text-xs">23-08-12</p>
+                <p className="text-gray-500 text-xs">{props.topic.createdDate}</p>
             </div>
             <p className="flex text-[18px] w-full overflow-hidden truncate-to-2-lines"># {props.topic?.title}</p>
             <p className="flex text-[14px] w-full overflow-hidden truncate-to-2-lines">{props.topic?.description}</p>

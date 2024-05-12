@@ -306,6 +306,86 @@ export const $LoginResponseDTORequestResponse = {
     additionalProperties: false
 } as const;
 
+export const $MessageDTO = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        text: {
+            type: 'string',
+            nullable: true
+        },
+        createdDate: {
+            type: 'string',
+            nullable: true
+        },
+        user: {
+            '$ref': '#/components/schemas/UserDTO'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $MessageDTOPagedResponse = {
+    type: 'object',
+    properties: {
+        page: {
+            type: 'integer',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            format: 'int32'
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int32'
+        },
+        data: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/MessageDTO'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $MessageDTOPagedResponseRequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/MessageDTOPagedResponse'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $MessageDeleteDTO = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        groupId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        topicId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const $RefreshResponseDTO = {
     type: 'object',
     properties: {
@@ -445,7 +525,7 @@ export const $TopicDTO = {
         },
         createdDate: {
             type: 'string',
-            format: 'date-time'
+            nullable: true
         },
         user: {
             '$ref': '#/components/schemas/UserDTO'

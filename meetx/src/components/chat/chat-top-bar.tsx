@@ -1,7 +1,8 @@
 import { UsersRound } from "lucide-react";
 import { ChevronRight } from 'lucide-react';
+import { TopicDTO } from "openapi/requests/types.gen";
 
-const ChatTopBar = (props: {topic:any, setUsersOpened: any, usersOpened: boolean, topicOpened: boolean, setTopicOpened: any, isGroup: boolean}) => {
+const ChatTopBar = (props: {topic?: TopicDTO, setUsersOpened: any, usersOpened: boolean, topicOpened: boolean, setTopicOpened: any, isGroup: boolean}) => {
 
     const handleOnClickGroup = () => {
         props.setUsersOpened(!props.usersOpened);
@@ -14,7 +15,7 @@ const ChatTopBar = (props: {topic:any, setUsersOpened: any, usersOpened: boolean
     return (
     <div className="w-full max-h-12 shadow-lg flex items-center py-3
     px-6 text-white justify-between">
-        {props.topic.name}
+        {props.topic?.title}
         {
             props.isGroup ?
             <>

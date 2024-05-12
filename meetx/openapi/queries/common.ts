@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.3.0 
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, TopicService, UserService } from "../requests/services.gen";
+import { AuthorizationService, GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
 export type GroupServiceGetApiGroupGetGroupsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetGroups>>;
 export type GroupServiceGetApiGroupGetGroupsQueryResult<TData = GroupServiceGetApiGroupGetGroupsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGroupServiceGetApiGroupGetGroupsKey = "GroupServiceGetApiGroupGetGroups";
@@ -31,6 +31,16 @@ export const useGroupServiceGetApiGroupGetGroupKey = "GroupServiceGetApiGroupGet
 export const UseGroupServiceGetApiGroupGetGroupKeyFn = ({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetGroupKey, ...(queryKey ?? [{ groupId }])];
+export type MessageServiceGetApiMessageGetMessagesDefaultResponse = Awaited<ReturnType<typeof MessageService.getApiMessageGetMessages>>;
+export type MessageServiceGetApiMessageGetMessagesQueryResult<TData = MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useMessageServiceGetApiMessageGetMessagesKey = "MessageServiceGetApiMessageGetMessages";
+export const UseMessageServiceGetApiMessageGetMessagesKeyFn = ({ groupId, page, pageSize, search, topicId }: {
+  groupId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}, queryKey?: Array<unknown>) => [useMessageServiceGetApiMessageGetMessagesKey, ...(queryKey ?? [{ groupId, page, pageSize, search, topicId }])];
 export type TopicServiceGetApiTopicGetTopicDefaultResponse = Awaited<ReturnType<typeof TopicService.getApiTopicGetTopic>>;
 export type TopicServiceGetApiTopicGetTopicQueryResult<TData = TopicServiceGetApiTopicGetTopicDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useTopicServiceGetApiTopicGetTopicKey = "TopicServiceGetApiTopicGetTopic";
@@ -93,4 +103,5 @@ export type GroupServicePutApiGroupChangeRoleMutationResult = Awaited<ReturnType
 export type GroupServicePutApiGroupRemoveMemberMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupRemoveMember>>;
 export type UserServicePutApiUserUpdateMutationResult = Awaited<ReturnType<typeof UserService.putApiUserUpdate>>;
 export type GroupServiceDeleteApiGroupDeleteGroupMutationResult = Awaited<ReturnType<typeof GroupService.deleteApiGroupDeleteGroup>>;
+export type MessageServiceDeleteApiMessageDeleteMessageMutationResult = Awaited<ReturnType<typeof MessageService.deleteApiMessageDeleteMessage>>;
 export type TopicServiceDeleteApiTopicDeleteTopicMutationResult = Awaited<ReturnType<typeof TopicService.deleteApiTopicDeleteTopic>>;

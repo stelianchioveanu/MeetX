@@ -104,6 +104,31 @@ export type LoginResponseDTORequestResponse = {
     errorMessage?: ErrorMessage;
 };
 
+export type MessageDTO = {
+    id?: string;
+    text?: string | null;
+    createdDate?: string | null;
+    user?: UserDTO;
+};
+
+export type MessageDTOPagedResponse = {
+    page?: number;
+    pageSize?: number;
+    totalCount?: number;
+    data?: Array<MessageDTO> | null;
+};
+
+export type MessageDTOPagedResponseRequestResponse = {
+    response?: MessageDTOPagedResponse;
+    errorMessage?: ErrorMessage;
+};
+
+export type MessageDeleteDTO = {
+    id?: string;
+    groupId?: string;
+    topicId?: string;
+};
+
 export type RefreshResponseDTO = {
     token?: string | null;
 };
@@ -149,7 +174,7 @@ export type TopicDTO = {
     id?: string;
     title?: string | null;
     description?: string | null;
-    createdDate?: string;
+    createdDate?: string | null;
     user?: UserDTO;
     numberAnswers?: number;
 };
@@ -305,6 +330,22 @@ export type DeleteApiGroupDeleteGroupData = {
 };
 
 export type DeleteApiGroupDeleteGroupResponse = RequestResponse;
+
+export type GetApiMessageGetMessagesData = {
+    groupId?: string;
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    topicId?: string;
+};
+
+export type GetApiMessageGetMessagesResponse = MessageDTOPagedResponseRequestResponse;
+
+export type DeleteApiMessageDeleteMessageData = {
+    requestBody?: MessageDeleteDTO;
+};
+
+export type DeleteApiMessageDeleteMessageResponse = RequestResponse;
 
 export type PostApiTopicAddTopicData = {
     requestBody?: TopicAddDTO;
@@ -567,6 +608,36 @@ export type $OpenApiTs = {
         delete: {
             req: {
                 requestBody?: string;
+            };
+            res: {
+                /**
+                 * Success
+                 */
+                200: RequestResponse;
+            };
+        };
+    };
+    '/api/Message/GetMessages': {
+        get: {
+            req: {
+                groupId?: string;
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                topicId?: string;
+            };
+            res: {
+                /**
+                 * Success
+                 */
+                200: MessageDTOPagedResponseRequestResponse;
+            };
+        };
+    };
+    '/api/Message/DeleteMessage': {
+        delete: {
+            req: {
+                requestBody?: MessageDeleteDTO;
             };
             res: {
                 /**

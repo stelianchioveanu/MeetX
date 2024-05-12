@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.3.0 
 
 import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { GroupService, TopicService, UserService } from "../requests/services.gen";
+import { GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -49,6 +49,23 @@ export const useGroupServiceGetApiGroupGetGroupMembersSuspense = <TData = Common
 export const useGroupServiceGetApiGroupGetGroupSuspense = <TData = Common.GroupServiceGetApiGroupGetGroupDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @param data.groupId
+* @param data.topicId
+* @returns MessageDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useMessageServiceGetApiMessageGetMessagesSuspense = <TData = Common.MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, page, pageSize, search, topicId }: {
+  groupId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetMessagesKeyFn({ groupId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetMessages({ groupId, page, pageSize, search, topicId }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.groupId

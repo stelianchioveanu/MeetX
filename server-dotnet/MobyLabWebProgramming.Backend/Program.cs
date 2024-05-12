@@ -1,4 +1,5 @@
 using MobyLabWebProgramming.Infrastructure.Extensions;
+using SignalRChat.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,4 +14,5 @@ builder.AddCorsConfiguration()
 var app = builder.Build();
 
 app.ConfigureApplication();
+app.MapHub<ChatService>("/chatHub");
 app.Run();
