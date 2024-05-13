@@ -108,6 +108,8 @@ export type MessageDTO = {
     id?: string;
     text?: string | null;
     createdDate?: string | null;
+    groupId?: string;
+    topicId?: string;
     user?: UserDTO;
 };
 
@@ -333,6 +335,7 @@ export type DeleteApiGroupDeleteGroupResponse = RequestResponse;
 
 export type GetApiMessageGetMessagesData = {
     groupId?: string;
+    lastMessageId?: string;
     page?: number;
     pageSize?: number;
     search?: string;
@@ -621,6 +624,7 @@ export type $OpenApiTs = {
         get: {
             req: {
                 groupId?: string;
+                lastMessageId?: string;
                 page?: number;
                 pageSize?: number;
                 search?: string;

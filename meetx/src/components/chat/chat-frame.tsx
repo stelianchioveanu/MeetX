@@ -40,7 +40,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
             <ChatTopBar topic={data?.response} setUsersOpened={setUsersOpened}
             usersOpened={usersOpened} topicOpened={topicOpened} setTopicOpened={setTopicOpened} isGroup={props.isGroup} />
             <div className="flex w-full h-[calc(100%-48px)]">
-                <div className="flex w-full p-4 flex-col gap-8 relative">
+                <div className="flex w-full p-4 flex-col gap-8 relative justify-end">
                     {
                         topicOpened && props.isGroup ?
                         <TopicItem topic={data?.response}/> :

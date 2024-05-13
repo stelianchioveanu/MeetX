@@ -56,16 +56,18 @@ export const prefetchUseGroupServiceGetApiGroupGetGroup = (queryClient: QueryCli
 * @param data.pageSize
 * @param data.groupId
 * @param data.topicId
+* @param data.lastMessageId
 * @returns MessageDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const prefetchUseMessageServiceGetApiMessageGetMessages = (queryClient: QueryClient, { groupId, page, pageSize, search, topicId }: {
+export const prefetchUseMessageServiceGetApiMessageGetMessages = (queryClient: QueryClient, { groupId, lastMessageId, page, pageSize, search, topicId }: {
   groupId?: string;
+  lastMessageId?: string;
   page?: number;
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useMessageServiceGetApiMessageGetMessagesKey, [{ groupId, page, pageSize, search, topicId }]], queryFn: () => MessageService.getApiMessageGetMessages({ groupId, page, pageSize, search, topicId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useMessageServiceGetApiMessageGetMessagesKey, [{ groupId, lastMessageId, page, pageSize, search, topicId }]], queryFn: () => MessageService.getApiMessageGetMessages({ groupId, lastMessageId, page, pageSize, search, topicId }) });
 /**
 * @param data The data for the request.
 * @param data.groupId

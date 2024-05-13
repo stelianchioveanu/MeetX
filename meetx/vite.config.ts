@@ -10,6 +10,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['microsoft_signalr']
+    exclude: ['microsoft_signalr', 'react-intersection-observer']
   }
 })

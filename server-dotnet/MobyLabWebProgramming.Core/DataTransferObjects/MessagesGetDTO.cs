@@ -4,4 +4,5 @@ public class MessagesGetDTO
 {
     public Guid GroupId { get; set; }
     public Guid TopicId { get; set; }
+    public Guid LastMessageId { get; set; }
 }

@@ -321,6 +321,14 @@ export const $MessageDTO = {
             type: 'string',
             nullable: true
         },
+        groupId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        topicId: {
+            type: 'string',
+            format: 'uuid'
+        },
         user: {
             '$ref': '#/components/schemas/UserDTO'
         }

@@ -254,6 +254,7 @@ export class MessageService {
      * @param data.pageSize
      * @param data.groupId
      * @param data.topicId
+     * @param data.lastMessageId
      * @returns MessageDTOPagedResponseRequestResponse Success
      * @throws ApiError
      */
@@ -266,7 +267,8 @@ export class MessageService {
                 Page: data.page,
                 PageSize: data.pageSize,
                 GroupId: data.groupId,
-                TopicId: data.topicId
+                TopicId: data.topicId,
+                LastMessageId: data.lastMessageId
             }
         });
     }

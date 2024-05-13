@@ -57,16 +57,18 @@ export const useGroupServiceGetApiGroupGetGroup = <TData = Common.GroupServiceGe
 * @param data.pageSize
 * @param data.groupId
 * @param data.topicId
+* @param data.lastMessageId
 * @returns MessageDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const useMessageServiceGetApiMessageGetMessages = <TData = Common.MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, page, pageSize, search, topicId }: {
+export const useMessageServiceGetApiMessageGetMessages = <TData = Common.MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, lastMessageId, page, pageSize, search, topicId }: {
   groupId?: string;
+  lastMessageId?: string;
   page?: number;
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetMessagesKeyFn({ groupId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetMessages({ groupId, page, pageSize, search, topicId }) as TData, ...options });
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetMessagesKeyFn({ groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetMessages({ groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.groupId

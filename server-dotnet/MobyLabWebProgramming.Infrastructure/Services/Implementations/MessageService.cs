@@ -73,14 +73,16 @@ public class MessageService : IMessageService
         {
             Id = newMessage.Id,
             Text = newMessage.Text,
-            CreatedDate = DateTime.Parse(newMessage.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+            CreatedDate = DateTime.Parse(newMessage.CreatedAt.ToLocalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
             User = new UserDTO
             {
                 Id = newMessage.User.Id,
                 Email = newMessage.User.Email,
                 Name = newMessage.User.Name,
                 Role = newMessage.User.Role
-            }
+            },
+            GroupId = newMessage.Topic.GroupId,
+            TopicId = newMessage.Topic.Id,
         };
 
         return ServiceResponse<MessageDTO>.ForSuccess(messageDTO);
@@ -112,9 +114,18 @@ public class MessageService : IMessageService
             return ServiceResponse<PagedResponse<MessageDTO>>.FromError(CommonErrors.TopicNotFound);
         }
 
-        var result = await _repository.PageAsync(pagination, new MessageProjectionSpec(messagesGet.TopicId), cancellationToken);
+        var message = await _repository.GetAsync(new MessageSpec(messagesGet.LastMessageId), cancellationToken);
 
-        return ServiceResponse<PagedResponse<MessageDTO>>.ForSuccess(result);
+        if (message == null)
+        {
+            var result = await _repository.PageAsync(pagination, new MessageProjectionSpec(messagesGet.TopicId), cancellationToken);
+            return ServiceResponse<PagedResponse<MessageDTO>>.ForSuccess(result);
+        } else
+        {
+            var result = await _repository.PageAsync(pagination, new MessageProjectionSpec(messagesGet.TopicId, message), cancellationToken);
+            Console.WriteLine(message.Text);
+            return ServiceResponse<PagedResponse<MessageDTO>>.ForSuccess(result);
+        }
     }
 
     public async Task<ServiceResponse> DeleteMessage(MessageDeleteDTO message, User? requestingUser = default, CancellationToken cancellationToken = default)

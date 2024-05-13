@@ -34,13 +34,14 @@ export const UseGroupServiceGetApiGroupGetGroupKeyFn = ({ groupId }: {
 export type MessageServiceGetApiMessageGetMessagesDefaultResponse = Awaited<ReturnType<typeof MessageService.getApiMessageGetMessages>>;
 export type MessageServiceGetApiMessageGetMessagesQueryResult<TData = MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useMessageServiceGetApiMessageGetMessagesKey = "MessageServiceGetApiMessageGetMessages";
-export const UseMessageServiceGetApiMessageGetMessagesKeyFn = ({ groupId, page, pageSize, search, topicId }: {
+export const UseMessageServiceGetApiMessageGetMessagesKeyFn = ({ groupId, lastMessageId, page, pageSize, search, topicId }: {
   groupId?: string;
+  lastMessageId?: string;
   page?: number;
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}, queryKey?: Array<unknown>) => [useMessageServiceGetApiMessageGetMessagesKey, ...(queryKey ?? [{ groupId, page, pageSize, search, topicId }])];
+} = {}, queryKey?: Array<unknown>) => [useMessageServiceGetApiMessageGetMessagesKey, ...(queryKey ?? [{ groupId, lastMessageId, page, pageSize, search, topicId }])];
 export type TopicServiceGetApiTopicGetTopicDefaultResponse = Awaited<ReturnType<typeof TopicService.getApiTopicGetTopic>>;
 export type TopicServiceGetApiTopicGetTopicQueryResult<TData = TopicServiceGetApiTopicGetTopicDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useTopicServiceGetApiTopicGetTopicKey = "TopicServiceGetApiTopicGetTopic";

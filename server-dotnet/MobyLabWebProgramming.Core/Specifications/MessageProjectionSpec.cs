@@ -17,7 +17,7 @@ public sealed class MessageProjectionSpec : BaseSpec<MessageProjectionSpec, Mess
     {
         Id = e.Id,
         Text = e.Text,
-        CreatedDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+        CreatedDate = DateTime.Parse(e.CreatedAt.ToLocalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         User = new UserDTO
         {
             Id = e.User.Id,
@@ -25,10 +25,18 @@ public sealed class MessageProjectionSpec : BaseSpec<MessageProjectionSpec, Mess
             Name = e.User.Name,
             Role = e.User.Role
         },
+        GroupId = e.Topic.GroupId,
+        TopicId = e.Topic.Id,
     };
 
     public MessageProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
     {
+    }
+
+    public MessageProjectionSpec(Guid topicId, Message message)
+    {
+        Console.WriteLine(message.CreatedAt.ToString());
+        Query.Where(e => e.TopicId == topicId && e.CreatedAt < message.CreatedAt).OrderByDescending(x => x.CreatedAt, true);
     }
 
     public MessageProjectionSpec(Guid topicId)
