@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiMessageGetMessagesData, GetApiMessageGetMessagesResponse, DeleteApiMessageDeleteMessageData, DeleteApiMessageDeleteMessageResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
+import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiGroupGetGroupDetailsData, GetApiGroupGetGroupDetailsResponse, GetApiMessageGetTopicMessagesData, GetApiMessageGetTopicMessagesResponse, GetApiMessageGetPrivateMessagesData, GetApiMessageGetPrivateMessagesResponse, DeleteApiMessageDeleteMessageData, DeleteApiMessageDeleteMessageResponse, PostApiMessageFilesAddFilesTopicMessageData, PostApiMessageFilesAddFilesTopicMessageResponse, GetApiPrivateConversationGetPrivateConversationsData, GetApiPrivateConversationGetPrivateConversationsResponse, GetApiPrivateConversationGetPrivateConversationData, GetApiPrivateConversationGetPrivateConversationResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
 
 export class AuthorizationService {
     /**
@@ -244,6 +244,22 @@ export class GroupService {
         });
     }
     
+    /**
+     * @param data The data for the request.
+     * @param data.groupId
+     * @returns GroupDetailsDTORequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiGroupGetGroupDetails(data: GetApiGroupGetGroupDetailsData = {}): CancelablePromise<GetApiGroupGetGroupDetailsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Group/GetGroupDetails',
+            query: {
+                groupId: data.groupId
+            }
+        });
+    }
+    
 }
 
 export class MessageService {
@@ -254,20 +270,50 @@ export class MessageService {
      * @param data.pageSize
      * @param data.groupId
      * @param data.topicId
+     * @param data.convId
      * @param data.lastMessageId
      * @returns MessageDTOPagedResponseRequestResponse Success
      * @throws ApiError
      */
-    public static getApiMessageGetMessages(data: GetApiMessageGetMessagesData = {}): CancelablePromise<GetApiMessageGetMessagesResponse> {
+    public static getApiMessageGetTopicMessages(data: GetApiMessageGetTopicMessagesData = {}): CancelablePromise<GetApiMessageGetTopicMessagesResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Message/GetMessages',
+            url: '/api/Message/GetTopicMessages',
             query: {
                 Search: data.search,
                 Page: data.page,
                 PageSize: data.pageSize,
                 GroupId: data.groupId,
                 TopicId: data.topicId,
+                ConvId: data.convId,
+                LastMessageId: data.lastMessageId
+            }
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.search
+     * @param data.page
+     * @param data.pageSize
+     * @param data.groupId
+     * @param data.topicId
+     * @param data.convId
+     * @param data.lastMessageId
+     * @returns MessageDTOPagedResponseRequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiMessageGetPrivateMessages(data: GetApiMessageGetPrivateMessagesData = {}): CancelablePromise<GetApiMessageGetPrivateMessagesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Message/GetPrivateMessages',
+            query: {
+                Search: data.search,
+                Page: data.page,
+                PageSize: data.pageSize,
+                GroupId: data.groupId,
+                TopicId: data.topicId,
+                ConvId: data.convId,
                 LastMessageId: data.lastMessageId
             }
         });
@@ -285,6 +331,63 @@ export class MessageService {
             url: '/api/Message/DeleteMessage',
             body: data.requestBody,
             mediaType: 'application/json'
+        });
+    }
+    
+}
+
+export class MessageFilesService {
+    /**
+     * @param data The data for the request.
+     * @param data.formData
+     * @returns FilesAddedDTORequestResponse Success
+     * @throws ApiError
+     */
+    public static postApiMessageFilesAddFilesTopicMessage(data: PostApiMessageFilesAddFilesTopicMessageData = {}): CancelablePromise<PostApiMessageFilesAddFilesTopicMessageResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/MessageFiles/AddFilesTopicMessage',
+            formData: data.formData,
+            mediaType: 'multipart/form-data'
+        });
+    }
+    
+}
+
+export class PrivateConversationService {
+    /**
+     * @param data The data for the request.
+     * @param data.search
+     * @param data.page
+     * @param data.pageSize
+     * @returns PrivateConversationDTOPagedResponseRequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiPrivateConversationGetPrivateConversations(data: GetApiPrivateConversationGetPrivateConversationsData = {}): CancelablePromise<GetApiPrivateConversationGetPrivateConversationsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/PrivateConversation/GetPrivateConversations',
+            query: {
+                Search: data.search,
+                Page: data.page,
+                PageSize: data.pageSize
+            }
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.convId
+     * @returns PrivateConversationDTORequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiPrivateConversationGetPrivateConversation(data: GetApiPrivateConversationGetPrivateConversationData = {}): CancelablePromise<GetApiPrivateConversationGetPrivateConversationResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/PrivateConversation/GetPrivateConversation',
+            query: {
+                convId: data.convId
+            }
         });
     }
     

@@ -25,7 +25,6 @@ import { GroupAddDTO } from "../../../openapi/requests/types.gen";
 import { useGroupServicePostApiGroupAddGroup } from "../../../openapi/queries/queries";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { toast } from "react-toastify";
 import { useState } from "react";
  
@@ -38,7 +37,6 @@ const formSchema = z.object({
 
 const AddGroup = () => {
     const queryClient = useQueryClient();
-    const {refresh} = useRefreshToken();
     const [clicked, setClicked] = useState(false);
     const [success, setSuccess] = useState(false);
 
@@ -65,10 +63,6 @@ const AddGroup = () => {
             if (failureCount > 0) {
                 toast("Add group failed! Please try again later!");
                 return false;
-            }
-            if (error.message === "Unauthorized") {
-                refresh();
-                return true;
             }
             return false;
         },

@@ -131,4 +131,15 @@ public class GroupController : AuthorizedController
             this.FromServiceResponse(await _groupService.DeleteGroup(groupId, currentUser.Result)) :
             this.ErrorMessageResult(currentUser.Error);
     }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<GroupDetailsDTO>>> GetGroupDetails([FromQuery] Guid groupId)
+    {
+        var currentUser = await GetCurrentUserNotDTO();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _groupService.GetGroupDetails(groupId, currentUser.Result)) :
+            this.ErrorMessageResult<GroupDetailsDTO>(currentUser.Error);
+    }
 }

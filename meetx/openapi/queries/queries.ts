@@ -1,7 +1,7 @@
-// generated with @7nohe/openapi-react-query-codegen@1.3.0 
+// generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
+import { AuthorizationService, GroupService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicAddDTO, TopicDeleteDTO, UserAddDTO, UserUpdateDTO } from "../requests/types.gen";
 import * as Common from "./common";
 /**
@@ -52,23 +52,77 @@ export const useGroupServiceGetApiGroupGetGroup = <TData = Common.GroupServiceGe
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) as TData, ...options });
 /**
 * @param data The data for the request.
+* @param data.groupId
+* @returns GroupDetailsDTORequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServiceGetApiGroupGetGroupDetails = <TData = Common.GroupServiceGetApiGroupGetGroupDetailsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupDetailsKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) as TData, ...options });
+/**
+* @param data The data for the request.
 * @param data.search
 * @param data.page
 * @param data.pageSize
 * @param data.groupId
 * @param data.topicId
+* @param data.convId
 * @param data.lastMessageId
 * @returns MessageDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const useMessageServiceGetApiMessageGetMessages = <TData = Common.MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, lastMessageId, page, pageSize, search, topicId }: {
+export const useMessageServiceGetApiMessageGetTopicMessages = <TData = Common.MessageServiceGetApiMessageGetTopicMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ convId, groupId, lastMessageId, page, pageSize, search, topicId }: {
+  convId?: string;
   groupId?: string;
   lastMessageId?: string;
   page?: number;
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetMessagesKeyFn({ groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetMessages({ groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetTopicMessagesKeyFn({ convId, groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetTopicMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @param data.groupId
+* @param data.topicId
+* @param data.convId
+* @param data.lastMessageId
+* @returns MessageDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useMessageServiceGetApiMessageGetPrivateMessages = <TData = Common.MessageServiceGetApiMessageGetPrivateMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ convId, groupId, lastMessageId, page, pageSize, search, topicId }: {
+  convId?: string;
+  groupId?: string;
+  lastMessageId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetPrivateMessagesKeyFn({ convId, groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetPrivateMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns PrivateConversationDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversations = <TData = Common.PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversations({ page, pageSize, search }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.convId
+* @returns PrivateConversationDTORequestResponse Success
+* @throws ApiError
+*/
+export const usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversation = <TData = Common.PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ convId }: {
+  convId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKeyFn({ convId }, queryKey), queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversation({ convId }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.groupId
@@ -218,6 +272,17 @@ export const useGroupServicePostApiGroupJoinGroup = <TData = Common.GroupService
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody?: JoinGroupDTO;
 }, TContext>({ mutationFn: ({ requestBody }) => GroupService.postApiGroupJoinGroup({ requestBody }) as unknown as Promise<TData>, ...options });
+/**
+* @param data The data for the request.
+* @param data.formData
+* @returns FilesAddedDTORequestResponse Success
+* @throws ApiError
+*/
+export const useMessageFilesServicePostApiMessageFilesAddFilesTopicMessage = <TData = Common.MessageFilesServicePostApiMessageFilesAddFilesTopicMessageMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  formData?: { Images?: (Blob | File)[]; Files?: (Blob | File)[]; TopicId?: string; PrivateConversationId?: string; };
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  formData?: { Images?: (Blob | File)[]; Files?: (Blob | File)[]; TopicId?: string; PrivateConversationId?: string; };
+}, TContext>({ mutationFn: ({ formData }) => MessageFilesService.postApiMessageFilesAddFilesTopicMessage({ formData }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody

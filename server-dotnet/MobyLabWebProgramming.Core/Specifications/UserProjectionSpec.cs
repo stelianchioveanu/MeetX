@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using Ardalis.Specification;
 using Microsoft.EntityFrameworkCore;
 using MobyLabWebProgramming.Core.DataTransferObjects;
@@ -20,7 +21,8 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Id = e.Id,
         Email = e.Email,
         Name = e.Name,
-        Role = e.Role
+        Role = e.Role,
+        RegisteredDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
     };
 
     public UserProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

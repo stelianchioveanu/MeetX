@@ -10,6 +10,7 @@ using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 using System.Net;
+using System.Web;
 using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
@@ -120,7 +121,7 @@ public class GroupService : IGroupService
             await _repository.UpdateAsync(result, cancellationToken);
         }
 
-        string link = $"http://localhost:5000/invite?groupId={groupId}&token={token}";
+        string link = $"http://localhost:5173/invite?groupId={groupId}&token={HttpUtility.UrlEncode(token)}";
 
         return ServiceResponse<GroupLinkResponse>.ForSuccess(new GroupLinkResponse { Link = link });
     }
@@ -133,6 +134,9 @@ public class GroupService : IGroupService
         }
 
         var entity = await _repository.GetAsync(new LinkGroupSpec(joinGroup.GroupId), cancellationToken);
+
+        Console.WriteLine(entity.Token);
+        Console.WriteLine(joinGroup.Token);
 
         if (entity == null || entity.Token != joinGroup.Token || entity.UpdatedAt.AddMinutes(5) < DateTime.UtcNow)
         {
@@ -269,12 +273,12 @@ public class GroupService : IGroupService
 
         foreach (var member in result.Data)
         {
-            if (group.Admins.Any(u => u.Id == member.Id))
+            if (group.Admins.Any(u => u.Id == member.User.Id))
             {
-                member.GroupRole = GroupRoleEnum.Admin;
+                member.isAdmin = true;
             } else
             {
-                member.GroupRole = GroupRoleEnum.Member;
+                member.isAdmin = false;
             }
         }
 
@@ -317,6 +321,36 @@ public class GroupService : IGroupService
         }
 
         return ServiceResponse<GroupGetDTO>.ForSuccess(group);
+    }
+
+    public async Task<ServiceResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId, User? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse<GroupDetailsDTO>.FromError(CommonErrors.UserNotFound);
+        }
+
+        var entity = await _repository.GetAsync(new GroupSpec(groupId), cancellationToken);
+
+        if (entity == null)
+        {
+            return ServiceResponse<GroupDetailsDTO>.FromError(CommonErrors.GroupNotFound);
+        }
+
+        var group = new GroupDetailsDTO
+        {
+            Group = new GroupDTO
+            {
+                Id = entity.Id,
+                Color = entity.Color,
+                Name = entity.Name,
+                NumberMembers = entity.Users.Count,
+                ShortName = entity.ShortName
+            },
+            IsMember = entity.Users.Any(e => e.Id == requestingUser.Id),
+        };
+
+        return ServiceResponse<GroupDetailsDTO>.ForSuccess(group);
     }
 
     public async Task<ServiceResponse> RemoveMember(RemoveMemberDTO remove, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)

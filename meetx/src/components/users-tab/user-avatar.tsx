@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { UserDTO } from "openapi/requests/types.gen";
+import { UserDTO } from "../../../openapi/requests/types.gen";
 import stelian from "../../pages/home/sections/img/stelian.jpeg"
 
 

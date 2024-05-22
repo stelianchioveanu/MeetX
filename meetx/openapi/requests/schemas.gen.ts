@@ -40,6 +40,57 @@ export const $ErrorMessage = {
     additionalProperties: false
 } as const;
 
+export const $FileGetDTO = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        path: {
+            type: 'string',
+            nullable: true
+        },
+        type: {
+            '$ref': '#/components/schemas/FileTypes'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $FileTypes = {
+    enum: ['File', 'Image'],
+    type: 'string'
+} as const;
+
+export const $FilesAddedDTO = {
+    type: 'object',
+    properties: {
+        files: {
+            type: 'array',
+            items: {
+                type: 'string',
+                format: 'uuid'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $FilesAddedDTORequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/FilesAddedDTO'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const $GroupAddDTO = {
     type: 'object',
     properties: {
@@ -117,6 +168,32 @@ export const $GroupDTOPagedResponseRequestResponse = {
     additionalProperties: false
 } as const;
 
+export const $GroupDetailsDTO = {
+    type: 'object',
+    properties: {
+        group: {
+            '$ref': '#/components/schemas/GroupDTO'
+        },
+        isMember: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $GroupDetailsDTORequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/GroupDetailsDTO'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const $GroupGetDTO = {
     type: 'object',
     properties: {
@@ -170,20 +247,11 @@ export const $GroupLinkResponseRequestResponse = {
 export const $GroupMemberDTO = {
     type: 'object',
     properties: {
-        id: {
-            type: 'string',
-            format: 'uuid'
+        user: {
+            '$ref': '#/components/schemas/UserDTO'
         },
-        name: {
-            type: 'string',
-            nullable: true
-        },
-        email: {
-            type: 'string',
-            nullable: true
-        },
-        groupRole: {
-            '$ref': '#/components/schemas/GroupRoleEnum'
+        isAdmin: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -329,8 +397,19 @@ export const $MessageDTO = {
             type: 'string',
             format: 'uuid'
         },
+        convId: {
+            type: 'string',
+            format: 'uuid'
+        },
         user: {
-            '$ref': '#/components/schemas/UserDTO'
+            '$ref': '#/components/schemas/GroupMemberDTO'
+        },
+        files: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/FileGetDTO'
+            },
+            nullable: true
         }
     },
     additionalProperties: false
@@ -389,6 +468,75 @@ export const $MessageDeleteDTO = {
         topicId: {
             type: 'string',
             format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $PrivateConversationDTO = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        user1: {
+            '$ref': '#/components/schemas/UserDTO'
+        },
+        user2: {
+            '$ref': '#/components/schemas/UserDTO'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $PrivateConversationDTOPagedResponse = {
+    type: 'object',
+    properties: {
+        page: {
+            type: 'integer',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            format: 'int32'
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int32'
+        },
+        data: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PrivateConversationDTO'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $PrivateConversationDTOPagedResponseRequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/PrivateConversationDTOPagedResponse'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $PrivateConversationDTORequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/PrivateConversationDTO'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
         }
     },
     additionalProperties: false
@@ -647,6 +795,10 @@ export const $UserDTO = {
             nullable: true
         },
         email: {
+            type: 'string',
+            nullable: true
+        },
+        registeredDate: {
             type: 'string',
             nullable: true
         },

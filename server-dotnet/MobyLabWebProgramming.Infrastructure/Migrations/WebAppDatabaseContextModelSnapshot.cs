@@ -53,6 +53,43 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("GroupUser1");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.FileEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid?>("MessageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("FileEntity");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Group", b =>
                 {
                     b.Property<Guid>("Id")
@@ -124,6 +161,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ConversationId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -132,7 +172,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasMaxLength(4095)
                         .HasColumnType("character varying(4095)");
 
-                    b.Property<Guid>("TopicId")
+                    b.Property<Guid?>("TopicId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -143,11 +183,40 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ConversationId");
+
                     b.HasIndex("TopicId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.PrivateConversation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("User1Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("User2Id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("User1Id");
+
+                    b.HasIndex("User2Id");
+
+                    b.ToTable("PrivateConversation");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.RefreshToken", b =>
@@ -282,38 +351,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFile");
-                });
-
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserRecentTopics", b =>
                 {
                     b.Property<Guid>("Id")
@@ -371,6 +408,15 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.FileEntity", b =>
+                {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Message", "Message")
+                        .WithMany("Files")
+                        .HasForeignKey("MessageId");
+
+                    b.Navigation("Message");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Group", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "FirstAdmin")
@@ -395,11 +441,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Message", b =>
                 {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.PrivateConversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId");
+
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Topic", "Topic")
                         .WithMany("Messages")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TopicId");
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
                         .WithMany("Messages")
@@ -407,9 +455,30 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Conversation");
+
                     b.Navigation("Topic");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.PrivateConversation", b =>
+                {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User1")
+                        .WithMany("StartedConversations")
+                        .HasForeignKey("User1Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User2")
+                        .WithMany("ReceivedConversations")
+                        .HasForeignKey("User2Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User1");
+
+                    b.Navigation("User2");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.RefreshToken", b =>
@@ -453,17 +522,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserFile", b =>
-                {
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
-                        .WithMany("UserFiles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserRecentTopics", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Topic", "Topic")
@@ -491,6 +549,16 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("Topics");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Message", b =>
+                {
+                    b.Navigation("Files");
+                });
+
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.PrivateConversation", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Topic", b =>
                 {
                     b.Navigation("Messages");
@@ -508,11 +576,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
                     b.Navigation("MyTopics");
 
+                    b.Navigation("ReceivedConversations");
+
                     b.Navigation("RefreshToken");
 
                     b.Navigation("ResetToken");
 
-                    b.Navigation("UserFiles");
+                    b.Navigation("StartedConversations");
                 });
 #pragma warning restore 612, 618
         }

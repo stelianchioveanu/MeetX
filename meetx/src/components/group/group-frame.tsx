@@ -5,17 +5,16 @@ import { ScrollArea } from "../ui/scroll-area";
 import { GroupService, TopicService } from "../../../openapi/requests/services.gen";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { useAppDispatch, useAppSelector } from "@/application/store";
 import { useGroupServiceGetApiGroupGetGroupKey, useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey } from "../../../openapi/queries/common";
-import { setGroup } from "@/application/state-slices";
+import { setAdmin, setGroup } from "@/application/state-slices";
 import { TopicDTO } from "openapi/requests/types.gen";
 import LeaveGroupDialog from "./leave-group-dialog";
 import DeleteGroupDialog from "./delete-group-dialog";
 import { GenerateLinkDialog } from "./generate-link-dialog";
+import { useEffect } from "react";
 
 const GroupFrame = () => {
-    const {refresh} = useRefreshToken();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
 
@@ -24,17 +23,18 @@ const GroupFrame = () => {
         queryFn: () => {
             return GroupService.getApiGroupGetGroup({groupId: selectedGroupId === null ? undefined : selectedGroupId});
         },
-        retry(failureCount, error) {
+        retry(failureCount) {
             if (failureCount > 0) {
                 toast("Get group failed! Please try again later!");
                 dispatch(setGroup("0"));
                 return false;
             }
-            refresh();
             return true;
         },
         retryDelay: 0,
     });
+
+    useEffect(() => {dispatch(setAdmin(group.data?.response?.groupRole === "Admin"))}, [group.data])
 
     const myTopics = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey, selectedGroupId],
@@ -47,7 +47,6 @@ const GroupFrame = () => {
                 dispatch(setGroup("0"));
                 return false;
             }
-            refresh();
             return true;
         },
         retryDelay: 0,
@@ -64,7 +63,6 @@ const GroupFrame = () => {
                 dispatch(setGroup("0"));
                 return false;
             }
-            refresh();
             return true;
         },
         retryDelay: 0,

@@ -1,7 +1,7 @@
-// generated with @7nohe/openapi-react-query-codegen@1.3.0 
+// generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
+import { AuthorizationService, GroupService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 export type GroupServiceGetApiGroupGetGroupsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetGroups>>;
 export type GroupServiceGetApiGroupGetGroupsQueryResult<TData = GroupServiceGetApiGroupGetGroupsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGroupServiceGetApiGroupGetGroupsKey = "GroupServiceGetApiGroupGetGroups";
@@ -31,17 +31,50 @@ export const useGroupServiceGetApiGroupGetGroupKey = "GroupServiceGetApiGroupGet
 export const UseGroupServiceGetApiGroupGetGroupKeyFn = ({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetGroupKey, ...(queryKey ?? [{ groupId }])];
-export type MessageServiceGetApiMessageGetMessagesDefaultResponse = Awaited<ReturnType<typeof MessageService.getApiMessageGetMessages>>;
-export type MessageServiceGetApiMessageGetMessagesQueryResult<TData = MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
-export const useMessageServiceGetApiMessageGetMessagesKey = "MessageServiceGetApiMessageGetMessages";
-export const UseMessageServiceGetApiMessageGetMessagesKeyFn = ({ groupId, lastMessageId, page, pageSize, search, topicId }: {
+export type GroupServiceGetApiGroupGetGroupDetailsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetGroupDetails>>;
+export type GroupServiceGetApiGroupGetGroupDetailsQueryResult<TData = GroupServiceGetApiGroupGetGroupDetailsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useGroupServiceGetApiGroupGetGroupDetailsKey = "GroupServiceGetApiGroupGetGroupDetails";
+export const UseGroupServiceGetApiGroupGetGroupDetailsKeyFn = ({ groupId }: {
+  groupId?: string;
+} = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetGroupDetailsKey, ...(queryKey ?? [{ groupId }])];
+export type MessageServiceGetApiMessageGetTopicMessagesDefaultResponse = Awaited<ReturnType<typeof MessageService.getApiMessageGetTopicMessages>>;
+export type MessageServiceGetApiMessageGetTopicMessagesQueryResult<TData = MessageServiceGetApiMessageGetTopicMessagesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useMessageServiceGetApiMessageGetTopicMessagesKey = "MessageServiceGetApiMessageGetTopicMessages";
+export const UseMessageServiceGetApiMessageGetTopicMessagesKeyFn = ({ convId, groupId, lastMessageId, page, pageSize, search, topicId }: {
+  convId?: string;
   groupId?: string;
   lastMessageId?: string;
   page?: number;
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}, queryKey?: Array<unknown>) => [useMessageServiceGetApiMessageGetMessagesKey, ...(queryKey ?? [{ groupId, lastMessageId, page, pageSize, search, topicId }])];
+} = {}, queryKey?: Array<unknown>) => [useMessageServiceGetApiMessageGetTopicMessagesKey, ...(queryKey ?? [{ convId, groupId, lastMessageId, page, pageSize, search, topicId }])];
+export type MessageServiceGetApiMessageGetPrivateMessagesDefaultResponse = Awaited<ReturnType<typeof MessageService.getApiMessageGetPrivateMessages>>;
+export type MessageServiceGetApiMessageGetPrivateMessagesQueryResult<TData = MessageServiceGetApiMessageGetPrivateMessagesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useMessageServiceGetApiMessageGetPrivateMessagesKey = "MessageServiceGetApiMessageGetPrivateMessages";
+export const UseMessageServiceGetApiMessageGetPrivateMessagesKeyFn = ({ convId, groupId, lastMessageId, page, pageSize, search, topicId }: {
+  convId?: string;
+  groupId?: string;
+  lastMessageId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}, queryKey?: Array<unknown>) => [useMessageServiceGetApiMessageGetPrivateMessagesKey, ...(queryKey ?? [{ convId, groupId, lastMessageId, page, pageSize, search, topicId }])];
+export type PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsDefaultResponse = Awaited<ReturnType<typeof PrivateConversationService.getApiPrivateConversationGetPrivateConversations>>;
+export type PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsQueryResult<TData = PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey = "PrivateConversationServiceGetApiPrivateConversationGetPrivateConversations";
+export const UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKeyFn = ({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: Array<unknown>) => [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey, ...(queryKey ?? [{ page, pageSize, search }])];
+export type PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationDefaultResponse = Awaited<ReturnType<typeof PrivateConversationService.getApiPrivateConversationGetPrivateConversation>>;
+export type PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationQueryResult<TData = PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey = "PrivateConversationServiceGetApiPrivateConversationGetPrivateConversation";
+export const UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKeyFn = ({ convId }: {
+  convId?: string;
+} = {}, queryKey?: Array<unknown>) => [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey, ...(queryKey ?? [{ convId }])];
 export type TopicServiceGetApiTopicGetTopicDefaultResponse = Awaited<ReturnType<typeof TopicService.getApiTopicGetTopic>>;
 export type TopicServiceGetApiTopicGetTopicQueryResult<TData = TopicServiceGetApiTopicGetTopicDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useTopicServiceGetApiTopicGetTopicKey = "TopicServiceGetApiTopicGetTopic";
@@ -97,6 +130,7 @@ export type AuthorizationServicePostApiAuthorizationResetPasswordMutationResult 
 export type AuthorizationServicePostApiAuthorizationRefreshTokenMutationResult = Awaited<ReturnType<typeof AuthorizationService.postApiAuthorizationRefreshToken>>;
 export type GroupServicePostApiGroupAddGroupMutationResult = Awaited<ReturnType<typeof GroupService.postApiGroupAddGroup>>;
 export type GroupServicePostApiGroupJoinGroupMutationResult = Awaited<ReturnType<typeof GroupService.postApiGroupJoinGroup>>;
+export type MessageFilesServicePostApiMessageFilesAddFilesTopicMessageMutationResult = Awaited<ReturnType<typeof MessageFilesService.postApiMessageFilesAddFilesTopicMessage>>;
 export type TopicServicePostApiTopicAddTopicMutationResult = Awaited<ReturnType<typeof TopicService.postApiTopicAddTopic>>;
 export type UserServicePostApiUserAddMutationResult = Awaited<ReturnType<typeof UserService.postApiUserAdd>>;
 export type GroupServicePutApiGroupLeaveGroupMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupLeaveGroup>>;

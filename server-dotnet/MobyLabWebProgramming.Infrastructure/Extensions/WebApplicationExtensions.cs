@@ -20,7 +20,8 @@ public static class WebApplicationExtensions
             .UseMiddleware<WebSocketsMiddleware>()
             .UseAuthentication() // Adds authentication.
             .UseSerilogRequestLogging() // Adds advanced logging using the Serilog NuGets.
-            .UseAuthorization(); // Adds authorization to verify the JWT.
+            .UseAuthorization() // Adds authorization to verify the JWT.
+            .UseStaticFiles();
         application.MapControllers(); // Adds controller mappings.
 
         return application;

@@ -12,7 +12,7 @@ const TopicItem = (props: {topic?: TopicDTO}) => {
 
     return (
     <div className="absolute top-0 left-0 bg-[#68738f]
-    h-1/2 max-h-[50%] w-full z-[50] shadow-lg p-4">
+    h-fit max-h-[50%] w-full z-[50] shadow-lg p-4">
         <ScrollArea className="w-full h-full">
             <MessageItem message={message} className="hover:bg-transparent"/>
         </ScrollArea>

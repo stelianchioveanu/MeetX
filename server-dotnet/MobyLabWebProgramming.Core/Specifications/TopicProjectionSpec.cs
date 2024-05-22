@@ -21,9 +21,10 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
             Id = e.User.Id,
             Email = e.User.Email,
             Name = e.User.Name,
-            Role = e.User.Role
+            Role = e.User.Role,
+            RegisteredDate = DateTime.Parse(e.User.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         },
-        NumberAnswers = e.Messages.Count,
+        NumberAnswers = e.Messages != null ? e.Messages.Count : 0,
     };
 
     public TopicProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

@@ -6,18 +6,18 @@ import PrivateFrame from "@/components/private-chats/private-frame";
 import { useQuery } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { GroupService } from "../../../openapi/requests/services.gen";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { toast } from "react-toastify";
 import { useAppSelector } from "@/application/store";
+import { useEffect } from "react";
+import Connector from '../../signalRConnection/signalr-connection';
+import ProfileFrame from "@/components/profile/profile-frame";
 
 const Dashboard = () => {
-    const {refresh} = useRefreshToken();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const { selectedConvId } = useAppSelector(x => x.selectedReducer);
     const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
-    const { token } = useAppSelector(x => x.profileReducer);
 
-    const {data} = useQuery({
+    const {data, status} = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupsKey],
         queryFn: () => {
             return GroupService.getApiGroupGetGroups();
@@ -27,11 +27,12 @@ const Dashboard = () => {
                 toast("Get groups failed! Please try again later!");
                 return false;
             }
-            refresh();
             return true;
         },
         retryDelay: 0
     });
+
+    useEffect(() => {if(status === "success") Connector()}, [status, data])
 
     const topic = {name: "# Topic 1", id: 1}
     const user1 = {name: "stelicas", id: 1}
@@ -39,21 +40,21 @@ const Dashboard = () => {
     return (
         <div className="w-full h-screen flex bg-[#272d3d] font">
             <NavigationBar groups={data?.response?.data}/>
-            {/* {
+            {
                 selectedGroupId === "0" ?
-                    <PrivateFrame setSelectedConvId={setSelectedConvId}/> :
+                    <PrivateFrame/> :
                     null
             }
             {
                 selectedGroupId === "0" && selectedConvId !== "0" ?
-                    <ChatFrame topText={user1} isGroup={false}/> :
+                    <ChatFrame isGroup={false}/> :
                     null
             }
             {
                 selectedGroupId === "0" && selectedConvId === "0" ?
-                    <GroupPage setSelectedTopicId={setSelectedTopicId}/> :
+                    <ProfileFrame/> :
                     null
-            } */}
+            }
             {
                 selectedGroupId !== "0" ?
                     <GroupFrame/> : 

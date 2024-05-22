@@ -8,6 +8,7 @@ const getInitialState = (): SelectedState => {
         selectedGroupId: "0" ?? null,
         selectedTopicId: "0" ?? null,
         selectedConvId: "0" ?? null,
+        isAdmin: false ?? null
     };
 }
 
@@ -20,7 +21,8 @@ export const selectedSlice = createSlice({
             ...state,
             selectedGroupId: action.payload ?? null,
             selectedTopicId: "0" ?? null,
-            selectedConvId: "0" ?? null
+            selectedConvId: "0" ?? null,
+            isAdmin: false ?? null
         };
     },
     setTopic: (state, action: PayloadAction<string>) => {
@@ -29,6 +31,7 @@ export const selectedSlice = createSlice({
             selectedGroupId: state.selectedGroupId,
             selectedTopicId: action.payload ?? null,
             selectedConvId: "0" ?? null,
+            isAdmin: state.isAdmin
         };
     },
     setConv: (state, action: PayloadAction<string>) => {
@@ -36,7 +39,17 @@ export const selectedSlice = createSlice({
             ...state,
             selectedGroupId: state.selectedGroupId,
             selectedTopicId: "0" ?? null,
-            selectedConvId: action.payload ?? null
+            selectedConvId: action.payload ?? null,
+            isAdmin: state.isAdmin
+        };
+    },
+    setAdmin: (state, action: PayloadAction<boolean>) => {
+        return {
+            ...state,
+            selectedGroupId: state.selectedGroupId,
+            selectedTopicId: state.selectedTopicId,
+            selectedConvId: state.selectedConvId,
+            isAdmin: action.payload ?? null
         };
     }
   }
@@ -45,7 +58,8 @@ export const selectedSlice = createSlice({
 export const { 
   setGroup,
   setTopic,
-  setConv
+  setConv,
+  setAdmin
 } = selectedSlice.actions;
 
 export const selectedReducer = selectedSlice.reducer;

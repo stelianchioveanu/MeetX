@@ -27,7 +27,8 @@ public sealed class UserRecentTopicsProjectionSpec : BaseSpec<UserRecentTopicsPr
             Id = e.User.Id,
             Email = e.User.Email,
             Name = e.User.Name,
-            Role = e.User.Role
+            Role = e.User.Role,
+            RegisteredDate = DateTime.Parse(e.User.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         }
     };
 

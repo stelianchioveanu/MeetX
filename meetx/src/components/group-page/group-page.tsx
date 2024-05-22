@@ -6,13 +6,10 @@ import { TopicDTO } from "../../../openapi/requests/types.gen";
 import { useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
 import { TopicService } from "../../../openapi/requests/services.gen";
 import { toast } from "react-toastify";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { useAppSelector } from "@/application/store";
 
 const GroupPage = () => {
-    const {refresh} = useRefreshToken();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
-    const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
 
     const {data} = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetTopicsKey, selectedGroupId],
@@ -24,7 +21,6 @@ const GroupPage = () => {
                 toast("Get topics failed! Please try again later!");
                 return false;
             }
-            refresh();
             return true;
         },
         retryDelay: 0

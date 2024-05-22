@@ -25,7 +25,6 @@ import { TopicAddDTO } from "../../../openapi/requests/types.gen";
 import { useTopicServicePostApiTopicAddTopic } from "../../../openapi/queries/queries";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { useAppSelector } from "@/application/store";
@@ -43,7 +42,6 @@ const formSchema = z.object({
 
 const AddTopic = () => {
     const queryClient = useQueryClient();
-    const {refresh} = useRefreshToken();
     const [clicked, setClicked] = useState(false);
     const [success, setSuccess] = useState(false);
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
@@ -73,10 +71,6 @@ const AddTopic = () => {
             if (failureCount > 0) {
                 toast("Add group failed! Please try again later!");
                 return false;
-            }
-            if (error.message === "Unauthorized") {
-                refresh();
-                return true;
             }
             return false;
         },

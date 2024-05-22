@@ -13,7 +13,6 @@ import {
 import { useGroupServicePutApiGroupLeaveGroup } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { toast } from "react-toastify";
 import { LeaveGroupDTO } from "openapi/requests/types.gen";
 import { useAppDispatch, useAppSelector } from "@/application/store";
@@ -21,7 +20,6 @@ import { setGroup } from "@/application/state-slices";
 
 const LeaveGroupDialog = () => {
     const queryClient = useQueryClient();
-    const {refresh} = useRefreshToken();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
     
@@ -34,10 +32,6 @@ const LeaveGroupDialog = () => {
           if (failureCount > 0) {
               toast("Leave group failed! Please try again later!");
               return false;
-          }
-          if (error.message === "Unauthorized") {
-              refresh();
-              return true;
           }
           return false;
       },
@@ -59,7 +53,7 @@ const LeaveGroupDialog = () => {
           <AlertDialogTrigger asChild>
             <Button className="w-3/4
             bg-blue-950 text-white
-            hover:bg-red-500 hover:text-neutral-100 mb-4">
+            hover:bg-blue-700 hover:text-neutral-100 mb-4">
                 Leave Group
             </Button>
           </AlertDialogTrigger>

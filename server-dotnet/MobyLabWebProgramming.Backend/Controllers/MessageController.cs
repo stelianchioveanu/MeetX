@@ -23,12 +23,23 @@ public class MessageController : AuthorizedController
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<RequestResponse<PagedResponse<MessageDTO>>>> GetMessages([FromQuery] PaginationSearchQueryParams pagination, [FromQuery] MessagesGetDTO messageGet)
+    public async Task<ActionResult<RequestResponse<PagedResponse<MessageDTO>>>> GetTopicMessages([FromQuery] PaginationSearchQueryParams pagination, [FromQuery] MessagesGetDTO messageGet)
     {
         var currentUser = await GetCurrentUserNotDTO();
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await _messageService.GetMessages(pagination, messageGet, currentUser.Result)) :
+            this.FromServiceResponse(await _messageService.GetTopicMessages(pagination, messageGet, currentUser.Result)) :
+            this.ErrorMessageResult<PagedResponse<MessageDTO>>(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<PagedResponse<MessageDTO>>>> GetPrivateMessages([FromQuery] PaginationSearchQueryParams pagination, [FromQuery] MessagesGetDTO messageGet)
+    {
+        var currentUser = await GetCurrentUserNotDTO();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _messageService.GetPrivateMessages(pagination, messageGet, currentUser.Result)) :
             this.ErrorMessageResult<PagedResponse<MessageDTO>>(currentUser.Error);
     }
 

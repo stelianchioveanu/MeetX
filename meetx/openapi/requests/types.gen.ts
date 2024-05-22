@@ -14,6 +14,23 @@ export type ErrorMessage = {
     status?: HttpStatusCode;
 };
 
+export type FileGetDTO = {
+    name?: string | null;
+    path?: string | null;
+    type?: FileTypes;
+};
+
+export type FileTypes = 'File' | 'Image';
+
+export type FilesAddedDTO = {
+    files?: Array<(string)> | null;
+};
+
+export type FilesAddedDTORequestResponse = {
+    response?: FilesAddedDTO;
+    errorMessage?: ErrorMessage;
+};
+
 export type GroupAddDTO = {
     name?: string | null;
 };
@@ -38,6 +55,16 @@ export type GroupDTOPagedResponseRequestResponse = {
     errorMessage?: ErrorMessage;
 };
 
+export type GroupDetailsDTO = {
+    group?: GroupDTO;
+    isMember?: boolean;
+};
+
+export type GroupDetailsDTORequestResponse = {
+    response?: GroupDetailsDTO;
+    errorMessage?: ErrorMessage;
+};
+
 export type GroupGetDTO = {
     group?: GroupDTO;
     groupRole?: GroupRoleEnum;
@@ -58,10 +85,8 @@ export type GroupLinkResponseRequestResponse = {
 };
 
 export type GroupMemberDTO = {
-    id?: string;
-    name?: string | null;
-    email?: string | null;
-    groupRole?: GroupRoleEnum;
+    user?: UserDTO;
+    isAdmin?: boolean;
 };
 
 export type GroupMemberDTOPagedResponse = {
@@ -110,7 +135,9 @@ export type MessageDTO = {
     createdDate?: string | null;
     groupId?: string;
     topicId?: string;
-    user?: UserDTO;
+    convId?: string;
+    user?: GroupMemberDTO;
+    files?: Array<FileGetDTO> | null;
 };
 
 export type MessageDTOPagedResponse = {
@@ -129,6 +156,29 @@ export type MessageDeleteDTO = {
     id?: string;
     groupId?: string;
     topicId?: string;
+};
+
+export type PrivateConversationDTO = {
+    id?: string;
+    user1?: UserDTO;
+    user2?: UserDTO;
+};
+
+export type PrivateConversationDTOPagedResponse = {
+    page?: number;
+    pageSize?: number;
+    totalCount?: number;
+    data?: Array<PrivateConversationDTO> | null;
+};
+
+export type PrivateConversationDTOPagedResponseRequestResponse = {
+    response?: PrivateConversationDTOPagedResponse;
+    errorMessage?: ErrorMessage;
+};
+
+export type PrivateConversationDTORequestResponse = {
+    response?: PrivateConversationDTO;
+    errorMessage?: ErrorMessage;
 };
 
 export type RefreshResponseDTO = {
@@ -214,6 +264,7 @@ export type UserDTO = {
     id?: string;
     name?: string | null;
     email?: string | null;
+    registeredDate?: string | null;
     role?: UserRoleEnum;
 };
 
@@ -333,7 +384,14 @@ export type DeleteApiGroupDeleteGroupData = {
 
 export type DeleteApiGroupDeleteGroupResponse = RequestResponse;
 
-export type GetApiMessageGetMessagesData = {
+export type GetApiGroupGetGroupDetailsData = {
+    groupId?: string;
+};
+
+export type GetApiGroupGetGroupDetailsResponse = GroupDetailsDTORequestResponse;
+
+export type GetApiMessageGetTopicMessagesData = {
+    convId?: string;
     groupId?: string;
     lastMessageId?: string;
     page?: number;
@@ -342,13 +400,50 @@ export type GetApiMessageGetMessagesData = {
     topicId?: string;
 };
 
-export type GetApiMessageGetMessagesResponse = MessageDTOPagedResponseRequestResponse;
+export type GetApiMessageGetTopicMessagesResponse = MessageDTOPagedResponseRequestResponse;
+
+export type GetApiMessageGetPrivateMessagesData = {
+    convId?: string;
+    groupId?: string;
+    lastMessageId?: string;
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    topicId?: string;
+};
+
+export type GetApiMessageGetPrivateMessagesResponse = MessageDTOPagedResponseRequestResponse;
 
 export type DeleteApiMessageDeleteMessageData = {
     requestBody?: MessageDeleteDTO;
 };
 
 export type DeleteApiMessageDeleteMessageResponse = RequestResponse;
+
+export type PostApiMessageFilesAddFilesTopicMessageData = {
+    formData?: {
+        Images?: Array<((Blob | File))>;
+        Files?: Array<((Blob | File))>;
+        TopicId?: string;
+        PrivateConversationId?: string;
+    };
+};
+
+export type PostApiMessageFilesAddFilesTopicMessageResponse = FilesAddedDTORequestResponse;
+
+export type GetApiPrivateConversationGetPrivateConversationsData = {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+};
+
+export type GetApiPrivateConversationGetPrivateConversationsResponse = PrivateConversationDTOPagedResponseRequestResponse;
+
+export type GetApiPrivateConversationGetPrivateConversationData = {
+    convId?: string;
+};
+
+export type GetApiPrivateConversationGetPrivateConversationResponse = PrivateConversationDTORequestResponse;
 
 export type PostApiTopicAddTopicData = {
     requestBody?: TopicAddDTO;
@@ -425,9 +520,7 @@ export type PutApiUserUpdateResponse = RequestResponse;
 export type $OpenApiTs = {
     '/api/Authorization/Login': {
         post: {
-            req: {
-                requestBody?: LoginDTO;
-            };
+            req: PostApiAuthorizationLoginData;
             res: {
                 /**
                  * Success
@@ -438,9 +531,7 @@ export type $OpenApiTs = {
     };
     '/api/Authorization/Register': {
         post: {
-            req: {
-                requestBody?: RegisterDTO;
-            };
+            req: PostApiAuthorizationRegisterData;
             res: {
                 /**
                  * Success
@@ -451,9 +542,7 @@ export type $OpenApiTs = {
     };
     '/api/Authorization/RequestReset': {
         post: {
-            req: {
-                requestBody?: RequestResetDTO;
-            };
+            req: PostApiAuthorizationRequestResetData;
             res: {
                 /**
                  * Success
@@ -464,9 +553,7 @@ export type $OpenApiTs = {
     };
     '/api/Authorization/ResetPassword': {
         post: {
-            req: {
-                requestBody?: ResetPasswordDTO;
-            };
+            req: PostApiAuthorizationResetPasswordData;
             res: {
                 /**
                  * Success
@@ -487,9 +574,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/AddGroup': {
         post: {
-            req: {
-                requestBody?: GroupAddDTO;
-            };
+            req: PostApiGroupAddGroupData;
             res: {
                 /**
                  * Success
@@ -500,11 +585,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/GetGroups': {
         get: {
-            req: {
-                page?: number;
-                pageSize?: number;
-                search?: string;
-            };
+            req: GetApiGroupGetGroupsData;
             res: {
                 /**
                  * Success
@@ -515,9 +596,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/GetInviteLink': {
         get: {
-            req: {
-                id?: string;
-            };
+            req: GetApiGroupGetInviteLinkData;
             res: {
                 /**
                  * Success
@@ -528,9 +607,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/JoinGroup': {
         post: {
-            req: {
-                requestBody?: JoinGroupDTO;
-            };
+            req: PostApiGroupJoinGroupData;
             res: {
                 /**
                  * Success
@@ -541,9 +618,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/LeaveGroup': {
         put: {
-            req: {
-                requestBody?: LeaveGroupDTO;
-            };
+            req: PutApiGroupLeaveGroupData;
             res: {
                 /**
                  * Success
@@ -554,9 +629,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/ChangeRole': {
         put: {
-            req: {
-                requestBody?: ChangeRoleDTO;
-            };
+            req: PutApiGroupChangeRoleData;
             res: {
                 /**
                  * Success
@@ -567,12 +640,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/GetGroupMembers': {
         get: {
-            req: {
-                groupId?: string;
-                page?: number;
-                pageSize?: number;
-                search?: string;
-            };
+            req: GetApiGroupGetGroupMembersData;
             res: {
                 /**
                  * Success
@@ -583,9 +651,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/GetGroup': {
         get: {
-            req: {
-                groupId?: string;
-            };
+            req: GetApiGroupGetGroupData;
             res: {
                 /**
                  * Success
@@ -596,9 +662,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/RemoveMember': {
         put: {
-            req: {
-                requestBody?: RemoveMemberDTO;
-            };
+            req: PutApiGroupRemoveMemberData;
             res: {
                 /**
                  * Success
@@ -609,9 +673,7 @@ export type $OpenApiTs = {
     };
     '/api/Group/DeleteGroup': {
         delete: {
-            req: {
-                requestBody?: string;
-            };
+            req: DeleteApiGroupDeleteGroupData;
             res: {
                 /**
                  * Success
@@ -620,16 +682,31 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/Message/GetMessages': {
+    '/api/Group/GetGroupDetails': {
         get: {
-            req: {
-                groupId?: string;
-                lastMessageId?: string;
-                page?: number;
-                pageSize?: number;
-                search?: string;
-                topicId?: string;
+            req: GetApiGroupGetGroupDetailsData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: GroupDetailsDTORequestResponse;
             };
+        };
+    };
+    '/api/Message/GetTopicMessages': {
+        get: {
+            req: GetApiMessageGetTopicMessagesData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: MessageDTOPagedResponseRequestResponse;
+            };
+        };
+    };
+    '/api/Message/GetPrivateMessages': {
+        get: {
+            req: GetApiMessageGetPrivateMessagesData;
             res: {
                 /**
                  * Success
@@ -640,9 +717,7 @@ export type $OpenApiTs = {
     };
     '/api/Message/DeleteMessage': {
         delete: {
-            req: {
-                requestBody?: MessageDeleteDTO;
-            };
+            req: DeleteApiMessageDeleteMessageData;
             res: {
                 /**
                  * Success
@@ -651,11 +726,42 @@ export type $OpenApiTs = {
             };
         };
     };
+    '/api/MessageFiles/AddFilesTopicMessage': {
+        post: {
+            req: PostApiMessageFilesAddFilesTopicMessageData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: FilesAddedDTORequestResponse;
+            };
+        };
+    };
+    '/api/PrivateConversation/GetPrivateConversations': {
+        get: {
+            req: GetApiPrivateConversationGetPrivateConversationsData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: PrivateConversationDTOPagedResponseRequestResponse;
+            };
+        };
+    };
+    '/api/PrivateConversation/GetPrivateConversation': {
+        get: {
+            req: GetApiPrivateConversationGetPrivateConversationData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: PrivateConversationDTORequestResponse;
+            };
+        };
+    };
     '/api/Topic/AddTopic': {
         post: {
-            req: {
-                requestBody?: TopicAddDTO;
-            };
+            req: PostApiTopicAddTopicData;
             res: {
                 /**
                  * Success
@@ -666,10 +772,7 @@ export type $OpenApiTs = {
     };
     '/api/Topic/GetTopic': {
         get: {
-            req: {
-                groupId?: string;
-                topicId?: string;
-            };
+            req: GetApiTopicGetTopicData;
             res: {
                 /**
                  * Success
@@ -680,12 +783,7 @@ export type $OpenApiTs = {
     };
     '/api/Topic/GetTopics': {
         get: {
-            req: {
-                groupId?: string;
-                page?: number;
-                pageSize?: number;
-                search?: string;
-            };
+            req: GetApiTopicGetTopicsData;
             res: {
                 /**
                  * Success
@@ -696,12 +794,7 @@ export type $OpenApiTs = {
     };
     '/api/Topic/GetMyTopics': {
         get: {
-            req: {
-                groupId?: string;
-                page?: number;
-                pageSize?: number;
-                search?: string;
-            };
+            req: GetApiTopicGetMyTopicsData;
             res: {
                 /**
                  * Success
@@ -712,12 +805,7 @@ export type $OpenApiTs = {
     };
     '/api/Topic/GetRecentTopics': {
         get: {
-            req: {
-                groupId?: string;
-                page?: number;
-                pageSize?: number;
-                search?: string;
-            };
+            req: GetApiTopicGetRecentTopicsData;
             res: {
                 /**
                  * Success
@@ -728,9 +816,7 @@ export type $OpenApiTs = {
     };
     '/api/Topic/DeleteTopic': {
         delete: {
-            req: {
-                requestBody?: TopicDeleteDTO;
-            };
+            req: DeleteApiTopicDeleteTopicData;
             res: {
                 /**
                  * Success
@@ -741,9 +827,7 @@ export type $OpenApiTs = {
     };
     '/api/User/GetById/{id}': {
         get: {
-            req: {
-                id: string;
-            };
+            req: GetApiUserGetByIdByIdData;
             res: {
                 /**
                  * Success
@@ -754,11 +838,7 @@ export type $OpenApiTs = {
     };
     '/api/User/GetPage': {
         get: {
-            req: {
-                page?: number;
-                pageSize?: number;
-                search?: string;
-            };
+            req: GetApiUserGetPageData;
             res: {
                 /**
                  * Success
@@ -769,9 +849,7 @@ export type $OpenApiTs = {
     };
     '/api/User/Add': {
         post: {
-            req: {
-                requestBody?: UserAddDTO;
-            };
+            req: PostApiUserAddData;
             res: {
                 /**
                  * Success
@@ -782,9 +860,7 @@ export type $OpenApiTs = {
     };
     '/api/User/Update': {
         put: {
-            req: {
-                requestBody?: UserUpdateDTO;
-            };
+            req: PutApiUserUpdateData;
             res: {
                 /**
                  * Success

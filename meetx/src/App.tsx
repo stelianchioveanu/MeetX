@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Reset from './pages/auth/Reset';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import JoinPage from './pages/join/JoinPage';
 
 const queryClient = new QueryClient();
 
@@ -33,14 +34,14 @@ function App() {
               limit={1}
               />
           <Routes>
-            <Route path="/">
+            <Route path="/"/>
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="requestResetPassword" element={<ForgotPassword />} />
             <Route path="resetPassword" element={<Reset/>} />
             <Route path="dashboard" element={<Dashboard/>} />
-            </Route>
+            <Route path="invite" element={<JoinPage/>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

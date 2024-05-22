@@ -11,7 +11,6 @@ public class User : BaseEntity
     public string Email { get; set; } = default!;
     public string Password { get; set; } = default!;
     public UserRoleEnum Role { get; set; } = default!;
-    public ICollection<UserFile> UserFiles { get; set; } = default!;
     public RefreshToken? RefreshToken { get; set; }
     public ResetToken? ResetToken { get; set; }
     public ICollection<Topic> MyTopics { get; set; } = default!;
@@ -20,4 +19,6 @@ public class User : BaseEntity
     public ICollection<Group> Groups { get; set; } = default!;
     public ICollection<UserRecentTopics> MyRecentTopics { get; set; } = default!;
     public ICollection<Message> Messages { get; set; } = default!;
+    public ICollection<PrivateConversation> StartedConversations { get; set; } = default!;
+    public ICollection<PrivateConversation> ReceivedConversations { get; set; } = default!;
 }

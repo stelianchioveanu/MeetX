@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using Ardalis.Specification;
 using Microsoft.EntityFrameworkCore;
 using MobyLabWebProgramming.Core.DataTransferObjects;
@@ -11,9 +12,13 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
 {
     protected override Expression<Func<User, GroupMemberDTO>> Spec => e => new()
     {
-        Id = e.Id,
-        Email = e.Email,
-        Name = e.Name
+        User = new UserDTO
+        {
+            Id = e.Id,
+            Email = e.Email,
+            Name = e.Name,
+            RegisteredDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString()
+        }
     };
 
     public GroupMemberProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -22,7 +27,7 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
 
     public GroupMemberProjectionSpec(Guid groupId)
     {
-        Query.Where(e => e.Groups.Any(u => u.Id == groupId)).OrderByDescending(x => x.CreatedAt, true);
+        Query.Where(e => e.Groups.Any(u => u.Id == groupId)).OrderBy(x => x.Name, true);
     }
 
     public GroupMemberProjectionSpec(string? search)
@@ -36,6 +41,6 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)).OrderByDescending(x => x.CreatedAt, true);
+        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)).OrderBy(x => x.Name, true);
     }
 }

@@ -1,7 +1,7 @@
-// generated with @7nohe/openapi-react-query-codegen@1.3.0 
+// generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { GroupService, MessageService, TopicService, UserService } from "../requests/services.gen";
+import { GroupService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -51,23 +51,77 @@ export const useGroupServiceGetApiGroupGetGroupSuspense = <TData = Common.GroupS
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) as TData, ...options });
 /**
 * @param data The data for the request.
+* @param data.groupId
+* @returns GroupDetailsDTORequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServiceGetApiGroupGetGroupDetailsSuspense = <TData = Common.GroupServiceGetApiGroupGetGroupDetailsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupDetailsKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) as TData, ...options });
+/**
+* @param data The data for the request.
 * @param data.search
 * @param data.page
 * @param data.pageSize
 * @param data.groupId
 * @param data.topicId
+* @param data.convId
 * @param data.lastMessageId
 * @returns MessageDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const useMessageServiceGetApiMessageGetMessagesSuspense = <TData = Common.MessageServiceGetApiMessageGetMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, lastMessageId, page, pageSize, search, topicId }: {
+export const useMessageServiceGetApiMessageGetTopicMessagesSuspense = <TData = Common.MessageServiceGetApiMessageGetTopicMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ convId, groupId, lastMessageId, page, pageSize, search, topicId }: {
+  convId?: string;
   groupId?: string;
   lastMessageId?: string;
   page?: number;
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetMessagesKeyFn({ groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetMessages({ groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetTopicMessagesKeyFn({ convId, groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetTopicMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @param data.groupId
+* @param data.topicId
+* @param data.convId
+* @param data.lastMessageId
+* @returns MessageDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useMessageServiceGetApiMessageGetPrivateMessagesSuspense = <TData = Common.MessageServiceGetApiMessageGetPrivateMessagesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ convId, groupId, lastMessageId, page, pageSize, search, topicId }: {
+  convId?: string;
+  groupId?: string;
+  lastMessageId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  topicId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMessageServiceGetApiMessageGetPrivateMessagesKeyFn({ convId, groupId, lastMessageId, page, pageSize, search, topicId }, queryKey), queryFn: () => MessageService.getApiMessageGetPrivateMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns PrivateConversationDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsSuspense = <TData = Common.PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversations({ page, pageSize, search }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.convId
+* @returns PrivateConversationDTORequestResponse Success
+* @throws ApiError
+*/
+export const usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationSuspense = <TData = Common.PrivateConversationServiceGetApiPrivateConversationGetPrivateConversationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ convId }: {
+  convId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKeyFn({ convId }, queryKey), queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversation({ convId }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.groupId

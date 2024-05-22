@@ -1,4 +1,6 @@
-﻿namespace MobyLabWebProgramming.Core.DataTransferObjects;
+﻿using MobyLabWebProgramming.Core.Entities;
+
+namespace MobyLabWebProgramming.Core.DataTransferObjects;
 
 public class MessageDTO
 {
@@ -7,5 +9,7 @@ public class MessageDTO
     public string CreatedDate { get; set; } = default!;
     public Guid GroupId { get; set; }
     public Guid TopicId { get; set; }
-    public UserDTO User { get; set; } = default!;
+    public Guid ConvId { get; set; }
+    public GroupMemberDTO User { get; set; } = default!;
+    public ICollection<FileGetDTO>? Files { get; set; }
 }

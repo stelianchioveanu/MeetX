@@ -10,17 +10,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { useGroupServiceDeleteApiGroupDeleteGroup, useGroupServicePutApiGroupLeaveGroup } from "../../../openapi/queries/queries";
+import { useGroupServiceDeleteApiGroupDeleteGroup } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/application/store";
 import { setGroup } from "@/application/state-slices";
 
 const DeleteGroupDialog = () => {
   const queryClient = useQueryClient();
-  const {refresh} = useRefreshToken();
   const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
   const dispatch = useAppDispatch();
   
@@ -29,15 +27,8 @@ const DeleteGroupDialog = () => {
           dispatch(setGroup("0"));
           queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
       },
-    retry(failureCount, error : any) {
-        if (failureCount > 0) {
-            toast("Delete group failed! Please try again later!" + error);
-            return false;
-        }
-        if (error.message === "Unauthorized") {
-            refresh();
-            return true;
-        }
+    retry(error : any) {
+        toast("Delete group failed! Please try again later!" + error);
         return false;
     },
   });

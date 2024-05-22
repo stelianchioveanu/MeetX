@@ -16,13 +16,11 @@ import { Label } from "@/components/ui/label"
 import { useQuery } from "@tanstack/react-query"
 import { useGroupServiceGetApiGroupGetInviteLinkKey } from "../../../openapi/queries/common"
 import { GroupService } from "../../../openapi/requests/services.gen"
-import { useRefreshToken } from "@/hooks/useRefreshToken"
 import { useAppSelector } from "@/application/store"
 import { toast } from "react-toastify"
 import { useState } from "react"
  
 export function GenerateLinkDialog() {
-  const {refresh} = useRefreshToken();
   const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
   const [clicked, setClicked] = useState(false);
 
@@ -36,7 +34,6 @@ export function GenerateLinkDialog() {
               toast("Get link failed! Please try again later!");
               return false;
           }
-          refresh();
           return true;
       },
       retryDelay: 0,

@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -89,7 +90,8 @@ public class UserService : IUserService
             Id = result.Id,
             Email = result.Email,
             Name = result.Name,
-            Role = result.Role
+            Role = result.Role,
+            RegisteredDate = DateTime.Parse(result.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         };
 
         var entity = await _repository.GetAsync(new RefreshTokenSpec(user.Id), cancellationToken);
@@ -126,7 +128,7 @@ public class UserService : IUserService
         return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
         {
             User = user,
-            Token = _loginService.GetToken(user, DateTime.UtcNow, new(0, 0, 15, 0), TokenTypeEnum.Auth)
+            Token = _loginService.GetToken(user, DateTime.UtcNow, new(0, 0, 1, 0), TokenTypeEnum.Auth)
         });
     }
 
@@ -333,7 +335,8 @@ public class UserService : IUserService
                                 Id = user.Id,
                                 Email = user.Email,
                                 Name = user.Name,
-                                Role = user.Role
+                                Role = user.Role,
+                                RegisteredDate = DateTime.Parse(user.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
                             };
 
                             entity.Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(7, 0, 0, 0), TokenTypeEnum.Refresh);
@@ -354,7 +357,7 @@ public class UserService : IUserService
 
                             return ServiceResponse<RefreshResponseDTO>.ForSuccess(new()
                             {
-                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 0, 15, 0), TokenTypeEnum.Auth)
+                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 0, 1, 0), TokenTypeEnum.Auth)
                             });
                         }
                     }
