@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using MobyLabWebProgramming.Core.Responses;
+using System.Net;
 
 namespace MobyLabWebProgramming.Core.Errors;
 
@@ -20,8 +21,11 @@ public static class CommonErrors
     public static ErrorMessage TopicNotFound => new(HttpStatusCode.NotFound, "Topic doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage ConvNotFound => new(HttpStatusCode.NotFound, "Conversation doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage MessageNotFound => new(HttpStatusCode.NotFound, "Message doesn't exist!", ErrorCodes.EntityNotFound);
-    public static ErrorMessage BadRequets => new(HttpStatusCode.BadRequest, "You need to fill every field!", ErrorCodes.WrongInputs);
-    public static ErrorMessage BadGroupName => new(HttpStatusCode.BadRequest, "The name should have at least two different characters other than space!", ErrorCodes.WrongInputs);
-    public static ErrorMessage BadInput => new(HttpStatusCode.BadRequest, "The fields should have at least one character other than space!", ErrorCodes.WrongInputs);
     public static ErrorMessage FileAddError => new(HttpStatusCode.InternalServerError, "Save file failed!", ErrorCodes.CannotAdd);
+
+
+    public static ErrorMessage BadRequets => new(HttpStatusCode.BadRequest, "You need to fill every field!", ErrorCodes.WrongInputs);
+    public static ErrorMessage BadName => new(HttpStatusCode.BadRequest, "The name should have at least two different characters other than space!", ErrorCodes.WrongName);
+    public static ErrorMessage BadPassword => new(HttpStatusCode.BadRequest, "Password is not valid!", ErrorCodes.WrongPassword);
+    public static ErrorMessage BadInput => new(HttpStatusCode.BadRequest, "The fields should have at least one character other than space!", ErrorCodes.WrongInputs);
 }

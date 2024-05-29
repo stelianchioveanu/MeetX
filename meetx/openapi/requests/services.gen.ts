@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiGroupGetGroupDetailsData, GetApiGroupGetGroupDetailsResponse, GetApiMessageGetTopicMessagesData, GetApiMessageGetTopicMessagesResponse, GetApiMessageGetPrivateMessagesData, GetApiMessageGetPrivateMessagesResponse, DeleteApiMessageDeleteMessageData, DeleteApiMessageDeleteMessageResponse, PostApiMessageFilesAddFilesTopicMessageData, PostApiMessageFilesAddFilesTopicMessageResponse, GetApiPrivateConversationGetPrivateConversationsData, GetApiPrivateConversationGetPrivateConversationsResponse, GetApiPrivateConversationGetPrivateConversationData, GetApiPrivateConversationGetPrivateConversationResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
+import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiGroupGetGroupDetailsData, GetApiGroupGetGroupDetailsResponse, GetApiMessageGetTopicMessagesData, GetApiMessageGetTopicMessagesResponse, GetApiMessageGetPrivateMessagesData, GetApiMessageGetPrivateMessagesResponse, DeleteApiMessageDeleteMessageData, DeleteApiMessageDeleteMessageResponse, PostApiMessageFilesAddFilesTopicMessageData, PostApiMessageFilesAddFilesTopicMessageResponse, GetApiPrivateConversationGetPrivateConversationsData, GetApiPrivateConversationGetPrivateConversationsResponse, GetApiPrivateConversationGetPrivateConversationData, GetApiPrivateConversationGetPrivateConversationResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetMeResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
 
 export class AuthorizationService {
     /**
@@ -528,6 +528,17 @@ export class UserService {
     }
     
     /**
+     * @returns UserDTORequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiUserGetMe(): CancelablePromise<GetApiUserGetMeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/User/GetMe'
+        });
+    }
+    
+    /**
      * @param data The data for the request.
      * @param data.search
      * @param data.page
@@ -564,7 +575,7 @@ export class UserService {
     
     /**
      * @param data The data for the request.
-     * @param data.requestBody
+     * @param data.formData
      * @returns RequestResponse Success
      * @throws ApiError
      */
@@ -572,8 +583,8 @@ export class UserService {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/User/Update',
-            body: data.requestBody,
-            mediaType: 'application/json'
+            formData: data.formData,
+            mediaType: 'multipart/form-data'
         });
     }
     

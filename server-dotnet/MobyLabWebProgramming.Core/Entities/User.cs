@@ -10,6 +10,10 @@ public class User : BaseEntity
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
     public string Password { get; set; } = default!;
+    public string ShortName { get; set; } = default!;
+    public string Color { get; set; } = default!;
+    public string AvatarPath { get; set; } = default!;
+    public bool Status { get; set; } = default!;
     public UserRoleEnum Role { get; set; } = default!;
     public RefreshToken? RefreshToken { get; set; }
     public ResetToken? ResetToken { get; set; }

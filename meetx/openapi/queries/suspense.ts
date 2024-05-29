@@ -188,6 +188,11 @@ export const useUserServiceGetApiUserGetByIdByIdSuspense = <TData = Common.UserS
   id: string;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetByIdByIdKeyFn({ id }, queryKey), queryFn: () => UserService.getApiUserGetByIdById({ id }) as TData, ...options });
 /**
+* @returns UserDTORequestResponse Success
+* @throws ApiError
+*/
+export const useUserServiceGetApiUserGetMeSuspense = <TData = Common.UserServiceGetApiUserGetMeDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetMeKeyFn(queryKey), queryFn: () => UserService.getApiUserGetMe() as TData, ...options });
+/**
 * @param data The data for the request.
 * @param data.search
 * @param data.page

@@ -23,6 +23,10 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
             Name = e.User.Name,
             Role = e.User.Role,
             RegisteredDate = DateTime.Parse(e.User.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+            Status = e.User.Status,
+            ShortName = e.User.ShortName,
+            AvatarPath = e.User.AvatarPath,
+            Color = e.User.Color,
         },
         NumberAnswers = e.Messages != null ? e.Messages.Count : 0,
     };

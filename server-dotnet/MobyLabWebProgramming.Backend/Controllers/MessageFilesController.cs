@@ -12,8 +12,8 @@ namespace MobyLabWebProgramming.Backend.Controllers;
 [Route("api/[controller]/[action]")]
 public class MessageFilesController : AuthorizedController
 {
-    private readonly IMessageFileService _messageFileService;
-    public MessageFilesController(IUserService userService, IMessageFileService messageFileService) : base(userService)
+    private readonly IFileService _messageFileService;
+    public MessageFilesController(IUserService userService, IFileService messageFileService) : base(userService)
     {
         _messageFileService = messageFileService;
     }
@@ -25,7 +25,7 @@ public class MessageFilesController : AuthorizedController
         var currentUser = await GetCurrentUser();
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await _messageFileService.SaveFilesMessageTopic(files, currentUser.Result)) :
+            this.FromServiceResponse(await _messageFileService.SaveFilesMessage(files, currentUser.Result)) :
             this.ErrorMessageResult<FilesAddedDTO>(currentUser.Error);
     }
 }

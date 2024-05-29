@@ -6,7 +6,7 @@ export type ChangeRoleDTO = {
     role?: GroupRoleEnum;
 };
 
-export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAMember';
+export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail';
 
 export type ErrorMessage = {
     message?: string | null;
@@ -257,6 +257,8 @@ export type UserAddDTO = {
     name?: string | null;
     email?: string | null;
     password?: string | null;
+    shortName?: string | null;
+    color?: string | null;
     role?: UserRoleEnum;
 };
 
@@ -266,6 +268,10 @@ export type UserDTO = {
     email?: string | null;
     registeredDate?: string | null;
     role?: UserRoleEnum;
+    shortName?: string | null;
+    color?: string | null;
+    avatarPath?: string | null;
+    status?: boolean;
 };
 
 export type UserDTOPagedResponse = {
@@ -286,12 +292,6 @@ export type UserDTORequestResponse = {
 };
 
 export type UserRoleEnum = 'Admin' | 'Personnel' | 'Client';
-
-export type UserUpdateDTO = {
-    id?: string;
-    name?: string | null;
-    password?: string | null;
-};
 
 export type PostApiAuthorizationLoginData = {
     requestBody?: LoginDTO;
@@ -497,6 +497,8 @@ export type GetApiUserGetByIdByIdData = {
 
 export type GetApiUserGetByIdByIdResponse = UserDTORequestResponse;
 
+export type GetApiUserGetMeResponse = UserDTORequestResponse;
+
 export type GetApiUserGetPageData = {
     page?: number;
     pageSize?: number;
@@ -512,7 +514,12 @@ export type PostApiUserAddData = {
 export type PostApiUserAddResponse = RequestResponse;
 
 export type PutApiUserUpdateData = {
-    requestBody?: UserUpdateDTO;
+    formData?: {
+        Name?: string;
+        Password?: string;
+        Avatar?: (Blob | File);
+        AvatarRemoved?: boolean;
+    };
 };
 
 export type PutApiUserUpdateResponse = RequestResponse;
@@ -828,6 +835,16 @@ export type $OpenApiTs = {
     '/api/User/GetById/{id}': {
         get: {
             req: GetApiUserGetByIdByIdData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: UserDTORequestResponse;
+            };
+        };
+    };
+    '/api/User/GetMe': {
+        get: {
             res: {
                 /**
                  * Success

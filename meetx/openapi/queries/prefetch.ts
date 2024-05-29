@@ -188,6 +188,11 @@ export const prefetchUseUserServiceGetApiUserGetByIdById = (queryClient: QueryCl
   id: string;
 }) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetByIdByIdKey, [{ id }]], queryFn: () => UserService.getApiUserGetByIdById({ id }) });
 /**
+* @returns UserDTORequestResponse Success
+* @throws ApiError
+*/
+export const prefetchUseUserServiceGetApiUserGetMe = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetMeKey, []], queryFn: () => UserService.getApiUserGetMe() });
+/**
 * @param data The data for the request.
 * @param data.search
 * @param data.page

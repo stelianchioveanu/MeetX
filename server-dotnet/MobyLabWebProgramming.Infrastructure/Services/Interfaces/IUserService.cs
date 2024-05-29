@@ -19,7 +19,7 @@ public interface IUserService
 
     public Task<ServiceResponse> AddUser(UserAddDTO user, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 
-    public Task<ServiceResponse> UpdateUser(UserUpdateDTO user, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse> UpdateUser(UserUpdateDTO user, User? requestingUser = default, CancellationToken cancellationToken = default);
 
     public Task<ServiceResponse> Register(RegisterDTO register, CancellationToken cancellationToken = default);
 

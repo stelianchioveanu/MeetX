@@ -37,6 +37,17 @@ public class UserController : AuthorizedController // Here we use the Authorized
             this.ErrorMessageResult<UserDTO>(currentUser.Error);
     }
 
+    [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
+    [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
+    public async Task<ActionResult<RequestResponse<UserDTO>>> GetMe() // The FromRoute attribute will bind the id from the route to this parameter.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(currentUser) :
+            this.ErrorMessageResult<UserDTO>(currentUser.Error);
+    }
+
     /// <summary>
     /// This method implements the Read operation (R from CRUD) on page of users.
     /// Generally, if you need to get multiple values from the database use pagination if there are many entries.
@@ -75,15 +86,12 @@ public class UserController : AuthorizedController // Here we use the Authorized
     /// </summary>
     [Authorize]
     [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
-    public async Task<ActionResult<RequestResponse>> Update([FromBody] UserUpdateDTO user) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
+    public async Task<ActionResult<RequestResponse>> Update([FromForm] UserUpdateDTO user) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
     {
-        var currentUser = await GetCurrentUser();
+        var currentUser = await GetCurrentUserNotDTO();
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await UserService.UpdateUser(user with
-            {
-                Password = !string.IsNullOrWhiteSpace(user.Password) ? PasswordUtils.HashPassword(user.Password) : null
-            }, currentUser.Result)) :
+            this.FromServiceResponse(await UserService.UpdateUser(user, currentUser.Result)) :
             this.ErrorMessageResult(currentUser.Error);
     }
 }

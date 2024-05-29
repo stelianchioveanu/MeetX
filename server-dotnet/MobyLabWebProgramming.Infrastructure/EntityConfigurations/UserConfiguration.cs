@@ -19,7 +19,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.Name)
             .HasMaxLength(255)
             .IsRequired();
+        builder.Property(e => e.ShortName)
+            .HasMaxLength(2)
+            .IsRequired();
+        builder.Property(e => e.Color)
+            .HasMaxLength(7)
+            .IsRequired();
+        builder.Property(e => e.Status)
+            .IsRequired();
+        builder.Property(e => e.AvatarPath)
+            .HasMaxLength(255)
+            .IsRequired(false);
         builder.Property(e => e.Email)
+            .HasMaxLength(255)
+            .IsRequired();
+        builder.Property(e => e.Name)
             .HasMaxLength(255)
             .IsRequired();
         builder.HasAlternateKey(e => e.Email);

@@ -24,5 +24,7 @@ public enum ErrorCodes
     TokenExpired,
     GroupAlreadyExists,
     NotAnAdmin,
-    NotAMember
+    NotAMember,
+    WrongName,
+    WrongEmail
 }

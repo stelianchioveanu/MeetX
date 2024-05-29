@@ -1,13 +1,12 @@
 import { cn } from "@/lib/utils"
 import { UserDTO } from "../../../openapi/requests/types.gen";
-import stelian from "../../pages/home/sections/img/stelian.jpeg"
 
 
 const UserAvatar = (props: {user?: UserDTO, className: String, status: "hidden" | "visible"}) => {
     const className = "w-[20%] h-[20%] rounded-full absolute right-[8%] bottom-[8%] "
     return (
     <div className={cn("relative", props.className)}>
-        <img src={stelian} className="w-full h-full
+        <img src={`http://localhost:5000/${props.user?.id}/Avatar/${props.user?.avatarPath}`} className="w-full h-full
         rounded-full"/>
         {
             props.status === "visible" ?

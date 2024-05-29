@@ -175,12 +175,12 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IUserService, UserService>()
             .AddTransient<ILoginService, LoginService>()
             .AddTransient<IFileRepository, FileRepository>()
-            .AddTransient<IMessageFileService, MessageFileService>()
+            .AddTransient<IFileService, FileService>()
             .AddTransient<IMailService, MailService>()
             .AddTransient<IValidationService, ValidationService>()
             .AddTransient<IGroupService, GroupService>()
             .AddTransient<IMessageService, MessageService>()
-            .AddTransient<IMessageFileService, MessageFileService>()
+            .AddTransient<IFileService, FileService>()
             .AddTransient<IPrivateConversationService, PrivateConversationService>()
             .AddTransient<ITopicService, TopicService>();
 

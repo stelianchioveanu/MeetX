@@ -17,7 +17,11 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
             Id = e.Id,
             Email = e.Email,
             Name = e.Name,
-            RegisteredDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString()
+            RegisteredDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+            Status = e.Status,
+            ShortName = e.ShortName,
+            AvatarPath = e.AvatarPath,
+            Color = e.Color,
         }
     };
 

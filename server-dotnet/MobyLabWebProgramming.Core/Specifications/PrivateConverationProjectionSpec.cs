@@ -20,6 +20,10 @@ public sealed class PrivateConversationProjectionSpec : BaseSpec<PrivateConversa
             Name = e.User1.Name,
             Role = e.User1.Role,
             RegisteredDate = DateTime.Parse(e.User1.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+            ShortName = e.User1.ShortName,
+            Status = e.User1.Status,
+            Color = e.User1.Color,
+            AvatarPath = e.User1.AvatarPath,
         },
         User2 = new UserDTO
         {
@@ -28,6 +32,10 @@ public sealed class PrivateConversationProjectionSpec : BaseSpec<PrivateConversa
             Name = e.User2.Name,
             Role = e.User2.Role,
             RegisteredDate = DateTime.Parse(e.User2.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+            ShortName = e.User2.ShortName,
+            Status = e.User2.Status,
+            Color = e.User2.Color,
+            AvatarPath = e.User2.AvatarPath
         },
     };
 

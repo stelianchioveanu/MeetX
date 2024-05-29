@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
+using System.Xml.Linq;
 
 namespace MobyLabWebProgramming.Infrastructure.Workers;
 
@@ -47,7 +48,9 @@ public class InitializerWorker : BackgroundService
                     Email = "admin@default.com",
                     Name = "Admin",
                     Role = UserRoleEnum.Admin,
-                    Password = PasswordUtils.HashPassword("default")
+                    Password = PasswordUtils.HashPassword("default"),
+                    ShortName = "AD",
+                    Color = "#e03f4f"
                 }, cancellationToken: cancellationToken);
             }
         }

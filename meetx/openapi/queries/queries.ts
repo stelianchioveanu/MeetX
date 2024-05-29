@@ -2,7 +2,7 @@
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { AuthorizationService, GroupService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
-import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicAddDTO, TopicDeleteDTO, UserAddDTO, UserUpdateDTO } from "../requests/types.gen";
+import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicAddDTO, TopicDeleteDTO, UserAddDTO } from "../requests/types.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -189,6 +189,11 @@ export const useUserServiceGetApiUserGetByIdById = <TData = Common.UserServiceGe
   id: string;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetByIdByIdKeyFn({ id }, queryKey), queryFn: () => UserService.getApiUserGetByIdById({ id }) as TData, ...options });
 /**
+* @returns UserDTORequestResponse Success
+* @throws ApiError
+*/
+export const useUserServiceGetApiUserGetMe = <TData = Common.UserServiceGetApiUserGetMeDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetMeKeyFn(queryKey), queryFn: () => UserService.getApiUserGetMe() as TData, ...options });
+/**
 * @param data The data for the request.
 * @param data.search
 * @param data.page
@@ -340,15 +345,15 @@ export const useGroupServicePutApiGroupRemoveMember = <TData = Common.GroupServi
 }, TContext>({ mutationFn: ({ requestBody }) => GroupService.putApiGroupRemoveMember({ requestBody }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
-* @param data.requestBody
+* @param data.formData
 * @returns RequestResponse Success
 * @throws ApiError
 */
 export const useUserServicePutApiUserUpdate = <TData = Common.UserServicePutApiUserUpdateMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody?: UserUpdateDTO;
+  formData?: { Name?: string; Password?: string; Avatar?: Blob | File; AvatarRemoved?: boolean; };
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody?: UserUpdateDTO;
-}, TContext>({ mutationFn: ({ requestBody }) => UserService.putApiUserUpdate({ requestBody }) as unknown as Promise<TData>, ...options });
+  formData?: { Name?: string; Password?: string; Avatar?: Blob | File; AvatarRemoved?: boolean; };
+}, TContext>({ mutationFn: ({ formData }) => UserService.putApiUserUpdate({ formData }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody

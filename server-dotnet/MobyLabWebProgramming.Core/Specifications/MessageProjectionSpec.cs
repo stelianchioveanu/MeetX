@@ -27,6 +27,10 @@ public sealed class MessageProjectionSpec : BaseSpec<MessageProjectionSpec, Mess
                 Name = e.User.Name,
                 Role = e.User.Role,
                 RegisteredDate = DateTime.Parse(e.User.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+                ShortName = e.User.ShortName,
+                Status = e.User.Status,
+                Color = e.User.Color,
+                AvatarPath = e.User.AvatarPath,
             },
             isAdmin = e.Topic != null && e.Topic.Group.Admins.Any(x => x.Id == e.User.Id)
         },

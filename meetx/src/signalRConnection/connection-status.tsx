@@ -5,7 +5,7 @@ const ConnectionStatus = () => {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        const connector = Connector(isConnected => {
+        Connector(isConnected => {
             setIsConnected(isConnected);
         });
     }, []);

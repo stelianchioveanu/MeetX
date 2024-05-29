@@ -19,7 +19,7 @@ export const $ChangeRoleDTO = {
 } as const;
 
 export const $ErrorCodes = {
-    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAMember'],
+    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAMember', 'WrongName', 'WrongEmail'],
     type: 'string'
 } as const;
 
@@ -776,6 +776,14 @@ export const $UserAddDTO = {
             type: 'string',
             nullable: true
         },
+        shortName: {
+            type: 'string',
+            nullable: true
+        },
+        color: {
+            type: 'string',
+            nullable: true
+        },
         role: {
             '$ref': '#/components/schemas/UserRoleEnum'
         }
@@ -804,6 +812,21 @@ export const $UserDTO = {
         },
         role: {
             '$ref': '#/components/schemas/UserRoleEnum'
+        },
+        shortName: {
+            type: 'string',
+            nullable: true
+        },
+        color: {
+            type: 'string',
+            nullable: true
+        },
+        avatarPath: {
+            type: 'string',
+            nullable: true
+        },
+        status: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -864,23 +887,4 @@ export const $UserDTORequestResponse = {
 export const $UserRoleEnum = {
     enum: ['Admin', 'Personnel', 'Client'],
     type: 'string'
-} as const;
-
-export const $UserUpdateDTO = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            format: 'uuid'
-        },
-        name: {
-            type: 'string',
-            nullable: true
-        },
-        password: {
-            type: 'string',
-            nullable: true
-        }
-    },
-    additionalProperties: false
 } as const;

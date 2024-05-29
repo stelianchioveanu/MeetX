@@ -11,7 +11,6 @@ using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 using System.Net;
 using System.Web;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
 public class GroupService : IGroupService
@@ -41,7 +40,7 @@ public class GroupService : IGroupService
 
         if (group.Name.Length < 2)
         {
-            return ServiceResponse.FromError(CommonErrors.BadGroupName);
+            return ServiceResponse.FromError(CommonErrors.BadName);
         }
 
         var result = await _repository.GetAsync(new GroupSpec(group.Name, requestingUser.Id), cancellationToken);
@@ -134,9 +133,6 @@ public class GroupService : IGroupService
         }
 
         var entity = await _repository.GetAsync(new LinkGroupSpec(joinGroup.GroupId), cancellationToken);
-
-        Console.WriteLine(entity.Token);
-        Console.WriteLine(joinGroup.Token);
 
         if (entity == null || entity.Token != joinGroup.Token || entity.UpdatedAt.AddMinutes(5) < DateTime.UtcNow)
         {

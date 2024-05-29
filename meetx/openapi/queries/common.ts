@@ -115,6 +115,10 @@ export const useUserServiceGetApiUserGetByIdByIdKey = "UserServiceGetApiUserGetB
 export const UseUserServiceGetApiUserGetByIdByIdKeyFn = ({ id }: {
   id: string;
 }, queryKey?: Array<unknown>) => [useUserServiceGetApiUserGetByIdByIdKey, ...(queryKey ?? [{ id }])];
+export type UserServiceGetApiUserGetMeDefaultResponse = Awaited<ReturnType<typeof UserService.getApiUserGetMe>>;
+export type UserServiceGetApiUserGetMeQueryResult<TData = UserServiceGetApiUserGetMeDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useUserServiceGetApiUserGetMeKey = "UserServiceGetApiUserGetMe";
+export const UseUserServiceGetApiUserGetMeKeyFn = (queryKey?: Array<unknown>) => [useUserServiceGetApiUserGetMeKey, ...(queryKey ?? [])];
 export type UserServiceGetApiUserGetPageDefaultResponse = Awaited<ReturnType<typeof UserService.getApiUserGetPage>>;
 export type UserServiceGetApiUserGetPageQueryResult<TData = UserServiceGetApiUserGetPageDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useUserServiceGetApiUserGetPageKey = "UserServiceGetApiUserGetPage";

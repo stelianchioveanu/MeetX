@@ -1,4 +1,5 @@
-﻿using MobyLabWebProgramming.Core.DataTransferObjects;
+﻿using Microsoft.AspNetCore.Http;
+using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
@@ -9,21 +10,22 @@ using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
-public class MessageFileService : IMessageFileService
+public class FileService : IFileService
 {
     private readonly IRepository<WebAppDatabaseContext> _repository;
     private readonly IFileRepository _fileRepository;
 
-    private static string GetConvDirectory(Guid convId) => Path.Join(convId.ToString(), IMessageFileService.ConvFilesDirectory);
-    private static string GetTopicDirectory(Guid topicId) => Path.Join(topicId.ToString(), IMessageFileService.TopicFilesDirectory);
+    private static string GetConvDirectory(Guid convId) => Path.Join(convId.ToString(), IFileService.ConvFilesDirectory);
+    private static string GetTopicDirectory(Guid topicId) => Path.Join(topicId.ToString(), IFileService.TopicFilesDirectory);
+    private static string GetEntityDirectory(Guid id) => Path.Join(id.ToString(), IFileService.AvatarDirectory);
 
-    public MessageFileService(IRepository<WebAppDatabaseContext> repository, IFileRepository fileRepository)
+    public FileService(IRepository<WebAppDatabaseContext> repository, IFileRepository fileRepository)
     {
         _repository = repository;
         _fileRepository = fileRepository;
     }
 
-    public async Task<ServiceResponse<FilesAddedDTO>> SaveFilesMessageTopic(MessageFilesAddDTO files, UserDTO requestingUser, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse<FilesAddedDTO>> SaveFilesMessage(MessageFilesAddDTO files, UserDTO requestingUser, CancellationToken cancellationToken = default)
     {
         var filesList = new List<Guid>();
 
@@ -86,12 +88,20 @@ public class MessageFileService : IMessageFileService
         return ServiceResponse<FilesAddedDTO>.ForSuccess(new FilesAddedDTO { Files = filesList });
     }
 
-    /*public async Task<ServiceResponse<FileDTO>> GetFileDownload(Guid id, CancellationToken cancellationToken = default) // If not successful respond with the error.
+    public ServiceResponse<string> SaveAvatar(IFormFile avatar, Guid id)
     {
-        var userFile = await _repository.GetAsync<UserFile>(id, cancellationToken); // First get the file entity from the database to find the location on the filesystem.
+        if (avatar != null && id != Guid.Empty)
+        {
+            var fileName = _fileRepository.SaveFile(avatar, GetEntityDirectory(id));
+            if (fileName.Result == null)
+            {
+                return ServiceResponse<string>.FromError(CommonErrors.FileAddError);
+            }
+            return ServiceResponse<string>.ForSuccess(fileName.Result);
+        } else
+        {
+            return ServiceResponse<string>.FromError(CommonErrors.BadRequets);
+        }
+    }
 
-        return userFile != null ?
-            _fileRepository.GetFile(Path.Join(GetFileDirectory(userFile.UserId), userFile.Path), userFile.Name) :
-            ServiceResponse<FileDTO>.FromError(new(HttpStatusCode.NotFound, "File entry not found!", ErrorCodes.EntityNotFound));
-    }*/
 }

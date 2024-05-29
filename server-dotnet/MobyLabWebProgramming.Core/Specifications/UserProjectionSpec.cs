@@ -23,6 +23,10 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Name = e.Name,
         Role = e.Role,
         RegisteredDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+        ShortName = e.ShortName,
+        Status = e.Status,
+        Color = e.Color,
+        AvatarPath = e.AvatarPath,
     };
 
     public UserProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

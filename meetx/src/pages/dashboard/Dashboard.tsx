@@ -22,7 +22,7 @@ const Dashboard = () => {
         queryFn: () => {
             return GroupService.getApiGroupGetGroups();
         },
-        retry(failureCount, error) {
+        retry(failureCount) {
             if (failureCount > 0) {
                 toast("Get groups failed! Please try again later!");
                 return false;
@@ -33,9 +33,6 @@ const Dashboard = () => {
     });
 
     useEffect(() => {if(status === "success") Connector()}, [status, data])
-
-    const topic = {name: "# Topic 1", id: 1}
-    const user1 = {name: "stelicas", id: 1}
 
     return (
         <div className="w-full h-screen flex bg-[#272d3d] font">
