@@ -31,6 +31,13 @@ export const useGroupServiceGetApiGroupGetGroupKey = "GroupServiceGetApiGroupGet
 export const UseGroupServiceGetApiGroupGetGroupKeyFn = ({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetGroupKey, ...(queryKey ?? [{ groupId }])];
+export type GroupServiceGetApiGroupGetMemberDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetMember>>;
+export type GroupServiceGetApiGroupGetMemberQueryResult<TData = GroupServiceGetApiGroupGetMemberDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useGroupServiceGetApiGroupGetMemberKey = "GroupServiceGetApiGroupGetMember";
+export const UseGroupServiceGetApiGroupGetMemberKeyFn = ({ groupId, userId }: {
+  groupId?: string;
+  userId?: string;
+} = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetMemberKey, ...(queryKey ?? [{ groupId, userId }])];
 export type GroupServiceGetApiGroupGetGroupDetailsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetGroupDetails>>;
 export type GroupServiceGetApiGroupGetGroupDetailsQueryResult<TData = GroupServiceGetApiGroupGetGroupDetailsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGroupServiceGetApiGroupGetGroupDetailsKey = "GroupServiceGetApiGroupGetGroupDetails";

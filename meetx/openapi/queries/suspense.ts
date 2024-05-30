@@ -52,6 +52,17 @@ export const useGroupServiceGetApiGroupGetGroupSuspense = <TData = Common.GroupS
 /**
 * @param data The data for the request.
 * @param data.groupId
+* @param data.userId
+* @returns GroupMemberDTORequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServiceGetApiGroupGetMemberSuspense = <TData = Common.GroupServiceGetApiGroupGetMemberDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, userId }: {
+  groupId?: string;
+  userId?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetMemberKeyFn({ groupId, userId }, queryKey), queryFn: () => GroupService.getApiGroupGetMember({ groupId, userId }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.groupId
 * @returns GroupDetailsDTORequestResponse Success
 * @throws ApiError
 */

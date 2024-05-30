@@ -38,10 +38,10 @@ const GroupUsers = () => {
                 data?.response?.data !== null && data?.response?.data !== undefined ?
                 data?.response?.data.map((user, index) => {
                     return (
-                        <PopoverUser member={user} side="left" key={index}>
+                        <PopoverUser userId={user.user?.id} side="left" key={index} isGroup={true}>
                             <UserButton variant={"ghost"}
                             className="w-52 h-12 hover:bg-neutral-600 gap-2 flex justify-start group mt-1">
-                                <UserAvatar user={user.user} className="w-10 h-10" status="visible"/>
+                                <UserAvatar user={user.user} className="w-10 h-10 text-xs" status="hidden"/>
                                 {user.user?.name}
                             </UserButton>
                         </PopoverUser>

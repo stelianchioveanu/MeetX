@@ -29,6 +29,56 @@ namespace SignalRChat.Hubs
             var userId = Context.User?.Claims.ToList().Where(x => x.Type == ClaimTypes.NameIdentifier).Select(x => Guid.Parse(x.Value)).FirstOrDefault().ToString();
             var connectionId = Context.ConnectionId;
 
+            if (userId != null)
+            {
+                var user = await _repository.GetAsync(new UserSpec(Guid.Parse(userId)));
+                if (user != null)
+                {
+                    user.Status = true;
+                    user = await _repository.UpdateAsync(user);
+                    foreach (var conv in user.StartedConversations)
+                    {
+                        List<string>? userConnections = null;
+                        Console.WriteLine(conv.User2Id);
+                        lock (_lock)
+                        {
+                            if (_userConnections.ContainsKey(conv.User2Id.ToString()))
+                            {
+                                userConnections = new List<string>(_userConnections[conv.User2Id.ToString()]);
+                            }
+                        }
+
+                        if (userConnections != null)
+                        {
+                            foreach (var connection in userConnections)
+                            {
+                                await Clients.Client(connection).SendAsync("UpdateConv");
+                            }
+                        }
+                    }
+
+                    foreach (var conv in user.ReceivedConversations)
+                    {
+                        List<string>? userConnections = null;
+                        lock (_lock)
+                        {
+                            if (_userConnections.ContainsKey(conv.User1Id.ToString()))
+                            {
+                                userConnections = new List<string>(_userConnections[conv.User1Id.ToString()]);
+                            }
+                        }
+
+                        if (userConnections != null)
+                        {
+                            foreach (var connection in userConnections)
+                            {
+                                await Clients.Client(connection).SendAsync("UpdateConv");
+                            }
+                        }
+                    }
+                }
+            }
+
             lock (_lock)
             {
                 if (userId != null)
@@ -139,14 +189,70 @@ namespace SignalRChat.Hubs
 
         public override async Task OnDisconnectedAsync(System.Exception? exception)
         {
+            bool notConnected = false;
+            Guid userId = Guid.Empty;
             lock (_lock)
             {
-                foreach (var userConnections in _userConnections.Values)
+                foreach (var userConnections in _userConnections)
                 {
-                    if (userConnections.Contains(Context.ConnectionId))
+                    if (userConnections.Value.Contains(Context.ConnectionId))
                     {
-                        userConnections.Remove(Context.ConnectionId);
+                        userConnections.Value.Remove(Context.ConnectionId);
+                        if (userConnections.Value.Count == 0)
+                        {
+                            userId = Guid.Parse(userConnections.Key);
+                            notConnected = true;
+                        }
                         break;
+                    }
+                }
+            }
+
+            if (userId != Guid.Empty && notConnected)
+            {
+                var user = await _repository.GetAsync(new UserSpec(userId));
+                if (user != null)
+                {
+                    user.Status = false;
+                    await _repository.UpdateAsync(user);
+                    foreach (var conv in user.StartedConversations)
+                    {
+                        List<string>? userConnections = null;
+                        lock (_lock)
+                        {
+                            if (_userConnections.ContainsKey(conv.User2Id.ToString()))
+                            {
+                                userConnections = new List<string>(_userConnections[conv.User2Id.ToString()]);
+                            }
+                        }
+
+                        if (userConnections != null)
+                        {
+                            foreach (var connection in userConnections)
+                            {
+                                await Clients.Client(connection).SendAsync("UpdateConv");
+                            }
+                        }
+                    }
+
+                    foreach (var conv in user.ReceivedConversations)
+                    {
+                        List<string>? userConnections = null;
+                        lock (_lock)
+                        {
+                            if (_userConnections.ContainsKey(conv.User1Id.ToString()))
+                            {
+                                userConnections = new List<string>(_userConnections[conv.User1Id.ToString()]);
+                            }
+                        }
+
+                        if (userConnections != null)
+                        {
+                            foreach (var connection in userConnections)
+                            {
+                                await Clients.Client(connection).SendAsync("UpdateConv");
+                            }
+                        }
                     }
                 }
             }

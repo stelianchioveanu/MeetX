@@ -52,6 +52,17 @@ export const prefetchUseGroupServiceGetApiGroupGetGroup = (queryClient: QueryCli
 /**
 * @param data The data for the request.
 * @param data.groupId
+* @param data.userId
+* @returns GroupMemberDTORequestResponse Success
+* @throws ApiError
+*/
+export const prefetchUseGroupServiceGetApiGroupGetMember = (queryClient: QueryClient, { groupId, userId }: {
+  groupId?: string;
+  userId?: string;
+} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetMemberKey, [{ groupId, userId }]], queryFn: () => GroupService.getApiGroupGetMember({ groupId, userId }) });
+/**
+* @param data The data for the request.
+* @param data.groupId
 * @returns GroupDetailsDTORequestResponse Success
 * @throws ApiError
 */

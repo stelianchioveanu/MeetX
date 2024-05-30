@@ -9,6 +9,7 @@ import Connector from '../../signalRConnection/signalr-connection'
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import FileCard from "./file-card";
 import { useMessageFilesServicePostApiMessageFilesAddFilesTopicMessage } from "../../../openapi/queries/queries";
+import { toast } from "react-toastify";
 
 const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     const [input, setInput] = useState("");
@@ -37,17 +38,51 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
         setInput(event.target.value);
     };
 
-    const imagesHandleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const fileHandleChange = (event: ChangeEvent<HTMLInputElement>, isImage: boolean) => {
         if (event.target.files) {
             const fileList = Array.from(event.target.files) as File[];
-            setImages((prevImages) => [...prevImages, ...fileList]);
-        }
-    }
+            
+            let filesSize = 0;
+            let filesCount = images.length + files.length;
+            let maximumNumber = false;
+            let maximumSize = false;
+            images.forEach(element => {
+                filesSize += element.size;
+            });
+            files.forEach(element => {
+                filesSize += element.size; 
+            });
 
-    const filesHandleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            const fileList = Array.from(event.target.files) as File[];
-            setFiles((prevFiles) => [...prevFiles, ...fileList]);
+            const filteredFiles = fileList.filter(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    toast(`Image ${file.name} is too large! Max 10MB`);
+                    return false;
+                }
+                if (filesCount === 10) {
+                    maximumNumber = true;
+                    return false;
+                }
+                if (filesSize + file.size > 25 * 1024 * 1024) {
+                    maximumSize = true;
+                    return false;
+                }
+                filesCount++;
+                filesSize = filesSize + file.size;
+                return true;
+            });
+
+            if (maximumNumber) {
+                toast("Maximum files number is 10!")
+            }
+            if (maximumSize) {
+                toast("Files size should not exceed 25MB!")
+            }
+
+            if (isImage) {
+                setImages((prevImages) => [...prevImages, ...filteredFiles]);
+            } else {
+                setFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
+            }
         }
     }
 
@@ -79,7 +114,6 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             console.log(error.message);
         },
         onSuccess: (result : any) => {
-            console.log(result.response.files);
             if (props.isGroup) {
                 newMessage(selectedGroupId ? selectedGroupId : "", selectedTopicId ? selectedTopicId : "", input, result.response.files);
             } else {
@@ -110,7 +144,6 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             setImages([]);
             setFiles([]);
         } else {
-            console.log(data);
             mutate({formData: data});
         }
     };
@@ -159,12 +192,13 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             <input className=" h-[45px] text-[#d8ddeb] bg-transparent
             focus-visible:outline-none grow" placeholder="#Type here"
             value={input} onChange={handleChange} onKeyDown={handleKeyPress} />
-            <input type="file" accept="image/*" multiple={true} hidden ref={imagesRef} onChange={imagesHandleChange}/>
+            <input type="file" accept=".jpeg, .jpg, .png" multiple={true} hidden ref={imagesRef}
+            onChange={(event) => fileHandleChange(event, true)}/>
             <input type="file" accept=".txt, .rtf, .md, .doc, .docx, .pdf, .xls,
             .xlsx, .csv, .ppt, .pptx, .key, .mp3, .wav, .ogg, .flac, .mp4, .mov, .avi, .mkv, .zip,
             .rar, .7z, .tar, .tar.gz, .js, .jsx, .html, .tsx, .css, .scss, .sass, .py, .java, .cpp,
             .h, .c, .cs, .php, .rb, .swift, .go, .ts, .json, .xml, .yaml, .yml, .exe" multiple={true} hidden
-            ref={filesRef} onChange={filesHandleChange}/>
+            ref={filesRef} onChange={(event) => fileHandleChange(event, false)}/>
             {
                 emojiOpened !== true ?
                 <SmileIcon id="slime" className="w-7 h-7 text-[#d8ddeb]"

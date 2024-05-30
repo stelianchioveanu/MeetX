@@ -22,7 +22,7 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
             ShortName = e.ShortName,
             AvatarPath = e.AvatarPath,
             Color = e.Color,
-        }
+        },
     };
 
     public GroupMemberProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

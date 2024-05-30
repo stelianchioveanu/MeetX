@@ -3,17 +3,20 @@ import {
     CardContent,
     CardFooter
   } from "@/components/ui/card"
-import { Download, File, X } from 'lucide-react';
+import { Download, Eye, File, Image, X } from 'lucide-react';
 import { FileGetDTO } from "../../../openapi/requests/types.gen";
 import { useAppSelector } from "@/application/store";
 import axios from "axios";
+import { useState } from "react";
 
 const FileMessageCard = (props: {file: FileGetDTO, isGroup: boolean}) => {
     const { selectedTopicId, selectedConvId } = useAppSelector(x => x.selectedReducer);
+    const [preView, setPreView] = useState<boolean>(false);
 
     const handleDownloadClick = () => {
         axios({
-            url: props.isGroup ? `http://localhost:5000/${selectedTopicId}/Topics/${props.file.path}` : `http://localhost:5000/${selectedConvId}/Users/${props.file.path}`,
+            url: props.isGroup ? `http://localhost:5000/${selectedTopicId}/Topics/${props.file.path}` :
+            `http://localhost:5000/${selectedConvId}/Users/${props.file.path}`,
             method: 'GET',
             responseType: 'blob',
           }).then((response) => {
@@ -35,8 +38,17 @@ const FileMessageCard = (props: {file: FileGetDTO, isGroup: boolean}) => {
             <CardContent className="w-[85%] aspect-square p-0">
                 {
                     props.file.type === "Image" ?
-                    <img src={props.isGroup ? `http://localhost:5000/${selectedTopicId}/Topics/${props.file.path}` : `http://localhost:5000/${selectedConvId}/Users/${props.file.path}`} className="w-full
-                    aspect-square object-contain"></img> :
+                    ( preView ?
+                    <img src={props.isGroup ? `http://localhost:5000/${selectedTopicId}/Topics/${props.file.path}` :
+                    `http://localhost:5000/${selectedConvId}/Users/${props.file.path}`} className="w-full
+                    aspect-square object-contain" loading="lazy"></img> :
+                    <div className="w-full h-full relative">
+                        <Image className="w-full h-full"/>
+                        <Eye className="text-green-600 absolute w-10 h-10 -right-1
+                        -bottom-1 hover:cursor-pointer hover:text-green-400
+                        transition-all" fill="#424b60" onClick={() => setPreView(true)}></Eye>
+                    </div>
+                    ) :
                     <File className="w-full h-full"/>
                 }
             </CardContent>

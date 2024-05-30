@@ -5,6 +5,7 @@ const URL = "http://localhost:5000/chatHub";
 class Connector {
     private connection: signalR.HubConnection;
     public events: (onMessageReceived: (message: any) => void) => void;
+    public update: (onMessageReceived: (message: any) => void) => void;
     static instance: Connector | null = null;
     public isConnected: boolean;
     private setConnected?: (isConnected: boolean) => void;
@@ -36,6 +37,12 @@ class Connector {
 
         this.events = (onMessageReceived) => {
             this.connection.on("ReceiveMessage", (message) => {
+                onMessageReceived(message);
+            });
+        };
+
+        this.update = (onMessageReceived) => {
+            this.connection.on("UpdateConv", (message) => {
                 onMessageReceived(message);
             });
         };

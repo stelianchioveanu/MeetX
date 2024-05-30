@@ -8,10 +8,10 @@ import FileMessageCard from "./file-message-card";
 const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: boolean}) => {
     return (
     <div className={cn("w-full h-fit py-2 hover:bg-[#00000020] flex gap-3 p-2", props.className)}>
-        <UserAvatar status="hidden" user={props.message.user?.user} className="h-10 min-w-10"/>
+        <UserAvatar status="hidden" user={props.message.user?.user} className="h-10 min-w-10 text-xs"/>
         <div className="flex w-full flex-col">
             <div className="flex items-center gap-2">
-                <PopoverUser member={props.message.user} side="right">
+                <PopoverUser userId={props.message.user?.user?.id} side="right" isGroup={props.isGroup}>
                     <Button variant={"link"} className="p-0 text-base font-semibold">
                         {props.message.user?.user?.name}
                     </Button>

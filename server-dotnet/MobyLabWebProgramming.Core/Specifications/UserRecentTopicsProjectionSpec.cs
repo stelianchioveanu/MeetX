@@ -22,17 +22,20 @@ public sealed class UserRecentTopicsProjectionSpec : BaseSpec<UserRecentTopicsPr
         Title = e.Topic.Title,
         Description = e.Topic.Description,
         CreatedDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
-        User = new UserDTO
-        {
-            Id = e.User.Id,
-            Email = e.User.Email,
-            Name = e.User.Name,
-            Role = e.User.Role,
-            RegisteredDate = DateTime.Parse(e.User.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
-            Status = e.User.Status,
-            ShortName = e.User.ShortName,
-            AvatarPath = e.User.AvatarPath,
-            Color = e.User.Color,
+        User = new GroupMemberDTO { 
+            User = new UserDTO
+            {
+                Id = e.User.Id,
+                Email = e.User.Email,
+                Name = e.User.Name,
+                Role = e.User.Role,
+                RegisteredDate = DateTime.Parse(e.User.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+                Status = e.User.Status,
+                ShortName = e.User.ShortName,
+                AvatarPath = e.User.AvatarPath,
+                Color = e.User.Color,
+            },
+            isAdmin = e.Topic.Group.Admins.Any(x => x.Id == e.User.Id)
         }
     };
 

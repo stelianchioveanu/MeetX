@@ -11,6 +11,7 @@ public sealed class UserSpec : BaseSpec<UserSpec, User>
 {
     public UserSpec(Guid id) : base(id)
     {
+        Query.Where(e => e.Id == id).Include(e => e.StartedConversations).Include(e => e.ReceivedConversations);
     }
 
     public UserSpec(string email)

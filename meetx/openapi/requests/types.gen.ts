@@ -101,6 +101,11 @@ export type GroupMemberDTOPagedResponseRequestResponse = {
     errorMessage?: ErrorMessage;
 };
 
+export type GroupMemberDTORequestResponse = {
+    response?: GroupMemberDTO;
+    errorMessage?: ErrorMessage;
+};
+
 export type GroupRoleEnum = 'Admin' | 'Member';
 
 export type HttpStatusCode = 'Continue' | 'SwitchingProtocols' | 'Processing' | 'EarlyHints' | 'OK' | 'Created' | 'Accepted' | 'NonAuthoritativeInformation' | 'NoContent' | 'ResetContent' | 'PartialContent' | 'MultiStatus' | 'AlreadyReported' | 'IMUsed' | 'MultipleChoices' | 'MovedPermanently' | 'Found' | 'SeeOther' | 'NotModified' | 'UseProxy' | 'Unused' | 'TemporaryRedirect' | 'PermanentRedirect' | 'BadRequest' | 'Unauthorized' | 'PaymentRequired' | 'Forbidden' | 'NotFound' | 'MethodNotAllowed' | 'NotAcceptable' | 'ProxyAuthenticationRequired' | 'RequestTimeout' | 'Conflict' | 'Gone' | 'LengthRequired' | 'PreconditionFailed' | 'RequestEntityTooLarge' | 'RequestUriTooLong' | 'UnsupportedMediaType' | 'RequestedRangeNotSatisfiable' | 'ExpectationFailed' | 'MisdirectedRequest' | 'UnprocessableEntity' | 'Locked' | 'FailedDependency' | 'UpgradeRequired' | 'PreconditionRequired' | 'TooManyRequests' | 'RequestHeaderFieldsTooLarge' | 'UnavailableForLegalReasons' | 'InternalServerError' | 'NotImplemented' | 'BadGateway' | 'ServiceUnavailable' | 'GatewayTimeout' | 'HttpVersionNotSupported' | 'VariantAlsoNegotiates' | 'InsufficientStorage' | 'LoopDetected' | 'NotExtended' | 'NetworkAuthenticationRequired';
@@ -227,7 +232,7 @@ export type TopicDTO = {
     title?: string | null;
     description?: string | null;
     createdDate?: string | null;
-    user?: UserDTO;
+    user?: GroupMemberDTO;
     numberAnswers?: number;
 };
 
@@ -383,6 +388,13 @@ export type DeleteApiGroupDeleteGroupData = {
 };
 
 export type DeleteApiGroupDeleteGroupResponse = RequestResponse;
+
+export type GetApiGroupGetMemberData = {
+    groupId?: string;
+    userId?: string;
+};
+
+export type GetApiGroupGetMemberResponse = GroupMemberDTORequestResponse;
 
 export type GetApiGroupGetGroupDetailsData = {
     groupId?: string;
@@ -686,6 +698,17 @@ export type $OpenApiTs = {
                  * Success
                  */
                 200: RequestResponse;
+            };
+        };
+    };
+    '/api/Group/GetMember': {
+        get: {
+            req: GetApiGroupGetMemberData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: GroupMemberDTORequestResponse;
             };
         };
     };

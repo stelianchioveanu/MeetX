@@ -6,12 +6,12 @@ import UserAvatar from "../users-tab/user-avatar";
 const Topic = (props: {topic: TopicDTO}) => {
     return (
     <div className="w-full h-fit flex gap-3">
-        <UserAvatar status="hidden" user={props.topic?.user} className="h-10 min-w-10"/>
+        <UserAvatar status="hidden" user={props.topic?.user?.user} className="h-10 min-w-10 text-xs"/>
         <div className="flex w-full flex-col gap-2">
             <div className="flex items-center gap-2">
-                <PopoverUser user={props.topic.user} side="right">
+                <PopoverUser userId={props.topic.user?.user?.id} isGroup={true} side="right">
                     <Button variant={"link"} className="p-0 text-base font-semibold">
-                        {props.topic?.user?.name}
+                        {props.topic?.user?.user?.name}
                     </Button>
                 </PopoverUser>
                 <p className="text-gray-500 text-xs">{props.topic.createdDate}</p>

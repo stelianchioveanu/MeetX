@@ -6,10 +6,13 @@ const UserAvatar = (props: {user?: UserDTO, className: String, status: "hidden" 
     const className = "w-[20%] h-[20%] rounded-full absolute right-[8%] bottom-[8%] "
     return (
     <div className={cn("relative", props.className)}>
-        <img src={`http://localhost:5000/${props.user?.id}/Avatar/${props.user?.avatarPath}`} className="w-full h-full
-        rounded-full"/>
+        {props.user?.avatarPath === null || props.user?.avatarPath === "" ?
+            <div className="w-full h-full rounded-full flex justify-center items-center text-[1.5em]" style={{backgroundColor: "" + props.user?.color}}>
+                <p className='text-[1em] text-white'>{props.user?.shortName}</p>
+            </div> :
+            <img className='w-full h-full rounded-full' src={`http://localhost:5000/${props.user?.id}/Avatar/${props.user?.avatarPath}`}></img>}
         {
-            props.status === "visible" ?
+            props.status === "visible" && props.user?.status ?
             <>
                 <div className="w-[36%] h-[36%] bg-[#171b25]
                 rounded-full absolute right-0 bottom-0

@@ -12,11 +12,14 @@ import { TopicDTO } from "openapi/requests/types.gen";
 import LeaveGroupDialog from "./leave-group-dialog";
 import DeleteGroupDialog from "./delete-group-dialog";
 import { GenerateLinkDialog } from "./generate-link-dialog";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 const GroupFrame = () => {
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
+    const [pageMyTopics, setPageMyTopics] = useState<number>(1);
+    const [pageRecentTopics, setPageRecentTopics] = useState<number>(1);
 
     const group = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupKey, selectedGroupId],
@@ -39,7 +42,7 @@ const GroupFrame = () => {
     const myTopics = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey, selectedGroupId],
         queryFn: () => {
-            return TopicService.getApiTopicGetMyTopics({search: "", groupId: selectedGroupId === null ? undefined : selectedGroupId});
+            return TopicService.getApiTopicGetMyTopics({search: "", pageSize: 5 * pageMyTopics, groupId: selectedGroupId === null ? undefined : selectedGroupId});
         },
         retry(failureCount, error) {
             if (failureCount > 0) {
@@ -55,7 +58,7 @@ const GroupFrame = () => {
     const recentTopics = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey, selectedGroupId],
         queryFn: () => {
-            return TopicService.getApiTopicGetRecentTopics({search: "", groupId: selectedGroupId === null ? undefined : selectedGroupId});
+            return TopicService.getApiTopicGetRecentTopics({search: "", pageSize: 5 * pageRecentTopics, groupId: selectedGroupId === null ? undefined : selectedGroupId});
         },
         retry(failureCount, error) {
             if (failureCount > 0) {
@@ -65,8 +68,16 @@ const GroupFrame = () => {
             }
             return true;
         },
-        retryDelay: 0,
+        retryDelay: 0
     });
+
+    useEffect(() => {
+        myTopics.refetch();
+    }, [pageMyTopics]);
+
+    useEffect(() => {
+        recentTopics.refetch();
+    }, [pageRecentTopics]);
 
     return (
     <div className="h-full w-60 bg-[#171b25] flex flex-col gap-4 items-center">
@@ -85,6 +96,10 @@ const GroupFrame = () => {
                         )
                     }) : null
             }
+            {
+                recentTopics.data?.response?.totalCount !== recentTopics.data?.response?.data?.length ?
+                <Button variant={"link"} className="w-full text-blue-700" onClick={() => {setPageRecentTopics(pageRecentTopics + 1);}}>Load more...</Button> : null
+            }
             <div className="min-h-12 flex items-center mb-2 px-2">
                 #Your topics
             </div>
@@ -95,6 +110,10 @@ const GroupFrame = () => {
                             <GroupTopic key={topic.id} topic={topic}></GroupTopic>
                         )
                     }) : null
+            }
+            {
+                myTopics.data?.response?.totalCount !== myTopics.data?.response?.data?.length ?
+                <Button variant={"link"} className="w-full text-blue-700" onClick={() => {setPageMyTopics(pageMyTopics + 1);}}>Load more...</Button> : null
             }
         </ScrollArea>
         <Separator className="bg-neutral-600 w-4/5"/>

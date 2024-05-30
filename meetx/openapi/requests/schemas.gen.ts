@@ -296,6 +296,19 @@ export const $GroupMemberDTOPagedResponseRequestResponse = {
     additionalProperties: false
 } as const;
 
+export const $GroupMemberDTORequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/GroupMemberDTO'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const $GroupRoleEnum = {
     enum: ['Admin', 'Member'],
     type: 'string'
@@ -684,7 +697,7 @@ export const $TopicDTO = {
             nullable: true
         },
         user: {
-            '$ref': '#/components/schemas/UserDTO'
+            '$ref': '#/components/schemas/GroupMemberDTO'
         },
         numberAnswers: {
             type: 'integer',

@@ -22,5 +22,7 @@ public interface IGroupService
     public Task<ServiceResponse> DeleteGroup(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse<GroupGetDTO>> GetGroup(Guid groupId, User? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse<PagedResponse<GroupMemberDTO>>> GetGroupMembers(PaginationQueryParams pagination, Guid GroupId, User? requestingUser = default, CancellationToken cancellationToken = default);
+
+    public Task<ServiceResponse<GroupMemberDTO>> GetGroupMember(Guid GroupId, Guid UserId, User? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId, User? requestingUser = default, CancellationToken cancellationToken = default);
 }

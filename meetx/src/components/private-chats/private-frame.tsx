@@ -1,12 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ScrollArea } from "../ui/scroll-area";
 import ConversationButton from "./conversation-button";
 import { PrivateConversationDTO } from "../../../openapi/requests/types.gen";
 import { usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey } from "../../../openapi/queries/common";
 import { PrivateConversationService } from "../../../openapi/requests/services.gen";
 import { toast } from "react-toastify";
+import Connector from '../../signalRConnection/signalr-connection';
+import { useEffect } from "react";
 
 const PrivateFrame = () => {
+    const queryClient = useQueryClient();
+    const { update } = Connector();
 
     const {data} = useQuery({
         queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey],
@@ -22,6 +26,13 @@ const PrivateFrame = () => {
         },
         retryDelay: 0
     });
+
+    useEffect(() => {
+        update(() => {
+            queryClient.invalidateQueries({queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey]})
+        });
+    }, 
+    [])
 
     return (
     <div className="h-full w-60 bg-[#171b25] flex flex-col gap-4 items-center">

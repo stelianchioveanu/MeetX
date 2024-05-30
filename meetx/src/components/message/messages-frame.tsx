@@ -64,7 +64,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
     });
 
     useEffect(() => {
-        if (topic.status === 'success' && props.isGroup) {
+        if (props.isGroup && topic.status === 'success') {
             if (topic.data.response?.data) {
                 setMessages(topic.data.response.data.reverse().concat(messages));
                 
@@ -79,7 +79,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
             setPage(prevPage => prevPage + 1);
             return;
         }
-        if (conv.status === 'success' && !props.isGroup) {
+        if (!props.isGroup && conv.status === 'success') {
             if (conv.data.response?.data) {
                 setMessages(conv.data.response.data.reverse().concat(messages));
                 
@@ -94,7 +94,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
             setPage(prevPage => prevPage + 1);
             return;
         }
-    }, [topic.data, topic.status, conv.data, conv.status]);
+    }, [topic.dataUpdatedAt, conv.dataUpdatedAt]);
 
     useEffect(() => {
         if (page === 2) {
@@ -126,7 +126,6 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
                 setMessages(messages => [...messages, message]);
                 setNewMessage(true);
             }
-            console.log(message);
         });
     }, []);
 
@@ -139,12 +138,14 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
 
     return (
         <ScrollArea className="w-full h-fit" ref={containerRef}>
-            <InfiniteScroll hasMore={hasMore} isLoading={isLoading} next={() => {setIsloading(true); if (props.isGroup) {topic.refetch()} else {conv.refetch()}}} threshold={1} reverse={true}>
+            <InfiniteScroll hasMore={hasMore} isLoading={isLoading} next={() => {setIsloading(true); if (props.isGroup) {topic.refetch();} else {conv.refetch();}}} threshold={1} reverse={true}>
+                <div id="loader" className="w-full h-8 top-auto">
                 {hasMore && 
-                    <div id="loader" className="w-full h-fit flex justify-center items-center top-auto">
+                    <div className="w-full h-full flex justify-center items-center">
                         <Loader2 className="h-8 w-8 animate-spin" />
                     </div>}
-                {!hasMore && <div className="w-full h-fit text-center top-auto">This is the beginning of the topic!</div>}
+                {!hasMore && <div className="w-full h-full text-center">This is the beginning of the topic!</div>}
+                </div>
             </InfiniteScroll>
             {
                 messages.map(function(message : MessageDTO){

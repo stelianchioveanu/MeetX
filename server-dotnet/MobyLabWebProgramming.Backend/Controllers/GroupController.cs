@@ -134,6 +134,17 @@ public class GroupController : AuthorizedController
 
     [Authorize]
     [HttpGet]
+    public async Task<ActionResult<RequestResponse<GroupMemberDTO>>> GetMember([FromQuery] Guid groupId, [FromQuery] Guid userId)
+    {
+        var currentUser = await GetCurrentUserNotDTO();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _groupService.GetGroupMember(groupId, userId, currentUser.Result)) :
+            this.ErrorMessageResult<GroupMemberDTO>(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpGet]
     public async Task<ActionResult<RequestResponse<GroupDetailsDTO>>> GetGroupDetails([FromQuery] Guid groupId)
     {
         var currentUser = await GetCurrentUserNotDTO();

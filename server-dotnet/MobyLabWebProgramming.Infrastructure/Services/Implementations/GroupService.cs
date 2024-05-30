@@ -9,6 +9,7 @@ using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
+using System.Diagnostics.Metrics;
 using System.Net;
 using System.Web;
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
@@ -279,6 +280,50 @@ public class GroupService : IGroupService
         }
 
         return ServiceResponse<PagedResponse<GroupMemberDTO>>.ForSuccess(result);
+    }
+
+    public async Task<ServiceResponse<GroupMemberDTO>> GetGroupMember(Guid GroupId, Guid UserId, User? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse<GroupMemberDTO>.FromError(CommonErrors.UserNotFound);
+        }
+
+        var group = await _repository.GetAsync(new GroupSpec(GroupId), cancellationToken);
+
+        if (group == null)
+        {
+            return ServiceResponse<GroupMemberDTO>.FromError(CommonErrors.GroupNotFound);
+        }
+
+        if (!group.Users.Contains(requestingUser))
+        {
+            return ServiceResponse<GroupMemberDTO>.FromError(CommonErrors.NotMember);
+        }
+
+        var result = await _repository.GetAsync(new UserProjectionSpec(UserId), cancellationToken);
+
+        if (result == null)
+        {
+            return ServiceResponse<GroupMemberDTO>.FromError(CommonErrors.UserNotFound);
+        }
+        else
+        {
+            var member = new GroupMemberDTO
+            {
+                User = result,
+            };
+            if (group.Admins.Any(u => u.Id == result.Id))
+            {
+                member.isAdmin = true;
+            }
+            else
+            {
+                member.isAdmin = false;
+            }
+
+            return ServiceResponse<GroupMemberDTO>.ForSuccess(member);
+        }
     }
 
     public async Task<ServiceResponse<GroupGetDTO>> GetGroup(Guid groupId, User? requestingUser = default, CancellationToken cancellationToken = default)
