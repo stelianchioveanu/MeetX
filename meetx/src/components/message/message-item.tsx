@@ -10,13 +10,15 @@ const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: b
     <div className={cn("w-full h-fit py-2 hover:bg-[#00000020] flex gap-3 p-2", props.className)}>
         <UserAvatar status="hidden" user={props.message.user?.user} className="h-10 min-w-10 text-xs"/>
         <div className="flex w-full flex-col">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-[95%]">
                 <PopoverUser userId={props.message.user?.user?.id} side="right" isGroup={props.isGroup}>
-                    <Button variant={"link"} className="p-0 text-base font-semibold">
-                        {props.message.user?.user?.name}
+                    <Button variant={"link"} className="p-0 text-base font-semibold w-fit max-w-[calc(100%-144px)]">
+                        <p className="truncate">
+                            {props.message?.user?.user?.name}
+                        </p>
                     </Button>
                 </PopoverUser>
-                <p className={"text-xs " + (props.isTopic ? "text-white" : "text-gray-500")}>{props.message.createdDate}</p>
+                <p className={"text-xs min-w-36 float-right " + (props.isTopic ? "text-white" : "text-gray-500")}>{props.message.createdDate}</p>
             </div>
             {
                 props.isTopic ?

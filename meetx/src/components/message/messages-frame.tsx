@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/application/store";
 import MessageItem from "./message-item";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { useQuery } from "@tanstack/react-query";
 import { MessageService } from "../../../openapi/requests/services.gen";
 import { MessageDTO } from "../../../openapi/requests/types.gen";
@@ -149,6 +149,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
 
     return (
         <ScrollArea className="w-full h-fit min-h-10" ref={containerRef}>
+            <ScrollBar className="flex"/>
             <InfiniteScroll hasMore={hasMore} isLoading={isLoading} next={() => {setIsloading(true); if (props.isGroup) {topic.refetch();} else {conv.refetch();}}} threshold={1} reverse={true}>
                 <div id="loader" className="w-full h-8 top-auto">
                 {hasMore && 

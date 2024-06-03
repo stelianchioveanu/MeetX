@@ -79,16 +79,16 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
                     <UserAvatar user={props.isGroup ? member.data?.response?.user :
                         user.data?.response} className="w-20 h-20 absolute bottom-4 left-3 text-2xl" status="visible"/>
                 </div>
-                <div className="flex flex-col p-3 gap-1">
+                <div className="flex flex-col p-3 gap-1 font">
                     {props.isGroup ?
                     <p className=" text-[#248379]">
                         {member.data?.response?.isAdmin ? "Admin" : "Member"}
                     </p> : null }
-                    <p className=" text-purple-700 text-xl font-semibold">
+                    <p className=" text-purple-700 text-xl font-semibold truncate">
                         {props.isGroup ? member.data?.response?.user?.name :
                         user.data?.response?.name}
                     </p>
-                    <p className="text-sm">
+                    <p className="text-sm truncate">
                         {props.isGroup ? member.data?.response?.user?.email :
                         user.data?.response?.email}
                     </p>

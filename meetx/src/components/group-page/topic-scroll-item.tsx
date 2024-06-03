@@ -11,10 +11,10 @@ const TopicScrollItem = (props: {topic: TopicDTO}) => {
     onClick={() => {props.topic?.id ? dispatch(setTopic(props.topic?.id)) : console.log("gagici")}}>
         {
             props.topic.numberAnswers !== 0 ?
-            <p className="bg-green-500 p-1 rounded-md flex min-w-fit">
+            <p className="bg-green-500 p-1 rounded-md flex min-w-[118px] max-w-[115px] items-center gap-1">
                 <Check/> {props.topic.numberAnswers} answers
             </p> :
-            <p className="bg-red-500 p-1 rounded-md flex min-w-fit">
+            <p className="bg-red-500 p-1 rounded-md flex min-w-[118px] max-w-[115px] items-center gap-1">
                 <X/> {props.topic.numberAnswers} answers
             </p>
         }

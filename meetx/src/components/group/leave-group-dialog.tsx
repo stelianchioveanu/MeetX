@@ -13,7 +13,6 @@ import {
 import { useGroupServicePutApiGroupLeaveGroup } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { LeaveGroupDTO } from "../../../openapi/requests/types.gen";
 import { useAppDispatch, useAppSelector } from "@/application/store";
 import { setGroup } from "@/application/state-slices";

@@ -1,7 +1,7 @@
 import { Separator } from "../ui/separator";
 import GroupTopic from "./group-topic";
 import AddTopic from "./add-topic";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { GroupService, TopicService } from "../../../openapi/requests/services.gen";
 import { useQuery } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/application/store";
@@ -62,7 +62,9 @@ const GroupFrame = () => {
             {
                 group.isLoading ? 
                 <Skeleton className="w-full h-full"/> :
-                group.data?.response?.group?.name
+                <p className="w-full h-full truncate">
+                    {group.data?.response?.group?.name}
+                </p>
             }
         </div>
         {
@@ -76,6 +78,7 @@ const GroupFrame = () => {
             <Separator className="bg-neutral-600 w-4/5"/>
         }
         <ScrollArea className="flex w-full flex-col p-2">
+            <ScrollBar className="flex"/>
             {
                 group.isFetching ?
                 <Skeleton className="w-full h-8"/>:

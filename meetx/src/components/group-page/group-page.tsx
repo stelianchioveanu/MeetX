@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "../ui/input";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import TopicScrollItem from "./topic-scroll-item";
 import { TopicDTO } from "../../../openapi/requests/types.gen";
 import { useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
@@ -67,6 +67,7 @@ const GroupPage = () => {
             </div>
         }
         <ScrollArea className="w-full h-full">
+            <ScrollBar orientation="vertical" className="flex"/>
             {
                 !isFetchedAfterMount || (isRefetching && page === 1) ?
                 <Skeleton className="w-full h-20"/> :

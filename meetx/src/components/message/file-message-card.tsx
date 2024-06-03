@@ -30,7 +30,7 @@ const FileMessageCard = (props: {file: FileGetDTO, isGroup: boolean}) => {
     };
 
     return ( 
-        <Card className=" w-[140px] aspect-square flex flex-col
+        <Card className="w-[140px] min-w-[140px] aspect-square flex flex-col
         justify-between items-center p-4 bg-[#424b60] border-0 relative">
             <Download className="absolute right-[2px] top-[2px] w-5 h-5
             text-white hover:text-green-600 hover:cursor-pointer" onClick={handleDownloadClick}>

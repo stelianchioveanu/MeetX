@@ -1,5 +1,5 @@
 import UserButton from "./user-button";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import PopoverUser from "./popover-user";
 import UserAvatar from "./user-avatar";
 import { useState } from "react";
@@ -24,6 +24,7 @@ const GroupUsers = () => {
     return (
     <div className="max-w-full float-right h-full flex justify-center bg-[#171b25] p-3">
         <ScrollArea className="max-h-full bg-[#171b25] flex flex-col items-center py-6 px-2">
+            <ScrollBar className="flex"/>
             {
                 isFetching ?
                 <Skeleton className="w-52 h-16"/> :
@@ -39,7 +40,9 @@ const GroupUsers = () => {
                                     <UserButton variant={"ghost"}
                                     className="w-52 h-12 hover:bg-neutral-600 gap-2 flex justify-start group mt-1">
                                         <UserAvatar user={user.user} className="w-10 h-10 text-xs" status="hidden"/>
-                                        {user.user?.name}
+                                        <p className="w-[calc(100%-40px)] truncate text-left">
+                                            {user.user?.name}
+                                        </p>
                                     </UserButton>
                                 </PopoverUser>
                             );

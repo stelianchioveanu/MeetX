@@ -84,6 +84,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             } else {
                 setFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
             }
+            event.target.value = '';
         }
     }
 
@@ -183,7 +184,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
                     })
                 }
                 </div>
-                <ScrollBar orientation="horizontal"></ScrollBar>
+                <ScrollBar orientation="horizontal" className="flex"></ScrollBar>
             </ScrollArea> : null
         }
         <div className="flex items-center gap-2 relative w-full">

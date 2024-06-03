@@ -203,7 +203,7 @@ const AddTopic = () => {
                                     })
                                 }
                                 </div>
-                                <ScrollBar orientation="horizontal"></ScrollBar>
+                                <ScrollBar orientation="horizontal" className="flex"></ScrollBar>
                             </ScrollArea> : null
                         }
                         <Button type="submit" size="sm" disabled={clicked ? true : false} className={success ? "px-3 bg-green-500 hover:bg-green-500" : "px-3"}>

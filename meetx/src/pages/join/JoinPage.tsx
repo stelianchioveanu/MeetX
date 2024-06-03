@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useGroupServicePostApiGroupJoinGroup } from '../../../openapi/queries/queries';
 import { JoinGroupDTO } from 'openapi/requests/types.gen';
+import { useAppRouter } from '@/hooks/useAppRouter';
 
 const JoinPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const id = searchParams.get('groupId');
     const token = searchParams.get('token');
+    const { redirectToHome } = useAppRouter();
 
     const {data, status} = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupDetailsKey],
@@ -22,11 +24,9 @@ const JoinPage = () => {
     });
 
     const { mutate, isPending } = useGroupServicePostApiGroupJoinGroup({
-        onError: () => {
-            toast("The invite link is expired!");
-        },
         onSuccess: () => {
-            
+            redirectToHome();
+            toast("Congratulations! You've successfully joined the group!")
         }
       });
 

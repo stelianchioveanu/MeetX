@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import ConversationButton from "./conversation-button";
 import { PrivateConversationDTO } from "../../../openapi/requests/types.gen";
 import { usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey } from "../../../openapi/queries/common";
@@ -37,6 +37,7 @@ const PrivateFrame = () => {
             }
         </div>
         <ScrollArea className="flex w-full flex-col p-2">
+            <ScrollBar className="flex"/>
             {
                 isFetching ?
                 <Skeleton className="w-full h-10"/> :

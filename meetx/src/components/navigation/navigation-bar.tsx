@@ -10,12 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { GroupService } from "../../../openapi/requests/services.gen";
 import { Skeleton } from "../ui/skeleton";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 const NavigationBar = () => {
     const {data, status, isFetching} = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupsKey],
         queryFn: () => {
-            return GroupService.getApiGroupGetGroups();
+            return GroupService.getApiGroupGetGroups({pageSize: 1000000000});
         },
         retry: false
     });
@@ -30,16 +31,18 @@ const NavigationBar = () => {
             <>
                 <Profile id="0"/>
                 <Separator className="bg-neutral-600 w-3/4"></Separator>
-                {
-                    data?.response?.data !== null && data?.response?.data !== undefined && data?.response?.data.length !== 0 ?
-                    <div className="w-full flex items-center flex-col gap-3 overflow-auto">
-                        {data?.response?.data.map(function(group : GroupDTO){
-                            return (
-                                <Group key={group.id} group={group}></Group>
-                            )
-                        })}
-                    </div> : null
-                }
+                <ScrollArea>
+                    {
+                        data?.response?.data !== null && data?.response?.data !== undefined && data?.response?.data.length !== 0 ?
+                        <div className="w-full flex items-center flex-col gap-3 overflow-auto">
+                            {data?.response?.data.map(function(group : GroupDTO){
+                                return (
+                                    <Group key={group.id} group={group}></Group>
+                                )
+                            })}
+                        </div> : null
+                    }
+                </ScrollArea>
                 <AddGroup/>
                 <Separator className="bg-neutral-600 w-3/4"></Separator>
                 <ModeToggle></ModeToggle>

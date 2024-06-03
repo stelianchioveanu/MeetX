@@ -1,6 +1,6 @@
 import { MessageDTO, TopicDTO } from "openapi/requests/types.gen";
 import MessageItem from "../message/message-item";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 
 const TopicItem = (props: {topic?: TopicDTO, isFetching: boolean}) => {
@@ -15,8 +15,9 @@ const TopicItem = (props: {topic?: TopicDTO, isFetching: boolean}) => {
 
     return (
     <div className="absolute top-0 left-0 bg-[#68738f]
-    h-fit max-h-[50%] w-full z-[50] shadow-lg p-4">
+    h-[50%] w-full z-[50] shadow-lg p-4">
         <ScrollArea className="w-full h-full">
+            <ScrollBar orientation="vertical" className="flex"></ScrollBar>
             {
                 props.isFetching ?
                 <div className="flex gap-2">

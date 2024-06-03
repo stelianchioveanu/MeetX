@@ -11,7 +11,7 @@ const ConnectionStatus = () => {
     }, []);
 
     return (
-        <div className={isConnected ? "bg-green-600 py-1 px-2 rounded-full" : "bg-red-600 py-1 px-2 rounded-full"}>
+        <div className={isConnected ? "bg-green-600 py-1 px-2 rounded-full whitespace-nowrap" : "bg-red-600 py-1 px-2 rounded-full whitespace-nowrap"}>
             {isConnected ? "Connected" : "Not Connected"}
         </div>
     );
