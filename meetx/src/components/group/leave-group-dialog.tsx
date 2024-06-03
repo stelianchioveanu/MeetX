@@ -27,14 +27,7 @@ const LeaveGroupDialog = () => {
       onSuccess: () => {
             dispatch(setGroup("0"));
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
-        },
-      retry(failureCount, error : any) {
-          if (failureCount > 0) {
-              toast("Leave group failed! Please try again later!");
-              return false;
-          }
-          return false;
-      },
+        }
     });
 
     const handleSubmit = (group : { groupId: string }) => {

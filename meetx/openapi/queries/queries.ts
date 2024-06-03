@@ -2,7 +2,7 @@
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { AuthorizationService, GroupService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
-import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicAddDTO, TopicDeleteDTO, UserAddDTO } from "../requests/types.gen";
+import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicDeleteDTO, UserAddDTO } from "../requests/types.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -301,15 +301,15 @@ export const useMessageFilesServicePostApiMessageFilesAddFilesTopicMessage = <TD
 }, TContext>({ mutationFn: ({ formData }) => MessageFilesService.postApiMessageFilesAddFilesTopicMessage({ formData }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
-* @param data.requestBody
+* @param data.formData
 * @returns RequestResponse Success
 * @throws ApiError
 */
 export const useTopicServicePostApiTopicAddTopic = <TData = Common.TopicServicePostApiTopicAddTopicMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody?: TopicAddDTO;
+  formData?: { GroupId?: string; Title?: string; Description?: string; Images?: (Blob | File)[]; Files?: (Blob | File)[]; };
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody?: TopicAddDTO;
-}, TContext>({ mutationFn: ({ requestBody }) => TopicService.postApiTopicAddTopic({ requestBody }) as unknown as Promise<TData>, ...options });
+  formData?: { GroupId?: string; Title?: string; Description?: string; Images?: (Blob | File)[]; Files?: (Blob | File)[]; };
+}, TContext>({ mutationFn: ({ formData }) => TopicService.postApiTopicAddTopic({ formData }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody

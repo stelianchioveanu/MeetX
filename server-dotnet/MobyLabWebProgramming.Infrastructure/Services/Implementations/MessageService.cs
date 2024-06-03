@@ -30,14 +30,14 @@ public class MessageService : IMessageService
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadRequets);
         }
-        if (message == null || message.Text.IsNullOrEmpty())
+        if (message == null || message.Text == null)
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadRequets);
         }
 
         message.Text = message.Text.Trim();
 
-        if (message.Text.Length < 1)
+        if (message.Text.Length < 1 && (message.Files == null || message.Files.Count == 0))
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadInput);
         }
@@ -124,7 +124,7 @@ public class MessageService : IMessageService
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadRequets);
         }
-        if (message == null || message.Text.IsNullOrEmpty())
+        if (message == null || message.Text == null)
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadRequets);
         }
@@ -136,7 +136,7 @@ public class MessageService : IMessageService
 
         message.Text = message.Text.Trim();
 
-        if (message.Text.Length < 1)
+        if (message.Text.Length < 1 && (message.Files == null || message.Files.Count == 0))
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadInput);
         }

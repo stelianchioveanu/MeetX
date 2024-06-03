@@ -4,25 +4,47 @@ import { Separator } from "../ui/separator";
 import AddGroup from "./add-group";
 import Group from "./group";
 import Profile from "./profile";
+import { useEffect } from "react";
+import Connector from '../../signalRConnection/signalr-connection';
+import { useQuery } from "@tanstack/react-query";
+import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
+import { GroupService } from "../../../openapi/requests/services.gen";
+import { Skeleton } from "../ui/skeleton";
 
-const NavigationBar = (props: { groups: Array<GroupDTO> | null | undefined }) => {
+const NavigationBar = () => {
+    const {data, status, isFetching} = useQuery({
+        queryKey: [useGroupServiceGetApiGroupGetGroupsKey],
+        queryFn: () => {
+            return GroupService.getApiGroupGetGroups();
+        },
+        retry: false
+    });
+
+    useEffect(() => {if(status === "success") Connector()}, [status, data])
+
     return ( 
     <div className="w-16 bg-[rgba(17,20,28,1)] flex items-center flex-col gap-3 py-2 box-border">
-        <Profile id="0"/>
-        <Separator className="bg-neutral-600 w-3/4"></Separator>
         {
-            props.groups !== null && props.groups !== undefined && props.groups.length !== 0 ?
-            <div className="w-full flex items-center flex-col gap-3 overflow-auto">
-                {props.groups.map(function(group : GroupDTO){
-                    return (
-                        <Group key={group.id} group={group}></Group>
-                    )
-                })}
-            </div> : null
+            isFetching ?
+            <Skeleton className="h-11 w-11 rounded-full"/> : 
+            <>
+                <Profile id="0"/>
+                <Separator className="bg-neutral-600 w-3/4"></Separator>
+                {
+                    data?.response?.data !== null && data?.response?.data !== undefined && data?.response?.data.length !== 0 ?
+                    <div className="w-full flex items-center flex-col gap-3 overflow-auto">
+                        {data?.response?.data.map(function(group : GroupDTO){
+                            return (
+                                <Group key={group.id} group={group}></Group>
+                            )
+                        })}
+                    </div> : null
+                }
+                <AddGroup/>
+                <Separator className="bg-neutral-600 w-3/4"></Separator>
+                <ModeToggle></ModeToggle>
+            </>
         }
-        <AddGroup/>
-        <Separator className="bg-neutral-600 w-3/4"></Separator>
-        <ModeToggle></ModeToggle>
     </div>
     );
 }

@@ -23,7 +23,7 @@ public class TopicController : AuthorizedController
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<RequestResponse>> AddTopic([FromBody] TopicAddDTO topic)
+    public async Task<ActionResult<RequestResponse>> AddTopic([FromForm] TopicAddDTO topic)
     {
         var currentUser = await GetCurrentUserNotDTO();
 

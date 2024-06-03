@@ -18,14 +18,7 @@ const JoinPage = () => {
         queryFn: () => {
             return GroupService.getApiGroupGetGroupDetails({groupId: id ? id : undefined});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("The invite link is expired!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0
+        retry: false
     });
 
     const { mutate, isPending } = useGroupServicePostApiGroupJoinGroup({

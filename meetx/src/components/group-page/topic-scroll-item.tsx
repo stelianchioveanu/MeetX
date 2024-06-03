@@ -8,7 +8,7 @@ const TopicScrollItem = (props: {topic: TopicDTO}) => {
     const dispatch = useAppDispatch();
     return (
     <div className="w-full h-fit flex rounded-md gap-3 p-2 items-start hover:bg-[#00000050] hover:cursor-pointer"
-    onClick={() => {props.topic?.id ? dispatch(setTopic(props.topic?.id)) : null}}>
+    onClick={() => {props.topic?.id ? dispatch(setTopic(props.topic?.id)) : console.log("gagici")}}>
         {
             props.topic.numberAnswers !== 0 ?
             <p className="bg-green-500 p-1 rounded-md flex min-w-fit">

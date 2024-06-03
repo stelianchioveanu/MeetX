@@ -16,10 +16,12 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 public class TopicService : ITopicService
 {
     private readonly IRepository<WebAppDatabaseContext> _repository;
+    private readonly IFileService _fileService;
 
-    public TopicService(IRepository<WebAppDatabaseContext> repository)
+    public TopicService(IRepository<WebAppDatabaseContext> repository, IFileService fileService)
     {
         _repository = repository;
+        _fileService = fileService;
     }
 
     public async Task<ServiceResponse> AddTopic(TopicAddDTO topic, User? requestingUser = default, CancellationToken cancellationToken = default)
@@ -62,7 +64,9 @@ public class TopicService : ITopicService
             GroupId = topic.GroupId,
         };
 
-        await _repository.AddAsync(newTopic, cancellationToken);
+        newTopic = await _repository.AddAsync(newTopic, cancellationToken);
+
+        await _fileService.SaveFiles(new FilesAddDTO { TopicId = newTopic.Id, PrivateConversationId = Guid.Empty, Files = topic.Files, Images = topic.Images }, true, cancellationToken);
 
         return ServiceResponse.ForSuccess();
     }

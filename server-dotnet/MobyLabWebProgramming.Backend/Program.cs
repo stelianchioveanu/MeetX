@@ -13,6 +13,8 @@ builder.AddCorsConfiguration()
 
 var app = builder.Build();
 
+/*app.UseMiddleware<Test>();*/
+
 app.ConfigureApplication();
 app.MapHub<ChatService>("/chatHub");
 app.Run();

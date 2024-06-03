@@ -13,7 +13,6 @@ import Connector from '../../signalRConnection/signalr-connection'
 import { useQuery } from "@tanstack/react-query";
 import { GroupService, UserService } from "../../../openapi/requests/services.gen";
 import { NIL as NIL_UUID } from 'uuid';
-import { toast } from "react-toastify";
 import { useGroupServiceGetApiGroupGetMemberKey, useUserServiceGetApiUserGetByIdByIdKey } from "../../../openapi/queries/common";
 
 const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, isGroup: boolean}) => {
@@ -32,14 +31,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
         queryFn: () => {
             return UserService.getApiUserGetByIdById({id: props.userId === undefined ? NIL_UUID : props.userId});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get user failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0,
+        retry: false,
         enabled: false
     });
 
@@ -48,14 +40,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
         queryFn: () => {
             return GroupService.getApiGroupGetMember({userId: props.userId, groupId: selectedGroupId ? selectedGroupId : NIL_UUID});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get member failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0,
+        retry: false,
         enabled: false
     });
 

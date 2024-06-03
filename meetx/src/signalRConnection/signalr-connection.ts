@@ -36,15 +36,11 @@ class Connector {
         });
 
         this.events = (onMessageReceived) => {
-            this.connection.on("ReceiveMessage", (message) => {
-                onMessageReceived(message);
-            });
+            this.connection.on("ReceiveMessage", onMessageReceived);
         };
 
         this.update = (onMessageReceived) => {
-            this.connection.on("UpdateConv", (message) => {
-                onMessageReceived(message);
-            });
+            this.connection.on("UpdateConv", onMessageReceived);
         };
     }
 
@@ -81,6 +77,11 @@ class Connector {
             setConnected(Connector.instance.isConnected);
         }
         return Connector.instance;
+    }
+
+    public removeEvent(event: string, handler: (message: any) => void) {
+        //console.log("Removing event listener for:", event);
+        this.connection.off(event, handler);
     }
 }
 

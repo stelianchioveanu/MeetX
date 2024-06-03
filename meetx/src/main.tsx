@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { store } from './application/store.ts';
 import { Middleware, OpenAPI as OpenAPIConfig } from "../openapi/requests/core/OpenAPI.ts";
 import axios, { AxiosResponse } from "axios";
+import { toast } from 'react-toastify';
 
 function isUnauthorizedError(error: any) {
   return error.status === 401;
@@ -27,6 +28,7 @@ const responseInterceptor: Middleware<AxiosResponse<any, any>> = async (error) =
   const originalConfig = error.config;
 
   if (!isUnauthorizedError(error)) {
+      toast(error?.data?.errorMessage?.message || error.data.Message);
       return error;
   }
 
@@ -44,10 +46,13 @@ const responseInterceptor: Middleware<AxiosResponse<any, any>> = async (error) =
     try {
         originalConfig.headers.Authorization = `Bearer ${token}`;
         return await axios.request(originalConfig);
-    } catch(innerError) {
+    } catch(innerError: any) {
         if (isUnauthorizedError(innerError)) {
             throw innerError;
-        }                  
+        } else {
+          toast(innerError?.response?.data?.errorMessage?.message ||
+            innerError.response?.data.Message);
+        }
     }
   } catch (err) {
     window.location.href = "/login";

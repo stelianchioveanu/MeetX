@@ -17,7 +17,6 @@ import { Link } from "react-router-dom"
 import { LoginDTO } from "openapi/requests/types.gen";
 import { useAppDispatch } from "@/application/store";
 import { setToken } from "@/application/state-slices";
-import { toast } from "react-toastify";
 import { useAppRouter } from "@/hooks/useAppRouter";
 
 const loginFormSchema = z.object({
@@ -47,7 +46,6 @@ const Login = () => {
         },
         onSuccess: (result : any) => {
             dispatch(setToken(result.response?.token ?? ''));
-            toast("Congrats");
             redirectToHome();
         }
       });

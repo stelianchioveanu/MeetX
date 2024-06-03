@@ -13,8 +13,7 @@ import {
 import { useGroupServicePutApiGroupChangeRole } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupMembersKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { ChangeRoleDTO, GroupRoleEnum, RemoveMemberDTO } from "openapi/requests/types.gen";
+import { ChangeRoleDTO, GroupRoleEnum } from "openapi/requests/types.gen";
 import { useAppSelector } from "@/application/store";
 
 const ChangeRole = (props: {userId?: string, isAdmin?: boolean}) => {
@@ -24,15 +23,7 @@ const ChangeRole = (props: {userId?: string, isAdmin?: boolean}) => {
     const { mutate } = useGroupServicePutApiGroupChangeRole({
       onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey]});
-        },
-      retry(failureCount) {
-          if (failureCount > 0) {
-              toast("Remove member failed! Please try again later!");
-              return false;
-          }
-          toast("Remove member failed! Please try again later!");
-          return false;
-      },
+        }
     });
 
     const handleSubmit = () => {

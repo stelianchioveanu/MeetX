@@ -1,4 +1,4 @@
-import { Check, Loader2, Plus } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -21,13 +21,15 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { TopicAddDTO } from "../../../openapi/requests/types.gen";
 import { useTopicServicePostApiTopicAddTopic } from "../../../openapi/queries/queries";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
-import { toast } from "react-toastify";
-import { useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { useAppSelector } from "@/application/store";
+import { toast } from "react-toastify";
+import FilesUpload from "../chat/files-upload";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import FileCard from "../chat/file-card";
  
 const formSchema = z.object({
     title: z
@@ -45,6 +47,58 @@ const AddTopic = () => {
     const [clicked, setClicked] = useState(false);
     const [success, setSuccess] = useState(false);
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+    const [images, setImages] = useState<File[]>([]);
+    const [files, setFiles] = useState<File[]>([]);
+    const imagesRef = useRef<HTMLInputElement>(null);
+    const filesRef = useRef<HTMLInputElement>(null);
+
+    const fileHandleChange = (event: ChangeEvent<HTMLInputElement>, isImage: boolean) => {
+        if (event.target.files) {
+            const fileList = Array.from(event.target.files) as File[];
+            
+            let filesSize = 0;
+            let filesCount = images.length + files.length;
+            let maximumNumber = false;
+            let maximumSize = false;
+            images.forEach(element => {
+                filesSize += element.size;
+            });
+            files.forEach(element => {
+                filesSize += element.size; 
+            });
+
+            const filteredFiles = fileList.filter(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    toast(`Image ${file.name} is too large! Max 10MB`);
+                    return false;
+                }
+                if (filesCount === 10) {
+                    maximumNumber = true;
+                    return false;
+                }
+                if (filesSize + file.size > 25 * 1024 * 1024) {
+                    maximumSize = true;
+                    return false;
+                }
+                filesCount++;
+                filesSize = filesSize + file.size;
+                return true;
+            });
+
+            if (maximumNumber) {
+                toast("Maximum files number is 10!")
+            }
+            if (maximumSize) {
+                toast("Files size should not exceed 25MB!")
+            }
+
+            if (isImage) {
+                setImages((prevImages) => [...prevImages, ...filteredFiles]);
+            } else {
+                setFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
+            }
+        }
+    }
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -66,31 +120,21 @@ const AddTopic = () => {
             setSuccess(true);
             queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey]});
             queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetTopicsKey]});
-        },
-        retry(failureCount, error) {
-            if (failureCount > 0) {
-                toast("Add group failed! Please try again later!");
-                return false;
-            }
-            return false;
-        },
+        }
       });
 
     const handleSubmit = (topic : { title: string, description: string }) => {
         const { title, description } = topic;
-        const addTopicData: TopicAddDTO = {
-            groupId: selectedGroupId ? selectedGroupId : undefined,
-            title,
-            description,
-        };
-        const dataToSend = {
-            requestBody: addTopicData
-        };
-        mutate(dataToSend);
+        mutate({formData: {
+            GroupId: selectedGroupId ? selectedGroupId : undefined,
+            Title: title,
+            Description: description,
+            Images: images,
+            Files: files}});
     };
 
     return (
-        <Dialog onOpenChange={() => {setClicked(false); setSuccess(false); form.reset();}}>
+        <Dialog onOpenChange={() => {setClicked(false); setSuccess(false); form.reset(); setImages([]), setFiles([])}}>
             <DialogTrigger asChild>
                 <Button className="w-3/4
                     dark:bg-neutral-900 dark:text-white
@@ -130,6 +174,38 @@ const AddTopic = () => {
                             </FormItem>
                         )}
                         />
+                        <input type="file" accept=".jpeg, .jpg, .png" multiple={true} hidden ref={imagesRef}
+                        onChange={(event) => fileHandleChange(event, true)}/>
+                        <input type="file" accept=".txt, .rtf, .md, .doc, .docx, .pdf, .xls,
+                        .xlsx, .csv, .ppt, .pptx, .key, .mp3, .wav, .ogg, .flac, .mp4, .mov, .avi, .mkv, .zip,
+                        .rar, .7z, .tar, .tar.gz, .js, .jsx, .html, .tsx, .css, .scss, .sass, .py, .java, .cpp,
+                        .h, .c, .cs, .php, .rb, .swift, .go, .ts, .json, .xml, .yaml, .yml, .exe" multiple={true} hidden
+                        ref={filesRef} onChange={(event) => fileHandleChange(event, false)}/>
+                        <FilesUpload innerRef={null} imagesRef={imagesRef} filesRef={filesRef}
+                        className="w-full flex gap-2" classNameButtons="justify-center"/>
+                        { images.length !==0 || files.length !== 0 ?
+                            <ScrollArea className="w-full h-fit">
+                                <div className="flex w-full space-x-4 p-4">
+                                {
+                                    images.map(function(image : File, id){
+                                        return (
+                                            <FileCard key={id} id={id} file={image} setImages={setImages}
+                                            setFiles={setFiles} images={images} files={files} type="image"/>
+                                        )
+                                    })
+                                }
+                                {
+                                    files.map(function(file : File, id){
+                                        return (
+                                            <FileCard key={id} id={id} file={file} setImages={setImages}
+                                            setFiles={setFiles} images={images} files={files} type="file"/>
+                                        )
+                                    })
+                                }
+                                </div>
+                                <ScrollBar orientation="horizontal"></ScrollBar>
+                            </ScrollArea> : null
+                        }
                         <Button type="submit" size="sm" disabled={clicked ? true : false} className={success ? "px-3 bg-green-500 hover:bg-green-500" : "px-3"}>
                             {isPending ? <Loader2 className="animate-spin h-4 w-4"></Loader2> :
                             success ? <Check className="h-4 w-4"/> :

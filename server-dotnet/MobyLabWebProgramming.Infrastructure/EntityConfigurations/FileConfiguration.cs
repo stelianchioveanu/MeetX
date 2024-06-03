@@ -29,5 +29,10 @@ public class FileConfiguration : IEntityTypeConfiguration<FileEntity>
             .WithMany(e => e.Files)
             .HasForeignKey(e => e.MessageId)
             .IsRequired(false);
+
+        builder.HasOne(e => e.Topic)
+            .WithMany(e => e.Files)
+            .HasForeignKey(e => e.TopicId)
+            .IsRequired(false);
     }
 }

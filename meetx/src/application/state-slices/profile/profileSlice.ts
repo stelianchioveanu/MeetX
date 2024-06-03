@@ -19,7 +19,7 @@ const decodeToken = (token: string | null): ProfileState => {
   if (decoded?.exp && decoded.exp < now) {
     decoded = null;
     token = null;
-    localStorage.removeItem(tokenKey);
+    //localStorage.removeItem(tokenKey);
   }
 
   return {

@@ -221,12 +221,6 @@ export type ResetPasswordDTO = {
     password?: string | null;
 };
 
-export type TopicAddDTO = {
-    groupId?: string;
-    title?: string | null;
-    description?: string | null;
-};
-
 export type TopicDTO = {
     id?: string;
     title?: string | null;
@@ -234,6 +228,7 @@ export type TopicDTO = {
     createdDate?: string | null;
     user?: GroupMemberDTO;
     numberAnswers?: number;
+    files?: Array<FileGetDTO> | null;
 };
 
 export type TopicDTOPagedResponse = {
@@ -458,7 +453,13 @@ export type GetApiPrivateConversationGetPrivateConversationData = {
 export type GetApiPrivateConversationGetPrivateConversationResponse = PrivateConversationDTORequestResponse;
 
 export type PostApiTopicAddTopicData = {
-    requestBody?: TopicAddDTO;
+    formData?: {
+        GroupId?: string;
+        Title?: string;
+        Description?: string;
+        Images?: Array<((Blob | File))>;
+        Files?: Array<((Blob | File))>;
+    };
 };
 
 export type PostApiTopicAddTopicResponse = RequestResponse;

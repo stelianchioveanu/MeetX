@@ -658,25 +658,6 @@ export const $ResetPasswordDTO = {
     additionalProperties: false
 } as const;
 
-export const $TopicAddDTO = {
-    type: 'object',
-    properties: {
-        groupId: {
-            type: 'string',
-            format: 'uuid'
-        },
-        title: {
-            type: 'string',
-            nullable: true
-        },
-        description: {
-            type: 'string',
-            nullable: true
-        }
-    },
-    additionalProperties: false
-} as const;
-
 export const $TopicDTO = {
     type: 'object',
     properties: {
@@ -702,6 +683,13 @@ export const $TopicDTO = {
         numberAnswers: {
             type: 'integer',
             format: 'int32'
+        },
+        files: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/FileGetDTO'
+            },
+            nullable: true
         }
     },
     additionalProperties: false

@@ -414,7 +414,7 @@ export class PrivateConversationService {
 export class TopicService {
     /**
      * @param data The data for the request.
-     * @param data.requestBody
+     * @param data.formData
      * @returns RequestResponse Success
      * @throws ApiError
      */
@@ -422,8 +422,8 @@ export class TopicService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/Topic/AddTopic',
-            body: data.requestBody,
-            mediaType: 'application/json'
+            formData: data.formData,
+            mediaType: 'multipart/form-data'
         });
     }
     

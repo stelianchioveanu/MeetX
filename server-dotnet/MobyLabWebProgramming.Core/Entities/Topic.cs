@@ -12,4 +12,5 @@ public class Topic : BaseEntity
     public Guid UserId { get; set; } = default!;
     public ICollection<UserRecentTopics> RecentTopicUsers { get; set; } = default!;
     public ICollection<Message>? Messages { get; set; } = default!;
+    public ICollection<FileEntity>? Files { get; set; }
 }

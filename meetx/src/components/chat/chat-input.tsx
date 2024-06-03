@@ -24,6 +24,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     const { newMessage, newPrivateMessage } = Connector();
     const imagesRef = useRef<HTMLInputElement>(null);
     const filesRef = useRef<HTMLInputElement>(null);
+    const isSubmitting = useRef(false);
 
     useEffect(() => {
         setInput("");
@@ -110,9 +111,6 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     }
 
     const { mutate } = useMessageFilesServicePostApiMessageFilesAddFilesTopicMessage({
-        onError: (error : any) => {
-            console.log(error.message);
-        },
         onSuccess: (result : any) => {
             if (props.isGroup) {
                 newMessage(selectedGroupId ? selectedGroupId : "", selectedTopicId ? selectedTopicId : "", input, result.response.files);
@@ -122,11 +120,18 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             setInput("");
             setImages([]);
             setFiles([]);
+            isSubmitting.current = false;
         }
     });
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+
+        if (isSubmitting.current) {
+            return;
+        }
+
+        isSubmitting.current = true;
 
         const data = {
             Images: images.length !== 0 ? images : undefined,
@@ -143,6 +148,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             setInput("");
             setImages([]);
             setFiles([]);
+            isSubmitting.current = false;
         } else {
             mutate({formData: data});
         }
@@ -150,9 +156,9 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
 
     const handleKeyPress = (event: any) => {
         if (event.key === 'Enter') {
-          handleSubmit(event);
+            handleSubmit(event);
         }
-      };
+    };
 
     return (
     <form className="max-h-full float-end bg-[#68738f] rounded-md flex flex-col
@@ -186,7 +192,10 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
                 <PlusCircle fill="#68738f" className="w-7 h-7 text-[#d8ddeb]" onClick={openUploader}/> :
                 <>
                     <X className="w-7 h-7 text-[#d8ddeb]" onClick={closeUploader}/>
-                    <FilesUpload imagesRef={imagesRef} filesRef={filesRef} innerRef={ref}/>
+                    <FilesUpload imagesRef={imagesRef} filesRef={filesRef} innerRef={ref}
+                    className="h-fit w-[200px] absolute
+                    bg-[#151617] bottom-12 left-0 rounded-md flex items-center flex-col py-3 gap-2"
+                    classNameButtons="justify-start"/>
                 </>
             }
             <input className=" h-[45px] text-[#d8ddeb] bg-transparent

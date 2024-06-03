@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey,
     useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicKey } from "../../../openapi/queries/common";
 import { PrivateConversationService, TopicService } from "../../../openapi/requests/services.gen";
-import { toast } from "react-toastify";
 import { useAppSelector } from "@/application/store";
 
 const ChatFrame = (props:{isGroup: boolean}) => {
@@ -21,19 +20,17 @@ const ChatFrame = (props:{isGroup: boolean}) => {
     const [usersOpened, setUsersOpened] = useState(false);
     const [topicOpened, setTopicOpened] = useState(false);
 
+    useEffect(() => {
+        setTopicOpened(false);
+        setUsersOpened(false);
+    }, [selectedTopicId])
+
     const topic = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetTopicKey, selectedGroupId, selectedTopicId, selectedConvId],
         queryFn: () => {
             return TopicService.getApiTopicGetTopic({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get topic failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0,
+        retry: false,
         enabled: false
     });
 
@@ -42,14 +39,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
         queryFn: () => {
             return PrivateConversationService.getApiPrivateConversationGetPrivateConversation({convId: selectedConvId === null ? undefined : selectedConvId});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get conv failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0,
+        retry: false,
         enabled: false
     });
 
@@ -59,21 +49,22 @@ const ChatFrame = (props:{isGroup: boolean}) => {
         } else {
             conv.refetch();
         }
-    })
+    }, [selectedTopicId, selectedConvId])
 
     useEffect(() => {
         queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
-    }, [selectedTopicId, topic.data, topic.isLoading, topic.isPending])
+    }, [selectedTopicId, topic.dataUpdatedAt])
 
     return (
         <div className="w-[calc(100%-304px)] h-full flex flex-col">
             <ChatTopBar topic={topic.data?.response} conv={conv.data?.response} setUsersOpened={setUsersOpened}
-            usersOpened={usersOpened} topicOpened={topicOpened} setTopicOpened={setTopicOpened} isGroup={props.isGroup} />
+            usersOpened={usersOpened} topicOpened={topicOpened} setTopicOpened={setTopicOpened}
+            isGroup={props.isGroup} isFetching={props.isGroup ? topic.isFetching : conv.isFetching} />
             <div className="flex w-full h-[calc(100%-48px)]">
                 <div className="flex grow p-4 flex-col gap-8 relative justify-end overflow-hidden">
                     {
                         topicOpened && props.isGroup ?
-                        <TopicItem topic={topic.data?.response}/> :
+                        <TopicItem topic={topic.data?.response} isFetching={topic.isFetching}/> :
                         null
                     }
                     <MessagesFrame isGroup={props.isGroup}/>

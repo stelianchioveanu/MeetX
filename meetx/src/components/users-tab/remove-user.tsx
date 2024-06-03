@@ -13,7 +13,6 @@ import {
 import { useGroupServicePutApiGroupRemoveMember } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupMembersKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { RemoveMemberDTO } from "openapi/requests/types.gen";
 import { useAppSelector } from "@/application/store";
 
@@ -24,14 +23,7 @@ const RemoveUser = (props: {userId?: string}) => {
     const { mutate } = useGroupServicePutApiGroupRemoveMember({
       onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey]});
-        },
-      retry(failureCount) {
-          if (failureCount > 0) {
-              toast("Remove member failed! Please try again later!");
-              return false;
-          }
-          return false;
-      },
+        }
     });
 
     const handleSubmit = () => {

@@ -4,7 +4,7 @@ import { AvatarDialog } from './avatar-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { useUserServiceGetApiUserGetMeKey } from '../../../openapi/queries/common';
 import { UserService } from '../../../openapi/requests/services.gen';
-import { toast } from 'react-toastify';
+import { Skeleton } from '../ui/skeleton';
 
 const ProfileFrame = () => {
     const [image, setImage] = useState<string | null>(null);
@@ -13,19 +13,12 @@ const ProfileFrame = () => {
     const [imageChanged, setImageChanged] = useState<boolean>(false);
     const [imageRemoved, setImageRemoved] = useState<boolean>(false);
 
-    const {data, status} = useQuery({
+    const {data, status, isFetching} = useQuery({
         queryKey: [useUserServiceGetApiUserGetMeKey],
         queryFn: () => {
             return UserService.getApiUserGetMe();
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get my data failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0
+        retry: false
     });
 
     useEffect(() => {
@@ -42,14 +35,20 @@ const ProfileFrame = () => {
     return (
     <div className='flex flex-wrap grow items-center justify-center gap-x-24'>
         <div className='max-w-72 w-[80%] aspect-square relative'>
-            {image ?
-            <img className='w-full h-full rounded-full bg-white' src={image ? image : undefined}></img> :
-            <div className="w-full h-full rounded-full flex justify-center items-center" style={{backgroundColor: "" + data?.response?.color}}>
-                <p className='text-9xl text-white'>{data?.response?.shortName}</p>
-            </div>}
-            <AvatarDialog setImage={setImage} setImageChanged={setImageChanged} setImageRemoved={setImageRemoved}/>
+            {
+                isFetching ? 
+                <Skeleton className='w-full h-full rounded-full'/> :
+                <>
+                    {image ?
+                    <img className='w-full h-full rounded-full bg-white' src={image ? image : undefined}></img> :
+                    <div className="w-full h-full rounded-full flex justify-center items-center" style={{backgroundColor: "" + data?.response?.color}}>
+                        <p className='text-9xl text-white'>{data?.response?.shortName}</p>
+                    </div>}
+                    <AvatarDialog setImage={setImage} setImageChanged={setImageChanged} setImageRemoved={setImageRemoved}/>
+                </>
+            }
         </div>
-        <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}/>
+        <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved} isFetching={isFetching}/>
     </div> );
 }
  

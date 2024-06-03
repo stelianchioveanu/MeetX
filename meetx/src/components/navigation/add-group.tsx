@@ -25,7 +25,6 @@ import { GroupAddDTO } from "../../../openapi/requests/types.gen";
 import { useGroupServicePostApiGroupAddGroup } from "../../../openapi/queries/queries";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
-import { toast } from "react-toastify";
 import { useState } from "react";
  
 const formSchema = z.object({
@@ -58,14 +57,7 @@ const AddGroup = () => {
             setClicked(true);
             setSuccess(true);
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
-        },
-        retry(failureCount, error) {
-            if (failureCount > 0) {
-                toast("Add group failed! Please try again later!");
-                return false;
-            }
-            return false;
-        },
+        }
       });
 
     const handleSubmit = (group : { name: string }) => {

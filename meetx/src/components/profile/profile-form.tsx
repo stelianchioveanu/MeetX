@@ -20,6 +20,7 @@ import { useUserServiceGetApiUserGetMeKey } from "../../../openapi/queries/commo
 import { toast } from "react-toastify"
 import { RequestResponse } from "../../../openapi/requests/types.gen"
 import { ApiError } from "../../../openapi/requests/core/ApiError"
+import { Skeleton } from "../ui/skeleton"
 
 const loginFormSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters!"})
@@ -36,7 +37,7 @@ const loginFormSchema = z.object({
     path: ["confPassword"],
 });
 
-const ProfileForm = (props :  {name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean}) => {
+const ProfileForm = (props :  {name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean, isFetching: boolean}) => {
     const queryClient = useQueryClient();
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -108,60 +109,80 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
 
     return ( <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 gap-6 w-[80%] max-w-xl">
-            <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-                <FormItem className="space-y-1">
-                    <FormLabel className="text-white">Email</FormLabel>
-                    <FormControl>
-                        <Input placeholder="Email" className="font bg-transparent text-white" {...field} readOnly/>
-                    </FormControl>
-                    <FormMessage/>
-                </FormItem>
-            )}
+            {
+                props.isFetching ?
+                <Skeleton className="w-full h-10"/> :
+                <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                    <FormItem className="space-y-1">
+                        <FormLabel className="text-white">Email</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Email" className="font bg-transparent text-white" {...field} readOnly/>
+                        </FormControl>
+                        <FormMessage/>
+                    </FormItem>
+                )}
             />
-            <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-                <FormItem className="space-y-1">
-                    <FormLabel className="text-white">Name</FormLabel>
-                    <FormControl>
-                        <Input placeholder="Name" className="font bg-transparent text-white" {...field}/>
-                    </FormControl>
-                    <FormMessage/>
-                </FormItem>
-            )}
-            />
-            <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-                <FormItem className="space-y-1">
-                    <FormControl>
-                        <Input placeholder="New Password" type="password" className="font bg-transparent" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            )}
-            />
-            <FormField
-            control={form.control}
-            name="confPassword"
-            render={({ field }) => (
-                <FormItem className="space-y-1">
-                    <FormControl>
-                        <Input placeholder="Confirm Password" type="password" className="font bg-transparent" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            )}
-            />
-            <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
-                {false ? <Loader2 className="animate-spin"></Loader2> :
-                "Save"}
-            </Button>
+            }
+            {
+                props.isFetching ?
+                <Skeleton className="w-full h-10"/> :
+                <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                    <FormItem className="space-y-1">
+                        <FormLabel className="text-white">Name</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Name" className="font bg-transparent text-white" {...field}/>
+                        </FormControl>
+                        <FormMessage/>
+                    </FormItem>
+                )}
+                />
+            }
+            {
+                props.isFetching ?
+                <Skeleton className="w-full h-10"/> :
+                <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                    <FormItem className="space-y-1">
+                        <FormControl>
+                            <Input placeholder="New Password" type="password" className="font bg-transparent" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+                />
+            }
+            {
+                props.isFetching ?
+                <Skeleton className="w-full h-10"/> :
+                <FormField
+                control={form.control}
+                name="confPassword"
+                render={({ field }) => (
+                    <FormItem className="space-y-1">
+                        <FormControl>
+                            <Input placeholder="Confirm Password" type="password" className="font bg-transparent" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+                />
+            }
+            {
+                props.isFetching ?
+                null :
+                <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
+                    {false ? <Loader2 className="animate-spin"></Loader2> :
+                    "Save"}
+                </Button>
+            }
         </form>
     </Form> );
 }

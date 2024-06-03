@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import { useGroupServiceDeleteApiGroupDeleteGroup } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/application/store";
 import { setGroup } from "@/application/state-slices";
 
@@ -26,11 +25,7 @@ const DeleteGroupDialog = () => {
     onSuccess: () => {
           dispatch(setGroup("0"));
           queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
-      },
-    retry(error : any) {
-        toast("Delete group failed! Please try again later!" + error);
-        return false;
-    },
+      }
   });
 
   const handleSubmit = (groupId : string) => {

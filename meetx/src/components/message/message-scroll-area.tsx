@@ -33,15 +33,11 @@ export default function InfiniteScroll({
         );
         safeThreshold = 1;
       }
-      // When isLoading is true, this callback will do nothing.
-      // It means that the next function will never be called.
-      // It is safe because the intersection observer has disconnected the previous element.
       if (isLoading) return;
 
       if (observer.current) observer.current.disconnect();
       if (!element) return;
 
-      // Create a new IntersectionObserver instance because hasMore or next may be changed.
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting && hasMore) {

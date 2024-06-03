@@ -5,7 +5,7 @@ import UserAvatar from "../users-tab/user-avatar";
 import { FileGetDTO, MessageDTO } from "../../../openapi/requests/types.gen";
 import FileMessageCard from "./file-message-card";
 
-const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: boolean}) => {
+const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: boolean, isTopic: boolean, topic: string | null | undefined}) => {
     return (
     <div className={cn("w-full h-fit py-2 hover:bg-[#00000020] flex gap-3 p-2", props.className)}>
         <UserAvatar status="hidden" user={props.message.user?.user} className="h-10 min-w-10 text-xs"/>
@@ -16,8 +16,14 @@ const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: b
                         {props.message.user?.user?.name}
                     </Button>
                 </PopoverUser>
-                <p className="text-gray-500 text-xs">{props.message.createdDate}</p>
+                <p className={"text-xs " + (props.isTopic ? "text-white" : "text-gray-500")}>{props.message.createdDate}</p>
             </div>
+            {
+                props.isTopic ?
+                <p className="text-lg mb-2">
+                    #{props.topic}
+                </p> : null
+            }
             <p className="flex text-[14px]">{props.message.text}</p>
             <div className="w-full h-fit flex flex-wrap gap-3">
                 {

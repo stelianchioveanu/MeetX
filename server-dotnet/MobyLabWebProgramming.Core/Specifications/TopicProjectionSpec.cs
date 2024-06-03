@@ -33,6 +33,7 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
             isAdmin = e.Group.Admins.Any(x => x.Id == e.User.Id)
         },
         NumberAnswers = e.Messages != null ? e.Messages.Count : 0,
+        Files = e.Files != null ? e.Files.Select(o => new FileGetDTO { Name = o.Name, Path = o.Path, Type = o.Type }).ToList() : new List<FileGetDTO>()
     };
 
     public TopicProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -41,7 +42,7 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
 
     public TopicProjectionSpec(Guid Id)
     {
-        Query.Where(e => e.Id == Id).OrderByDescending(x => x.CreatedAt, true);
+        Query.Where(e => e.Id == Id).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Files);
     }
 
     public TopicProjectionSpec(string? search, Guid groupId)
@@ -50,17 +51,17 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
 
         if (search == null)
         {
-            Query.Where(e => e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
+            Query.Where(e => e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages).Include(e => e.Files);
             return;
         }
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => (EF.Functions.ILike(e.Title, searchExpr) || EF.Functions.ILike(e.Description, searchExpr)) && e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
+        Query.Where(e => (EF.Functions.ILike(e.Title, searchExpr) || EF.Functions.ILike(e.Description, searchExpr)) && e.GroupId == groupId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages).Include(e => e.Files);
     }
 
     public TopicProjectionSpec(string? search, Guid groupId, Guid userId)
     {
-        Query.Where(e => e.GroupId == groupId && e.UserId == userId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
+        Query.Where(e => e.GroupId == groupId && e.UserId == userId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages).Include(e => e.Files);
     }
 }

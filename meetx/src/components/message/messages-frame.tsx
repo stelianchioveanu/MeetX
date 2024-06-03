@@ -3,20 +3,18 @@ import MessageItem from "./message-item";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useQuery } from "@tanstack/react-query";
 import { MessageService } from "../../../openapi/requests/services.gen";
-import { toast } from "react-toastify";
 import { MessageDTO } from "../../../openapi/requests/types.gen";
 import { useEffect, useRef, useState } from "react";
 import Connector from '../../signalRConnection/signalr-connection';
 import InfiniteScroll from './message-scroll-area';
 import { Loader2 } from "lucide-react";
-import { useMessageServiceGetApiMessageGetPrivateMessagesKey, useMessageServiceGetApiMessageGetTopicMessagesKey } from "../../../openapi/queries/common";
+import { useMessageServiceGetApiMessageGetPrivateMessagesKey,
+    useMessageServiceGetApiMessageGetTopicMessagesKey } from "../../../openapi/queries/common";
 
 const MessagesFrame = (props: {isGroup: boolean}) => {
-    const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
-    const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
-    const { selectedConvId } = useAppSelector(x => x.selectedReducer);
+    const { selectedGroupId, selectedConvId, selectedTopicId } = useAppSelector(x => x.selectedReducer);
+    const { userId } = useAppSelector(x => x.profileReducer);
     const [messages, setMessages] = useState<MessageDTO[]>([]);
-    const { events } = Connector();
     const [page, setPage] = useState(1);
     const chatRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -36,14 +34,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
         queryFn: () => {
             return MessageService.getApiMessageGetTopicMessages({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined, page: 1, lastMessageId: messages.length === 0 ? undefined : messages[0].id});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get messages failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0,
+        retry:false,
         enabled: false,
     });
 
@@ -52,14 +43,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
         queryFn: () => {
             return MessageService.getApiMessageGetPrivateMessages({convId: selectedConvId ? selectedConvId : undefined, page: 1, lastMessageId: messages.length === 0 ? undefined : messages[0].id});
         },
-        retry(failureCount) {
-            if (failureCount > 0) {
-                toast("Get messages failed! Please try again later!");
-                return false;
-            }
-            return true;
-        },
-        retryDelay: 0,
+        retry:false,
         enabled: false,
     });
 
@@ -97,6 +81,13 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
     }, [topic.dataUpdatedAt, conv.dataUpdatedAt]);
 
     useEffect(() => {
+        if (newMessage === true) {
+            scrollToBottom();
+            setNewMessage(false);
+        }
+    }, [newMessage]);
+
+    useEffect(() => {
         if (page === 2) {
             scrollToBottom();
         }
@@ -110,34 +101,54 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
     }, [scrollValue]);
 
     useEffect(() => {
-        if (newMessage === true) {
-            scrollToBottom();
-            setNewMessage(false);
-        }
-    }, [newMessage]);
-
-
-    useEffect(() => {
-        events((message : MessageDTO) => {
-            if (props.isGroup && selectedGroupId === message.groupId && selectedTopicId === message.topicId) {
-                setMessages(messages => [...messages, message]);
-                setNewMessage(true);
-            } else if (!props.isGroup && selectedConvId === message.convId) {
-                setMessages(messages => [...messages, message]);
-                setNewMessage(true);
-            }
-        });
-    }, []);
-
-    useEffect(() => {
         setMessages([]);
         setPage(1);
         setHasMore(true);
         setScrollValue(0);
     }, [selectedTopicId, selectedConvId]);
 
+    useEffect(() => {
+        const connector = Connector();
+        
+        const messageHandler = (message : any) => {
+            if (props.isGroup && selectedGroupId === message.groupId && selectedTopicId === message.topicId) {
+                const value = (containerRef.current?.scrollHeight || 0) -
+                        (containerRef.current?.scrollTop || 0) -
+                        (containerRef.current?.clientHeight || 0);
+                if (value <= 1) {
+                    setMessages(messages => [...messages, message]);
+                    setNewMessage(true);
+                } else {
+                    setMessages(messages => [...messages, message]);
+                    if (message.user?.user?.id === userId) {
+                        setNewMessage(true);
+                    }
+                }
+            } else if (!props.isGroup && selectedConvId === message.convId) {
+                const value = (containerRef.current?.scrollHeight || 0) -
+                        (containerRef.current?.scrollTop || 0) -
+                        (containerRef.current?.clientHeight || 0);
+                if (value <= 1) {
+                    setMessages(messages => [...messages, message]);
+                    setNewMessage(true);
+                } else {
+                    setMessages(messages => [...messages, message]);
+                    if (message.user?.user?.id === userId) {
+                        setNewMessage(true);
+                    }
+                }
+            }
+        };
+
+        connector.events(messageHandler);
+
+        return () => {
+            connector.removeEvent("ReceiveMessage", messageHandler);
+        };
+    }, [selectedTopicId, selectedGroupId, selectedConvId, props.isGroup, userId]);
+
     return (
-        <ScrollArea className="w-full h-fit" ref={containerRef}>
+        <ScrollArea className="w-full h-fit min-h-10" ref={containerRef}>
             <InfiniteScroll hasMore={hasMore} isLoading={isLoading} next={() => {setIsloading(true); if (props.isGroup) {topic.refetch();} else {conv.refetch();}}} threshold={1} reverse={true}>
                 <div id="loader" className="w-full h-8 top-auto">
                 {hasMore && 
@@ -150,7 +161,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
             {
                 messages.map(function(message : MessageDTO){
                     return (
-                        <MessageItem key={message.id} message={message} isGroup={props.isGroup}/>
+                        <MessageItem key={message.id} message={message} isGroup={props.isGroup} isTopic={false} topic={null}/>
                     )
                 })
             }

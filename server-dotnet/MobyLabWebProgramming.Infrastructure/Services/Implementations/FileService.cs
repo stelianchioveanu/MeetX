@@ -25,7 +25,7 @@ public class FileService : IFileService
         _fileRepository = fileRepository;
     }
 
-    public async Task<ServiceResponse<FilesAddedDTO>> SaveFilesMessage(MessageFilesAddDTO files, UserDTO requestingUser, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse<FilesAddedDTO>> SaveFiles(FilesAddDTO files, bool isTopic, CancellationToken cancellationToken = default)
     {
         var filesList = new List<Guid>();
 
@@ -44,7 +44,8 @@ public class FileService : IFileService
                 {
                     Name = image.FileName,
                     Path = fileName.Result,
-                    Type = FileTypes.Image
+                    Type = FileTypes.Image,
+                    TopicId = isTopic ? files.TopicId : null
                 };
 
                 var addedFile = await _repository.AddAsync(newFile);
@@ -72,7 +73,8 @@ public class FileService : IFileService
                 {
                     Name = file.FileName,
                     Path = fileName.Result,
-                    Type = FileTypes.File
+                    Type = FileTypes.File,
+                    TopicId = isTopic ? files.TopicId : null
                 };
 
                 var addedFile = await _repository.AddAsync(newFile);

@@ -20,7 +20,7 @@ public interface IFileService
     /// <summary>
     /// SaveFile saves a file on the file storage and also saves the path to the database for a requesting user.
     /// </summary>
-    public Task<ServiceResponse<FilesAddedDTO>> SaveFilesMessage(MessageFilesAddDTO file, UserDTO requestingUser, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<FilesAddedDTO>> SaveFiles(FilesAddDTO file, bool isTopic, CancellationToken cancellationToken = default);
     public ServiceResponse<string> SaveAvatar(IFormFile avatar, Guid id);
     /// <summary>
     /// GetFileDownload gets a file stream for a given file found by the id in the database.

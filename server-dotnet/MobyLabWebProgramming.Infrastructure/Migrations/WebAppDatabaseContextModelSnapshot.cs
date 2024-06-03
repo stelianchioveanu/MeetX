@@ -75,6 +75,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<Guid?>("TopicId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -86,6 +89,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MessageId");
+
+                    b.HasIndex("TopicId");
 
                     b.ToTable("FileEntity");
                 });
@@ -431,7 +436,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .WithMany("Files")
                         .HasForeignKey("MessageId");
 
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Topic", "Topic")
+                        .WithMany("Files")
+                        .HasForeignKey("TopicId");
+
                     b.Navigation("Message");
+
+                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Group", b =>
@@ -578,6 +589,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Topic", b =>
                 {
+                    b.Navigation("Files");
+
                     b.Navigation("Messages");
 
                     b.Navigation("RecentTopicUsers");

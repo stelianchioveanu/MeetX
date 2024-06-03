@@ -17,7 +17,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useGroupServiceGetApiGroupGetInviteLinkKey } from "../../../openapi/queries/common"
 import { GroupService } from "../../../openapi/requests/services.gen"
 import { useAppSelector } from "@/application/store"
-import { toast } from "react-toastify"
 import { useState } from "react"
  
 export function GenerateLinkDialog() {
@@ -29,14 +28,7 @@ export function GenerateLinkDialog() {
       queryFn: () => {
           return GroupService.getApiGroupGetInviteLink({id: selectedGroupId === null ? undefined : selectedGroupId});
       },
-      retry(failureCount, error) {
-          if (failureCount > 0) {
-              toast("Get link failed! Please try again later!");
-              return false;
-          }
-          return true;
-      },
-      retryDelay: 0,
+      retry: false,
       enabled: false
   });
   return (

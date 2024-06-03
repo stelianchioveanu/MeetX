@@ -12,20 +12,20 @@ namespace MobyLabWebProgramming.Backend.Controllers;
 [Route("api/[controller]/[action]")]
 public class MessageFilesController : AuthorizedController
 {
-    private readonly IFileService _messageFileService;
-    public MessageFilesController(IUserService userService, IFileService messageFileService) : base(userService)
+    private readonly IFileService _fileService;
+    public MessageFilesController(IUserService userService, IFileService fileService) : base(userService)
     {
-        _messageFileService = messageFileService;
+        _fileService = fileService;
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<RequestResponse<FilesAddedDTO>>> AddFilesTopicMessage([FromForm] MessageFilesAddDTO files)
+    public async Task<ActionResult<RequestResponse<FilesAddedDTO>>> AddFilesTopicMessage([FromForm] FilesAddDTO files)
     {
         var currentUser = await GetCurrentUser();
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await _messageFileService.SaveFilesMessage(files, currentUser.Result)) :
+            this.FromServiceResponse(await _fileService.SaveFiles(files, false)) :
             this.ErrorMessageResult<FilesAddedDTO>(currentUser.Error);
     }
 }
