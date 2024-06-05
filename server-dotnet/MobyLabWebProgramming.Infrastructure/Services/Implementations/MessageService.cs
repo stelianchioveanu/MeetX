@@ -1,6 +1,4 @@
-﻿using Ardalis.Specification;
-using Microsoft.IdentityModel.Tokens;
-using MobyLabWebProgramming.Core.DataTransferObjects;
+﻿using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
@@ -11,7 +9,6 @@ using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
@@ -39,7 +36,7 @@ public class MessageService : IMessageService
 
         if (message.Text.Length < 1 && (message.Files == null || message.Files.Count == 0))
         {
-            return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadInput);
+            return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadMessage);
         }
 
         var entity = await _repository.GetAsync(new GroupSpec(message.GroupId), cancellationToken);
@@ -56,14 +53,22 @@ public class MessageService : IMessageService
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.TopicNotFound);
         }
 
-        if (entity.Users.All(e => e.Id != userId))
+        var userid = userId == null ? Guid.Empty : userId.Value;
+
+        var requestingUser = await _repository.GetAsync(new UserSpec(userid), cancellationToken);
+        if (requestingUser == null)
+        {
+            return ServiceResponse<MessageDTO>.FromError(CommonErrors.UserNotFound);
+        }
+
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<MessageDTO>.FromError(CommonErrors.NotMember);
         }
 
         var newMessage = new Message
         {
-            UserId = (Guid)userId,
+            UserId = userid,
             Text = message.Text,
             TopicId = message.TopicId,
         };
@@ -108,6 +113,7 @@ public class MessageService : IMessageService
                     AvatarPath = newMessage.User.AvatarPath,
                 },
                 isAdmin = entity.Admins.Any(e => e.Id == newMessage.User.Id),
+                isMember = entity.Users.Any(e => e.Id == newMessage.User.Id),
             },
             GroupId = newMessage.Topic != null ? newMessage.Topic.GroupId : Guid.Empty,
             TopicId = newMessage.Topic != null ? newMessage.Topic.Id : Guid.Empty,
@@ -138,7 +144,7 @@ public class MessageService : IMessageService
 
         if (message.Text.Length < 1 && (message.Files == null || message.Files.Count == 0))
         {
-            return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadInput);
+            return ServiceResponse<MessageDTO>.FromError(CommonErrors.BadMessage);
         }
 
         var conv = await _repository.GetAsync(new PrivateConversationSpec(message.UserId, userId), cancellationToken);
@@ -210,6 +216,7 @@ public class MessageService : IMessageService
                         Status = user.Status,
                     },
                     isAdmin = false,
+                    isMember = false
                 },
                 GroupId = Guid.Empty,
                 TopicId = Guid.Empty,
@@ -237,7 +244,7 @@ public class MessageService : IMessageService
             return ServiceResponse<PagedResponse<MessageDTO>>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<PagedResponse<MessageDTO>>.FromError(CommonErrors.NotMember);
         }
@@ -293,43 +300,5 @@ public class MessageService : IMessageService
             var result = await _repository.PageAsync(pagination, new MessageProjectionSpec(messagesGet.ConvId, message), cancellationToken);
             return ServiceResponse<PagedResponse<MessageDTO>>.ForSuccess(result);
         }
-    }
-
-    public async Task<ServiceResponse> DeleteMessage(MessageDeleteDTO message, User? requestingUser = default, CancellationToken cancellationToken = default)
-    {
-        if (requestingUser == null)
-        {
-            return ServiceResponse.FromError(CommonErrors.UserNotFound);
-        }
-
-        var entity = await _repository.GetAsync(new GroupSpec(message.GroupId), cancellationToken);
-
-        if (entity == null)
-        {
-            return ServiceResponse.FromError(CommonErrors.GroupNotFound);
-        }
-
-        var entity2 = await _repository.GetAsync(new TopicSpec(message.TopicId), cancellationToken);
-
-        if (entity2 == null)
-        {
-            return ServiceResponse.FromError(CommonErrors.TopicNotFound);
-        }
-
-        var entity3 = await _repository.GetAsync(new MessageSpec(message.Id), cancellationToken);
-
-        if (entity3 == null)
-        {
-            return ServiceResponse.FromError(CommonErrors.MessageNotFound);
-        }
-
-        if (requestingUser.Id != entity3.UserId)
-        {
-            return ServiceResponse.FromError(CommonErrors.NotMessageCreator);
-        }
-
-        await _repository.DeleteAsync(new MessageSpec(entity3.Id), cancellationToken);
-
-        return ServiceResponse.ForSuccess();
     }
 }

@@ -32,7 +32,8 @@ public sealed class MessageProjectionSpec : BaseSpec<MessageProjectionSpec, Mess
                 Color = e.User.Color,
                 AvatarPath = e.User.AvatarPath,
             },
-            isAdmin = e.Topic != null && e.Topic.Group.Admins.Any(x => x.Id == e.User.Id)
+            isAdmin = e.Topic != null && e.Topic.Group.Admins.Any(x => x.Id == e.User.Id),
+            isMember = e.Topic != null && e.Topic.Group.Users.Any(x => x.Id == e.User.Id)
         },
         GroupId = e.Topic != null ? e.Topic.GroupId : Guid.Empty,
         TopicId = e.Topic != null ? e.Topic.Id : Guid.Empty,

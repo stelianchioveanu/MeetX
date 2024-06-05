@@ -1,8 +1,8 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
-import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, MessageDeleteDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicDeleteDTO, UserAddDTO } from "../requests/types.gen";
+import { AuthorizationService, GroupService, LinkedInService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicDeleteDTO } from "../requests/types.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -17,6 +17,19 @@ export const useGroupServiceGetApiGroupGetGroups = <TData = Common.GroupServiceG
   pageSize?: number;
   search?: string;
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => GroupService.getApiGroupGetGroups({ page, pageSize, search }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns GroupDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServiceGetApiGroupGetPublicGroups = <TData = Common.GroupServiceGetApiGroupGetPublicGroupsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetPublicGroupsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => GroupService.getApiGroupGetPublicGroups({ page, pageSize, search }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.id
@@ -70,6 +83,26 @@ export const useGroupServiceGetApiGroupGetMember = <TData = Common.GroupServiceG
 export const useGroupServiceGetApiGroupGetGroupDetails = <TData = Common.GroupServiceGetApiGroupGetGroupDetailsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupDetailsKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSigninLinkedinLink = <TData = Common.LinkedInServiceGetSigninLinkedinLinkDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSigninLinkedinLinkKeyFn(queryKey), queryFn: () => LinkedInService.getSigninLinkedinLink() as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSignupLinkedinLink = <TData = Common.LinkedInServiceGetSignupLinkedinLinkDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSignupLinkedinLinkKeyFn(queryKey), queryFn: () => LinkedInService.getSignupLinkedinLink() as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSigninLinkedin = <TData = Common.LinkedInServiceGetSigninLinkedinDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSigninLinkedinKeyFn(queryKey), queryFn: () => LinkedInService.getSigninLinkedin() as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSignupLinkedin = <TData = Common.LinkedInServiceGetSignupLinkedinDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSignupLinkedinKeyFn(queryKey), queryFn: () => LinkedInService.getSignupLinkedin() as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -311,16 +344,10 @@ export const useTopicServicePostApiTopicAddTopic = <TData = Common.TopicServiceP
   formData?: { GroupId?: string; Title?: string; Description?: string; Images?: (Blob | File)[]; Files?: (Blob | File)[]; };
 }, TContext>({ mutationFn: ({ formData }) => TopicService.postApiTopicAddTopic({ formData }) as unknown as Promise<TData>, ...options });
 /**
-* @param data The data for the request.
-* @param data.requestBody
 * @returns RequestResponse Success
 * @throws ApiError
 */
-export const useUserServicePostApiUserAdd = <TData = Common.UserServicePostApiUserAddMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody?: UserAddDTO;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody?: UserAddDTO;
-}, TContext>({ mutationFn: ({ requestBody }) => UserService.postApiUserAdd({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useUserServicePostApiUserLogout = <TData = Common.UserServicePostApiUserLogoutMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, void, TContext>, "mutationFn">) => useMutation<TData, TError, void, TContext>({ mutationFn: () => UserService.postApiUserLogout() as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody
@@ -371,22 +398,33 @@ export const useUserServicePutApiUserUpdate = <TData = Common.UserServicePutApiU
 * @returns RequestResponse Success
 * @throws ApiError
 */
-export const useGroupServiceDeleteApiGroupDeleteGroup = <TData = Common.GroupServiceDeleteApiGroupDeleteGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useUserServicePutApiUserMakeStaff = <TData = Common.UserServicePutApiUserMakeStaffMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody?: string;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody?: string;
-}, TContext>({ mutationFn: ({ requestBody }) => GroupService.deleteApiGroupDeleteGroup({ requestBody }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ requestBody }) => UserService.putApiUserMakeStaff({ requestBody }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody
 * @returns RequestResponse Success
 * @throws ApiError
 */
-export const useMessageServiceDeleteApiMessageDeleteMessage = <TData = Common.MessageServiceDeleteApiMessageDeleteMessageMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody?: MessageDeleteDTO;
+export const useUserServicePutApiUserRemoveStaff = <TData = Common.UserServicePutApiUserRemoveStaffMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody?: string;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody?: MessageDeleteDTO;
-}, TContext>({ mutationFn: ({ requestBody }) => MessageService.deleteApiMessageDeleteMessage({ requestBody }) as unknown as Promise<TData>, ...options });
+  requestBody?: string;
+}, TContext>({ mutationFn: ({ requestBody }) => UserService.putApiUserRemoveStaff({ requestBody }) as unknown as Promise<TData>, ...options });
+/**
+* @param data The data for the request.
+* @param data.requestBody
+* @returns RequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServiceDeleteApiGroupDeleteGroup = <TData = Common.GroupServiceDeleteApiGroupDeleteGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody?: string;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody?: string;
+}, TContext>({ mutationFn: ({ requestBody }) => GroupService.deleteApiGroupDeleteGroup({ requestBody }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody

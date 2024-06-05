@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Linkedin, Loader2 } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { useAuthorizationServicePostApiAuthorizationRegister } from "../../../openapi/queries/queries"
 import { RegisterDTO } from "../../../openapi/requests/types.gen"
+import { SelectIndustry } from "@/components/select-register/select-industry"
+import { useEffect, useState } from "react"
+import { NIL } from "uuid"
 
 const registerFormSchema = z.object({
     email: z
@@ -30,7 +33,8 @@ const registerFormSchema = z.object({
         .refine((value) => !/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(value ?? ""), 'Password is not valid!'),
     confirm: z
         .string()
-        .min(1, { message: "This field has to be filled." })
+        .min(1, { message: "This field has to be filled." }),
+    industry: z.string().min(1, { message: "This field has to be filled." })
   })
   .refine((data) => data.password === data.confirm, {
     message: "Passwords don't match",
@@ -38,19 +42,27 @@ const registerFormSchema = z.object({
 });
 
 const Register = () => {
+    const [groupId, setGroupId] = useState<string>(NIL);
+    const [queryParameters] = useSearchParams();
     const form = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
         defaultValues: {
           email: "",
           password: "",
           name: "",
-          confirm: ""
+          confirm: "",
+          industry: ""
         },
-      })
+    })
+
+    const setGroup = (groupId: string) => {
+        setGroupId(groupId);
+        form.setValue('industry', groupId, {shouldValidate: true});
+    }
 
     const { mutate, isPending, isSuccess } = useAuthorizationServicePostApiAuthorizationRegister({
         onError: (error : any) => {
-            form.setError(error.body?.errorMessage?.code === 'UserAlreadyExists' ? 'email' : 'confirm', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
+            form.setError(error.body?.errorMessage?.code === 'UserAlreadyExists' ? 'email' : 'industry', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
         },
         onSuccess: (response : any) => {
             console.log(response);
@@ -62,13 +74,21 @@ const Register = () => {
         const registerData: RegisterDTO = {
             email,
             name,
-            password
+            password,
+            groupId
         };
         const dataToSend = {
             requestBody: registerData
         };
         mutate(dataToSend);
     };
+
+    useEffect(() => {
+        const nameParam = queryParameters.get("name");
+        const emailParam = queryParameters.get("email");
+        form.setValue("name", nameParam ? nameParam : "");
+        form.setValue("email", emailParam ? emailParam : "");
+    }, [])
     
     return (
     <div className="w-full h-full bg flex justify-center items-center bg-auth">
@@ -84,7 +104,7 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Email" className="font" {...field}/>
+                                    <Input maxLength={255} placeholder="Email" className="font" {...field}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -96,9 +116,21 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Name" className="font" {...field} />
+                                    <Input maxLength={255} placeholder="Name" className="font" {...field} />
                                 </FormControl>
                                 <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                        <FormField
+                        control={form.control}
+                        name="industry"
+                        render={() => (
+                            <FormItem className="space-y-1">
+                                <FormControl>
+                                    <SelectIndustry groupId={groupId} setGroupId={setGroup}/>
+                                </FormControl>
+                                <FormMessage/>
                             </FormItem>
                         )}
                         />
@@ -108,7 +140,7 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Password" type="password" className="font" {...field} />
+                                    <Input maxLength={255} placeholder="Password" type="password" className="font" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -120,7 +152,7 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Confirm Password" type="password" className="font" {...field} />
+                                    <Input maxLength={255} placeholder="Confirm Password" type="password" className="font" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -137,10 +169,12 @@ const Register = () => {
                     <span className="text-neutral-400">or</span>
                     <div className="w-full h-px bg-neutral-400 mt-1"></div>
                 </div>
-                <Button className="font w-full gap-3 bg-[#0a66c2]">
-                    <Linkedin className="h-5"></Linkedin>
-                    Continue with LinkedIn
-                </Button>
+                <a className="w-full h-fit" href="http://localhost:5000/signup-linkedin-link">
+                    <Button className="font w-full gap-3 bg-[#0a66c2]">
+                        <Linkedin className="h-5"></Linkedin>
+                        Continue with LinkedIn
+                    </Button>
+                </a>
                 <div className="text-white font">
                     Already on MeetX? 
                     <span className="text-purple-700 hover:text-purple-800 hover:cursor-pointer">

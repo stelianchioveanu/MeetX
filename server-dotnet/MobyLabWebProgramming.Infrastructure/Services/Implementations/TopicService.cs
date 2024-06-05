@@ -9,7 +9,6 @@ using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
-using System.Text.RegularExpressions;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
@@ -39,9 +38,14 @@ public class TopicService : ITopicService
         topic.Title = topic.Title.Trim();
         topic.Description = topic.Description.Trim();
 
-        if (topic.Title.Length < 1 || topic.Description.Length < 1)
+        if (topic.Description.Length < 1 || topic.Description.Length > 4095)
         {
-            return ServiceResponse.FromError(CommonErrors.BadInput);
+            return ServiceResponse.FromError(CommonErrors.BadDescription);
+        }
+
+        if (topic.Title.Length < 1 || topic.Title.Length > 4095)
+        {
+            return ServiceResponse.FromError(CommonErrors.BadTitle);
         }
 
         var entity = await _repository.GetAsync(new GroupSpec(topic.GroupId), cancellationToken);
@@ -51,7 +55,7 @@ public class TopicService : ITopicService
             return ServiceResponse.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse.FromError(CommonErrors.NotMember);
         }
@@ -85,7 +89,7 @@ public class TopicService : ITopicService
             return ServiceResponse<TopicDTO>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<TopicDTO>.FromError(CommonErrors.NotMember);
         }
@@ -128,7 +132,7 @@ public class TopicService : ITopicService
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.NotMember);
         }
@@ -152,7 +156,7 @@ public class TopicService : ITopicService
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.NotMember);
         }
@@ -176,7 +180,7 @@ public class TopicService : ITopicService
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.NotMember);
         }
@@ -207,10 +211,11 @@ public class TopicService : ITopicService
             return ServiceResponse.FromError(CommonErrors.TopicNotFound);
         }
 
-        if (requestingUser.Id != entity2.UserId && !entity.Admins.Contains(requestingUser) && requestingUser.Role == UserRoleEnum.Client)
+        if (!entity.Admins.Contains(requestingUser))
         {
-            return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
+            return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.NotAnAdmin);
         }
+        
 
         await _repository.DeleteAsync(new TopicSpec(entity2.Id), cancellationToken);
 

@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 import { ProfileState } from "./profileSlice.types";
 import { OpenAPI as OpenAPIConfig } from "../../../../openapi/requests/core/OpenAPI";
+import Cookies from 'js-cookie';
 
 /**
  * Use constants to identify keys in the local storage. 
@@ -52,8 +53,8 @@ export const profileSlice = createSlice({
       return decodeToken(action.payload); // You can either return a new state or change it via the first parameter that is the current state.
     },
     resetProfile: () => { // This removes the token from the storage and resets the state.
+      Cookies.remove('MeetxRefresh');
       localStorage.removeItem(tokenKey);
-
       return {
         loggedIn: false,
         token: null,

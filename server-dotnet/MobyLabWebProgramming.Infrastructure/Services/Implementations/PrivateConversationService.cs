@@ -44,7 +44,7 @@ public class PrivateConversationService : IPrivateConversationService
         var result = await _repository.GetAsync(new PrivateConversationProjectionSpec(convId), cancellationToken);
         if (result == null)
         {
-            return ServiceResponse<PrivateConversationDTO>.FromError(CommonErrors.TopicNotFound);
+            return ServiceResponse<PrivateConversationDTO>.FromError(CommonErrors.ConvNotFound);
         }
 
         return ServiceResponse<PrivateConversationDTO>.ForSuccess(result);

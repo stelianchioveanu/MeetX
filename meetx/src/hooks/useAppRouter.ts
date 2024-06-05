@@ -9,6 +9,11 @@ export const useAppRouter = () => {
     [navigate]
   );
 
+  const redirectToHomePage = useCallback(
+    () => navigate("/"),
+    [navigate]
+  );
+
   const redirectToLogin = useCallback(
     () =>
       navigate({
@@ -17,9 +22,19 @@ export const useAppRouter = () => {
     [navigate]
   );
 
+  const redirectToRegister = useCallback(
+    () =>
+      navigate({
+        pathname: "/register"
+      }),
+    [navigate]
+  );
+
   return {
     redirectToHome,
     redirectToLogin,
-    navigate
+    navigate,
+    redirectToRegister,
+    redirectToHomePage
   };
 };

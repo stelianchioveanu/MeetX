@@ -69,7 +69,7 @@ const AddTopic = () => {
 
             const filteredFiles = fileList.filter(file => {
                 if (file.size > 10 * 1024 * 1024) {
-                    toast(`Image ${file.name} is too large! Max 10MB`);
+                    toast.error(`Image ${file.name} is too large! Max 10MB`);
                     return false;
                 }
                 if (filesCount === 10) {
@@ -86,10 +86,10 @@ const AddTopic = () => {
             });
 
             if (maximumNumber) {
-                toast("Maximum files number is 10!")
+                toast.error("Maximum files number is 10!")
             }
             if (maximumSize) {
-                toast("Files size should not exceed 25MB!")
+                toast.error("Files size should not exceed 25MB!")
             }
 
             if (isImage) {
@@ -156,7 +156,7 @@ const AddTopic = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Topic Title" className="font" {...field}/>
+                                    <Input maxLength={4095} placeholder="Topic Title" className="font" {...field}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -168,7 +168,7 @@ const AddTopic = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Description" className="font" {...field}/>
+                                    <Input maxLength={4095} placeholder="Description" className="font" {...field}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>

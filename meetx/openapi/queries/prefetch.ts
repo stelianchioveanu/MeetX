@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { type QueryClient } from "@tanstack/react-query";
-import { GroupService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -16,6 +16,19 @@ export const prefetchUseGroupServiceGetApiGroupGetGroups = (queryClient: QueryCl
   pageSize?: number;
   search?: string;
 } = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupsKey, [{ page, pageSize, search }]], queryFn: () => GroupService.getApiGroupGetGroups({ page, pageSize, search }) });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns GroupDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const prefetchUseGroupServiceGetApiGroupGetPublicGroups = (queryClient: QueryClient, { page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetPublicGroupsKey, [{ page, pageSize, search }]], queryFn: () => GroupService.getApiGroupGetPublicGroups({ page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.id
@@ -69,6 +82,26 @@ export const prefetchUseGroupServiceGetApiGroupGetMember = (queryClient: QueryCl
 export const prefetchUseGroupServiceGetApiGroupGetGroupDetails = (queryClient: QueryClient, { groupId }: {
   groupId?: string;
 } = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupDetailsKey, [{ groupId }]], queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const prefetchUseLinkedInServiceGetSigninLinkedinLink = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSigninLinkedinLinkKey, []], queryFn: () => LinkedInService.getSigninLinkedinLink() });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const prefetchUseLinkedInServiceGetSignupLinkedinLink = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSignupLinkedinLinkKey, []], queryFn: () => LinkedInService.getSignupLinkedinLink() });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const prefetchUseLinkedInServiceGetSigninLinkedin = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSigninLinkedinKey, []], queryFn: () => LinkedInService.getSigninLinkedin() });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const prefetchUseLinkedInServiceGetSignupLinkedin = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSignupLinkedinKey, []], queryFn: () => LinkedInService.getSignupLinkedin() });
 /**
 * @param data The data for the request.
 * @param data.search

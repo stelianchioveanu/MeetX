@@ -6,7 +6,7 @@ export type ChangeRoleDTO = {
     role?: GroupRoleEnum;
 };
 
-export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail';
+export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAnAppAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail' | 'WrongIndustry' | 'UserNotFound' | 'BadCredentials' | 'GroupNotFound' | 'WrongTitle' | 'WrongDescription' | 'ConvNotFound' | 'TopicNotFound' | 'WrongMessage';
 
 export type ErrorMessage = {
     message?: string | null;
@@ -41,6 +41,7 @@ export type GroupDTO = {
     numberMembers?: number;
     shortName?: string | null;
     color?: string | null;
+    isPublic?: boolean;
 };
 
 export type GroupDTOPagedResponse = {
@@ -68,6 +69,7 @@ export type GroupDetailsDTORequestResponse = {
 export type GroupGetDTO = {
     group?: GroupDTO;
     groupRole?: GroupRoleEnum;
+    userRole?: UserRoleEnum;
 };
 
 export type GroupGetDTORequestResponse = {
@@ -87,6 +89,7 @@ export type GroupLinkResponseRequestResponse = {
 export type GroupMemberDTO = {
     user?: UserDTO;
     isAdmin?: boolean;
+    isMember?: boolean;
 };
 
 export type GroupMemberDTOPagedResponse = {
@@ -106,7 +109,7 @@ export type GroupMemberDTORequestResponse = {
     errorMessage?: ErrorMessage;
 };
 
-export type GroupRoleEnum = 'Admin' | 'Member';
+export type GroupRoleEnum = 'Admin' | 'Staff' | 'Member' | 'NotMember';
 
 export type HttpStatusCode = 'Continue' | 'SwitchingProtocols' | 'Processing' | 'EarlyHints' | 'OK' | 'Created' | 'Accepted' | 'NonAuthoritativeInformation' | 'NoContent' | 'ResetContent' | 'PartialContent' | 'MultiStatus' | 'AlreadyReported' | 'IMUsed' | 'MultipleChoices' | 'MovedPermanently' | 'Found' | 'SeeOther' | 'NotModified' | 'UseProxy' | 'Unused' | 'TemporaryRedirect' | 'PermanentRedirect' | 'BadRequest' | 'Unauthorized' | 'PaymentRequired' | 'Forbidden' | 'NotFound' | 'MethodNotAllowed' | 'NotAcceptable' | 'ProxyAuthenticationRequired' | 'RequestTimeout' | 'Conflict' | 'Gone' | 'LengthRequired' | 'PreconditionFailed' | 'RequestEntityTooLarge' | 'RequestUriTooLong' | 'UnsupportedMediaType' | 'RequestedRangeNotSatisfiable' | 'ExpectationFailed' | 'MisdirectedRequest' | 'UnprocessableEntity' | 'Locked' | 'FailedDependency' | 'UpgradeRequired' | 'PreconditionRequired' | 'TooManyRequests' | 'RequestHeaderFieldsTooLarge' | 'UnavailableForLegalReasons' | 'InternalServerError' | 'NotImplemented' | 'BadGateway' | 'ServiceUnavailable' | 'GatewayTimeout' | 'HttpVersionNotSupported' | 'VariantAlsoNegotiates' | 'InsufficientStorage' | 'LoopDetected' | 'NotExtended' | 'NetworkAuthenticationRequired';
 
@@ -157,12 +160,6 @@ export type MessageDTOPagedResponseRequestResponse = {
     errorMessage?: ErrorMessage;
 };
 
-export type MessageDeleteDTO = {
-    id?: string;
-    groupId?: string;
-    topicId?: string;
-};
-
 export type PrivateConversationDTO = {
     id?: string;
     user1?: UserDTO;
@@ -199,6 +196,7 @@ export type RegisterDTO = {
     name?: string | null;
     email?: string | null;
     password?: string | null;
+    groupId?: string;
 };
 
 export type RemoveMemberDTO = {
@@ -253,15 +251,6 @@ export type TopicDeleteDTO = {
     topicId?: string;
 };
 
-export type UserAddDTO = {
-    name?: string | null;
-    email?: string | null;
-    password?: string | null;
-    shortName?: string | null;
-    color?: string | null;
-    role?: UserRoleEnum;
-};
-
 export type UserDTO = {
     id?: string;
     name?: string | null;
@@ -291,7 +280,7 @@ export type UserDTORequestResponse = {
     errorMessage?: ErrorMessage;
 };
 
-export type UserRoleEnum = 'Admin' | 'Personnel' | 'Client';
+export type UserRoleEnum = 'Admin' | 'Staff' | 'Client';
 
 export type PostApiAuthorizationLoginData = {
     requestBody?: LoginDTO;
@@ -332,6 +321,14 @@ export type GetApiGroupGetGroupsData = {
 };
 
 export type GetApiGroupGetGroupsResponse = GroupDTOPagedResponseRequestResponse;
+
+export type GetApiGroupGetPublicGroupsData = {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+};
+
+export type GetApiGroupGetPublicGroupsResponse = GroupDTOPagedResponseRequestResponse;
 
 export type GetApiGroupGetInviteLinkData = {
     id?: string;
@@ -397,6 +394,14 @@ export type GetApiGroupGetGroupDetailsData = {
 
 export type GetApiGroupGetGroupDetailsResponse = GroupDetailsDTORequestResponse;
 
+export type GetSigninLinkedinLinkResponse = unknown;
+
+export type GetSignupLinkedinLinkResponse = unknown;
+
+export type GetSigninLinkedinResponse = unknown;
+
+export type GetSignupLinkedinResponse = unknown;
+
 export type GetApiMessageGetTopicMessagesData = {
     convId?: string;
     groupId?: string;
@@ -420,12 +425,6 @@ export type GetApiMessageGetPrivateMessagesData = {
 };
 
 export type GetApiMessageGetPrivateMessagesResponse = MessageDTOPagedResponseRequestResponse;
-
-export type DeleteApiMessageDeleteMessageData = {
-    requestBody?: MessageDeleteDTO;
-};
-
-export type DeleteApiMessageDeleteMessageResponse = RequestResponse;
 
 export type PostApiMessageFilesAddFilesTopicMessageData = {
     formData?: {
@@ -520,11 +519,7 @@ export type GetApiUserGetPageData = {
 
 export type GetApiUserGetPageResponse = UserDTOPagedResponseRequestResponse;
 
-export type PostApiUserAddData = {
-    requestBody?: UserAddDTO;
-};
-
-export type PostApiUserAddResponse = RequestResponse;
+export type PostApiUserLogoutResponse = RequestResponse;
 
 export type PutApiUserUpdateData = {
     formData?: {
@@ -536,6 +531,18 @@ export type PutApiUserUpdateData = {
 };
 
 export type PutApiUserUpdateResponse = RequestResponse;
+
+export type PutApiUserMakeStaffData = {
+    requestBody?: string;
+};
+
+export type PutApiUserMakeStaffResponse = RequestResponse;
+
+export type PutApiUserRemoveStaffData = {
+    requestBody?: string;
+};
+
+export type PutApiUserRemoveStaffResponse = RequestResponse;
 
 export type $OpenApiTs = {
     '/api/Authorization/Login': {
@@ -606,6 +613,17 @@ export type $OpenApiTs = {
     '/api/Group/GetGroups': {
         get: {
             req: GetApiGroupGetGroupsData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: GroupDTOPagedResponseRequestResponse;
+            };
+        };
+    };
+    '/api/Group/GetPublicGroups': {
+        get: {
+            req: GetApiGroupGetPublicGroupsData;
             res: {
                 /**
                  * Success
@@ -724,6 +742,46 @@ export type $OpenApiTs = {
             };
         };
     };
+    '/signin-linkedin-link': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                200: unknown;
+            };
+        };
+    };
+    '/signup-linkedin-link': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                200: unknown;
+            };
+        };
+    };
+    '/signin-linkedin': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                200: unknown;
+            };
+        };
+    };
+    '/signup-linkedin': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                200: unknown;
+            };
+        };
+    };
     '/api/Message/GetTopicMessages': {
         get: {
             req: GetApiMessageGetTopicMessagesData;
@@ -743,17 +801,6 @@ export type $OpenApiTs = {
                  * Success
                  */
                 200: MessageDTOPagedResponseRequestResponse;
-            };
-        };
-    };
-    '/api/Message/DeleteMessage': {
-        delete: {
-            req: DeleteApiMessageDeleteMessageData;
-            res: {
-                /**
-                 * Success
-                 */
-                200: RequestResponse;
             };
         };
     };
@@ -888,9 +935,8 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/User/Add': {
+    '/api/User/Logout': {
         post: {
-            req: PostApiUserAddData;
             res: {
                 /**
                  * Success
@@ -902,6 +948,28 @@ export type $OpenApiTs = {
     '/api/User/Update': {
         put: {
             req: PutApiUserUpdateData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: RequestResponse;
+            };
+        };
+    };
+    '/api/User/MakeStaff': {
+        put: {
+            req: PutApiUserMakeStaffData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: RequestResponse;
+            };
+        };
+    };
+    '/api/User/RemoveStaff': {
+        put: {
+            req: PutApiUserRemoveStaffData;
             res: {
                 /**
                  * Success

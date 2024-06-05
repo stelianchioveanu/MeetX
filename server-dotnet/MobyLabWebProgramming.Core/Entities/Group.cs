@@ -11,4 +11,8 @@ public class Group : BaseEntity
     public ICollection<User> Users { get; set; } = default!;
     public ICollection<Topic> Topics { get; set; } = default!;
     public LinkGroup LinkGroup { get; set; } = default!;
+    public bool isPublic { get; set; } = false;
+    public Guid? ParentGroupId { get; set; } = default!;
+    public Group? ParentGroup { get; set; } = default!;
+    public ICollection<Group> ChildrenGroups { get; set; } = default!;
 }

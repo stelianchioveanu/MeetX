@@ -44,6 +44,12 @@ public class GroupController : AuthorizedController
             this.ErrorMessageResult<PagedResponse<GroupDTO>>(currentUser.Error);
     }
 
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<PagedResponse<GroupDTO>>>> GetPublicGroups([FromQuery] PaginationSearchQueryParams pagination)
+    {
+        return this.FromServiceResponse(await _groupService.GetPublicGroups(pagination));
+    }
+
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<RequestResponse<GroupLinkResponse>>> GetInviteLink([FromQuery] Guid id)

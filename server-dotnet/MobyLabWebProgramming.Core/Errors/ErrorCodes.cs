@@ -24,7 +24,17 @@ public enum ErrorCodes
     TokenExpired,
     GroupAlreadyExists,
     NotAnAdmin,
+    NotAnAppAdmin,
     NotAMember,
     WrongName,
-    WrongEmail
+    WrongEmail,
+    WrongIndustry,
+    UserNotFound,
+    BadCredentials,
+    GroupNotFound,
+    WrongTitle,
+    WrongDescription,
+    ConvNotFound,
+    TopicNotFound,
+    WrongMessage
 }

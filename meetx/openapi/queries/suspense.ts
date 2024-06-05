@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { GroupService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
 /**
 * @param data The data for the request.
@@ -16,6 +16,19 @@ export const useGroupServiceGetApiGroupGetGroupsSuspense = <TData = Common.Group
   pageSize?: number;
   search?: string;
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => GroupService.getApiGroupGetGroups({ page, pageSize, search }) as TData, ...options });
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns GroupDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServiceGetApiGroupGetPublicGroupsSuspense = <TData = Common.GroupServiceGetApiGroupGetPublicGroupsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetPublicGroupsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => GroupService.getApiGroupGetPublicGroups({ page, pageSize, search }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.id
@@ -69,6 +82,26 @@ export const useGroupServiceGetApiGroupGetMemberSuspense = <TData = Common.Group
 export const useGroupServiceGetApiGroupGetGroupDetailsSuspense = <TData = Common.GroupServiceGetApiGroupGetGroupDetailsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupDetailsKeyFn({ groupId }, queryKey), queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSigninLinkedinLinkSuspense = <TData = Common.LinkedInServiceGetSigninLinkedinLinkDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSigninLinkedinLinkKeyFn(queryKey), queryFn: () => LinkedInService.getSigninLinkedinLink() as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSignupLinkedinLinkSuspense = <TData = Common.LinkedInServiceGetSignupLinkedinLinkDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSignupLinkedinLinkKeyFn(queryKey), queryFn: () => LinkedInService.getSignupLinkedinLink() as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSigninLinkedinSuspense = <TData = Common.LinkedInServiceGetSigninLinkedinDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSigninLinkedinKeyFn(queryKey), queryFn: () => LinkedInService.getSigninLinkedin() as TData, ...options });
+/**
+* @returns unknown Success
+* @throws ApiError
+*/
+export const useLinkedInServiceGetSignupLinkedinSuspense = <TData = Common.LinkedInServiceGetSignupLinkedinDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseLinkedInServiceGetSignupLinkedinKeyFn(queryKey), queryFn: () => LinkedInService.getSignupLinkedin() as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.search

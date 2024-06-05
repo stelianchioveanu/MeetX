@@ -30,7 +30,8 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
                 AvatarPath = e.User.AvatarPath,
                 Color = e.User.Color,
             },
-            isAdmin = e.Group.Admins.Any(x => x.Id == e.User.Id)
+            isAdmin = e.Group.Admins.Any(x => x.Id == e.User.Id),
+            isMember = e.Group.Users.Any(x => x.Id == e.User.Id)
         },
         NumberAnswers = e.Messages != null ? e.Messages.Count : 0,
         Files = e.Files != null ? e.Files.Select(o => new FileGetDTO { Name = o.Name, Path = o.Path, Type = o.Type }).ToList() : new List<FileGetDTO>()

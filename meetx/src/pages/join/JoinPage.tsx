@@ -26,7 +26,7 @@ const JoinPage = () => {
     const { mutate, isPending } = useGroupServicePostApiGroupJoinGroup({
         onSuccess: () => {
             redirectToHome();
-            toast("Congratulations! You've successfully joined the group!")
+            toast.success("Congratulations! You've successfully joined the group!")
         }
       });
 

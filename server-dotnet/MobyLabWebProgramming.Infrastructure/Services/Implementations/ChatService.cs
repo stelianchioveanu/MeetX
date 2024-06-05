@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using MobyLabWebProgramming.Core.DataTransferObjects;
+using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
@@ -114,6 +115,29 @@ namespace SignalRChat.Hubs
             }
 
             foreach (var user in group.Users)
+            {
+                List<string>? userConnections = null;
+
+                lock (_lock)
+                {
+                    if (_userConnections.ContainsKey(user.Id.ToString()))
+                    {
+                        userConnections = new List<string>(_userConnections[user.Id.ToString()]);
+                    }
+                }
+
+                if (userConnections != null)
+                {
+                    foreach (var connection in userConnections)
+                    {
+                        await Clients.Client(connection).SendAsync("ReceiveMessage", response.Result);
+                    }
+                }
+            }
+
+            var users = await _repository.ListAsync(new UserSpec("staff", message.GroupId));
+
+            foreach (var user in users)
             {
                 List<string>? userConnections = null;
 

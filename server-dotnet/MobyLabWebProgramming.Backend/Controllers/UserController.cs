@@ -48,39 +48,27 @@ public class UserController : AuthorizedController // Here we use the Authorized
             this.ErrorMessageResult<UserDTO>(currentUser.Error);
     }
 
-    /// <summary>
-    /// This method implements the Read operation (R from CRUD) on page of users.
-    /// Generally, if you need to get multiple values from the database use pagination if there are many entries.
-    /// It will improve performance and reduce resource consumption for both client and server.
-    /// </summary>
     [Authorize]
     [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
-    public async Task<ActionResult<RequestResponse<PagedResponse<UserDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
+    public async Task<ActionResult<RequestResponse<PagedResponse<UserDTO>>>> GetUsers([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
                                                                                                                                          // the PaginationSearchQueryParams properties to the object in the method parameter.
     {
         var currentUser = await GetCurrentUser();
-        Console.WriteLine(currentUser.Result);
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await UserService.GetUsers(pagination)) :
+            this.FromServiceResponse(await UserService.GetUsers(pagination, currentUser.Result)) :
             this.ErrorMessageResult<PagedResponse<UserDTO>>(currentUser.Error);
     }
 
-    /// <summary>
-    /// This method implements the Create operation (C from CRUD) of a user. 
-    /// </summary>
     [Authorize]
-    [HttpPost] // This attribute will make the controller respond to a HTTP POST request on the route /api/User/Add.
-    public async Task<ActionResult<RequestResponse>> Add([FromBody] UserAddDTO user)
+    [HttpPost]
+    public async Task<ActionResult<RequestResponse>> Logout()
     {
         var currentUser = await GetCurrentUser();
-        user.Password = PasswordUtils.HashPassword(user.Password);
-
         return currentUser.Result != null ?
-            this.FromServiceResponse(await UserService.AddUser(user, currentUser.Result)) :
+            this.FromServiceResponse(await UserService.Logout(HttpContext, currentUser.Result)) :
             this.ErrorMessageResult(currentUser.Error);
     }
-
     /// <summary>
     /// This method implements the Update operation (U from CRUD) on a user. 
     /// </summary>
@@ -92,6 +80,28 @@ public class UserController : AuthorizedController // Here we use the Authorized
 
         return currentUser.Result != null ?
             this.FromServiceResponse(await UserService.UpdateUser(user, currentUser.Result)) :
+            this.ErrorMessageResult(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
+    public async Task<ActionResult<RequestResponse>> MakeStaff([FromBody] Guid userId) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await UserService.MakeStaff(userId, currentUser.Result)) :
+            this.ErrorMessageResult(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
+    public async Task<ActionResult<RequestResponse>> RemoveStaff([FromBody] Guid userId) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await UserService.RemoveStaff(userId, currentUser.Result)) :
             this.ErrorMessageResult(currentUser.Error);
     }
 }

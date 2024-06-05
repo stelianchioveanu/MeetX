@@ -3,12 +3,20 @@ import { ReactNode } from 'react';
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from '@/application/store';
 import { setGroup } from '@/application/state-slices';
+import { useQueryClient } from '@tanstack/react-query';
+import { useGroupServiceGetApiGroupGetGroupKey, useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicsKey } from '../../../openapi/queries/common';
 
 const NavigationItem = (props: { children: ReactNode, id: string | undefined }) => {
     const dispatch = useAppDispatch();
+    const queryClient = useQueryClient();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     return (
-    <button onClick={() => {props.id !== undefined ? dispatch(setGroup(props.id)) : null;}} className="group flex items-center relative">
+    <button onClick={() => {props.id !== undefined ? dispatch(setGroup(props.id)) : null;
+      queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupKey]});
+      queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetTopicsKey]});
+      queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey]});
+      queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
+    }} className="group flex items-center relative">
         <div className={cn(
           "absolute -left-2 bg-white rounded-r-full transition-all w-[4px] z-40",
           selectedGroupId !== props.id && "group-hover:h-[20px]",

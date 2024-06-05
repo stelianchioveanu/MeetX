@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiGroupGetMemberData, GetApiGroupGetMemberResponse, GetApiGroupGetGroupDetailsData, GetApiGroupGetGroupDetailsResponse, GetApiMessageGetTopicMessagesData, GetApiMessageGetTopicMessagesResponse, GetApiMessageGetPrivateMessagesData, GetApiMessageGetPrivateMessagesResponse, DeleteApiMessageDeleteMessageData, DeleteApiMessageDeleteMessageResponse, PostApiMessageFilesAddFilesTopicMessageData, PostApiMessageFilesAddFilesTopicMessageResponse, GetApiPrivateConversationGetPrivateConversationsData, GetApiPrivateConversationGetPrivateConversationsResponse, GetApiPrivateConversationGetPrivateConversationData, GetApiPrivateConversationGetPrivateConversationResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetMeResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserAddData, PostApiUserAddResponse, PutApiUserUpdateData, PutApiUserUpdateResponse } from './types.gen';
+import type { PostApiAuthorizationLoginData, PostApiAuthorizationLoginResponse, PostApiAuthorizationRegisterData, PostApiAuthorizationRegisterResponse, PostApiAuthorizationRequestResetData, PostApiAuthorizationRequestResetResponse, PostApiAuthorizationResetPasswordData, PostApiAuthorizationResetPasswordResponse, PostApiAuthorizationRefreshTokenResponse, PostApiGroupAddGroupData, PostApiGroupAddGroupResponse, GetApiGroupGetGroupsData, GetApiGroupGetGroupsResponse, GetApiGroupGetPublicGroupsData, GetApiGroupGetPublicGroupsResponse, GetApiGroupGetInviteLinkData, GetApiGroupGetInviteLinkResponse, PostApiGroupJoinGroupData, PostApiGroupJoinGroupResponse, PutApiGroupLeaveGroupData, PutApiGroupLeaveGroupResponse, PutApiGroupChangeRoleData, PutApiGroupChangeRoleResponse, GetApiGroupGetGroupMembersData, GetApiGroupGetGroupMembersResponse, GetApiGroupGetGroupData, GetApiGroupGetGroupResponse, PutApiGroupRemoveMemberData, PutApiGroupRemoveMemberResponse, DeleteApiGroupDeleteGroupData, DeleteApiGroupDeleteGroupResponse, GetApiGroupGetMemberData, GetApiGroupGetMemberResponse, GetApiGroupGetGroupDetailsData, GetApiGroupGetGroupDetailsResponse, GetSigninLinkedinLinkResponse, GetSignupLinkedinLinkResponse, GetSigninLinkedinResponse, GetSignupLinkedinResponse, GetApiMessageGetTopicMessagesData, GetApiMessageGetTopicMessagesResponse, GetApiMessageGetPrivateMessagesData, GetApiMessageGetPrivateMessagesResponse, PostApiMessageFilesAddFilesTopicMessageData, PostApiMessageFilesAddFilesTopicMessageResponse, GetApiPrivateConversationGetPrivateConversationsData, GetApiPrivateConversationGetPrivateConversationsResponse, GetApiPrivateConversationGetPrivateConversationData, GetApiPrivateConversationGetPrivateConversationResponse, PostApiTopicAddTopicData, PostApiTopicAddTopicResponse, GetApiTopicGetTopicData, GetApiTopicGetTopicResponse, GetApiTopicGetTopicsData, GetApiTopicGetTopicsResponse, GetApiTopicGetMyTopicsData, GetApiTopicGetMyTopicsResponse, GetApiTopicGetRecentTopicsData, GetApiTopicGetRecentTopicsResponse, DeleteApiTopicDeleteTopicData, DeleteApiTopicDeleteTopicResponse, GetApiUserGetByIdByIdData, GetApiUserGetByIdByIdResponse, GetApiUserGetMeResponse, GetApiUserGetPageData, GetApiUserGetPageResponse, PostApiUserLogoutResponse, PutApiUserUpdateData, PutApiUserUpdateResponse, PutApiUserMakeStaffData, PutApiUserMakeStaffResponse, PutApiUserRemoveStaffData, PutApiUserRemoveStaffResponse } from './types.gen';
 
 export class AuthorizationService {
     /**
@@ -107,6 +107,26 @@ export class GroupService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Group/GetGroups',
+            query: {
+                Search: data.search,
+                Page: data.page,
+                PageSize: data.pageSize
+            }
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.search
+     * @param data.page
+     * @param data.pageSize
+     * @returns GroupDTOPagedResponseRequestResponse Success
+     * @throws ApiError
+     */
+    public static getApiGroupGetPublicGroups(data: GetApiGroupGetPublicGroupsData = {}): CancelablePromise<GetApiGroupGetPublicGroupsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Group/GetPublicGroups',
             query: {
                 Search: data.search,
                 Page: data.page,
@@ -280,6 +300,53 @@ export class GroupService {
     
 }
 
+export class LinkedInService {
+    /**
+     * @returns unknown Success
+     * @throws ApiError
+     */
+    public static getSigninLinkedinLink(): CancelablePromise<GetSigninLinkedinLinkResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/signin-linkedin-link'
+        });
+    }
+    
+    /**
+     * @returns unknown Success
+     * @throws ApiError
+     */
+    public static getSignupLinkedinLink(): CancelablePromise<GetSignupLinkedinLinkResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/signup-linkedin-link'
+        });
+    }
+    
+    /**
+     * @returns unknown Success
+     * @throws ApiError
+     */
+    public static getSigninLinkedin(): CancelablePromise<GetSigninLinkedinResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/signin-linkedin'
+        });
+    }
+    
+    /**
+     * @returns unknown Success
+     * @throws ApiError
+     */
+    public static getSignupLinkedin(): CancelablePromise<GetSignupLinkedinResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/signup-linkedin'
+        });
+    }
+    
+}
+
 export class MessageService {
     /**
      * @param data The data for the request.
@@ -334,21 +401,6 @@ export class MessageService {
                 ConvId: data.convId,
                 LastMessageId: data.lastMessageId
             }
-        });
-    }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.requestBody
-     * @returns RequestResponse Success
-     * @throws ApiError
-     */
-    public static deleteApiMessageDeleteMessage(data: DeleteApiMessageDeleteMessageData = {}): CancelablePromise<DeleteApiMessageDeleteMessageResponse> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/Message/DeleteMessage',
-            body: data.requestBody,
-            mediaType: 'application/json'
         });
     }
     
@@ -577,17 +629,13 @@ export class UserService {
     }
     
     /**
-     * @param data The data for the request.
-     * @param data.requestBody
      * @returns RequestResponse Success
      * @throws ApiError
      */
-    public static postApiUserAdd(data: PostApiUserAddData = {}): CancelablePromise<PostApiUserAddResponse> {
+    public static postApiUserLogout(): CancelablePromise<PostApiUserLogoutResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/User/Add',
-            body: data.requestBody,
-            mediaType: 'application/json'
+            url: '/api/User/Logout'
         });
     }
     
@@ -603,6 +651,36 @@ export class UserService {
             url: '/api/User/Update',
             formData: data.formData,
             mediaType: 'multipart/form-data'
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns RequestResponse Success
+     * @throws ApiError
+     */
+    public static putApiUserMakeStaff(data: PutApiUserMakeStaffData = {}): CancelablePromise<PutApiUserMakeStaffResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/User/MakeStaff',
+            body: data.requestBody,
+            mediaType: 'application/json'
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns RequestResponse Success
+     * @throws ApiError
+     */
+    public static putApiUserRemoveStaff(data: PutApiUserRemoveStaffData = {}): CancelablePromise<PutApiUserRemoveStaffResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/User/RemoveStaff',
+            body: data.requestBody,
+            mediaType: 'application/json'
         });
     }
     

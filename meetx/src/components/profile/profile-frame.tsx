@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useUserServiceGetApiUserGetMeKey } from '../../../openapi/queries/common';
 import { UserService } from '../../../openapi/requests/services.gen';
 import { Skeleton } from '../ui/skeleton';
+import { UsersTable } from './users-table';
+import { ScrollArea } from '../ui/scroll-area';
 
 const ProfileFrame = () => {
     const [image, setImage] = useState<string | null>(null);
@@ -13,7 +15,7 @@ const ProfileFrame = () => {
     const [imageChanged, setImageChanged] = useState<boolean>(false);
     const [imageRemoved, setImageRemoved] = useState<boolean>(false);
 
-    const {data, status, isFetching} = useQuery({
+    const {data, status, isFetching, isLoading} = useQuery({
         queryKey: [useUserServiceGetApiUserGetMeKey],
         queryFn: () => {
             return UserService.getApiUserGetMe();
@@ -33,6 +35,7 @@ const ProfileFrame = () => {
     }, [data, status])
 
     return (
+    <ScrollArea>
     <div className='flex flex-wrap grow items-center justify-center gap-x-24'>
         <div className='max-w-72 w-[80%] aspect-square relative'>
             {
@@ -48,8 +51,13 @@ const ProfileFrame = () => {
                 </>
             }
         </div>
-        <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved} isFetching={isFetching}/>
-    </div> );
+        <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}
+        isFetching={isFetching} isLoading={isLoading}/>
+        <div className='h-fit w-[90%]'>
+            <UsersTable/>
+        </div>
+    </div>
+    </ScrollArea> );
 }
  
 export default ProfileFrame;

@@ -42,7 +42,7 @@ const RemoveUser = (props: {userId?: string}) => {
     return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-                <Button className="w-[50%] h-8 bg-red-900 text-white hover:bg-red-500">
+                <Button className="w-[100%] h-8 bg-red-900 text-white hover:bg-red-500">
                     Remove
                 </Button>
           </AlertDialogTrigger>

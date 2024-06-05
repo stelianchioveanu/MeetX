@@ -56,7 +56,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
 
             const filteredFiles = fileList.filter(file => {
                 if (file.size > 10 * 1024 * 1024) {
-                    toast(`Image ${file.name} is too large! Max 10MB`);
+                    toast.error(`Image ${file.name} is too large! Max 10MB`);
                     return false;
                 }
                 if (filesCount === 10) {
@@ -73,10 +73,10 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             });
 
             if (maximumNumber) {
-                toast("Maximum files number is 10!")
+                toast.error("Maximum files number is 10!")
             }
             if (maximumSize) {
-                toast("Files size should not exceed 25MB!")
+                toast.error("Files size should not exceed 25MB!")
             }
 
             if (isImage) {
@@ -201,7 +201,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             }
             <input className=" h-[45px] text-[#d8ddeb] bg-transparent
             focus-visible:outline-none grow" placeholder="#Type here"
-            value={input} onChange={handleChange} onKeyDown={handleKeyPress} />
+            value={input} onChange={handleChange} onKeyDown={handleKeyPress} maxLength={4095}/>
             <input type="file" accept=".jpeg, .jpg, .png" multiple={true} hidden ref={imagesRef}
             onChange={(event) => fileHandleChange(event, true)}/>
             <input type="file" accept=".txt, .rtf, .md, .doc, .docx, .pdf, .xls,

@@ -8,6 +8,20 @@ import { Middleware, OpenAPI as OpenAPIConfig } from "../openapi/requests/core/O
 import axios, { AxiosResponse } from "axios";
 import { toast } from 'react-toastify';
 
+// Set pentru a ține evidența mesajelor toast active
+const activeToasts = new Set();
+
+// Funcție pentru a afișa toast-urile de eroare fără duplicate
+export const showErrorToast = (message: string) => {
+  if (activeToasts.has(message)) {
+    return;
+  }
+  activeToasts.add(message);
+  toast.error(message, {
+    onClose: () => activeToasts.delete(message),
+  });
+};
+
 function isUnauthorizedError(error: any) {
   return error.status === 401;
 }
@@ -28,7 +42,7 @@ const responseInterceptor: Middleware<AxiosResponse<any, any>> = async (error) =
   const originalConfig = error.config;
 
   if (!isUnauthorizedError(error)) {
-      toast(error?.data?.errorMessage?.message || error.data.Message);
+      showErrorToast(error?.data?.errorMessage?.message || error.data.Message);
       return error;
   }
 
@@ -50,7 +64,7 @@ const responseInterceptor: Middleware<AxiosResponse<any, any>> = async (error) =
         if (isUnauthorizedError(innerError)) {
             throw innerError;
         } else {
-          toast(innerError?.response?.data?.errorMessage?.message ||
+          showErrorToast(innerError?.response?.data?.errorMessage?.message ||
             innerError.response?.data.Message);
         }
     }

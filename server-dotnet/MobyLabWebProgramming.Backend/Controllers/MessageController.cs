@@ -42,15 +42,4 @@ public class MessageController : AuthorizedController
             this.FromServiceResponse(await _messageService.GetPrivateMessages(pagination, messageGet, currentUser.Result)) :
             this.ErrorMessageResult<PagedResponse<MessageDTO>>(currentUser.Error);
     }
-
-    [Authorize]
-    [HttpDelete]
-    public async Task<ActionResult<RequestResponse>> DeleteMessage([FromBody] MessageDeleteDTO message)
-    {
-        var currentUser = await GetCurrentUserNotDTO();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _messageService.DeleteMessage(message, currentUser.Result)) :
-            this.ErrorMessageResult(currentUser.Error);
-    }
 }

@@ -11,5 +11,4 @@ public interface IMessageService
     public Task<ServiceResponse<MessageDTO>> AddMessageToUser(MessageAddDTO message, Guid? userId, CancellationToken cancellationToken = default);
     public Task<ServiceResponse<PagedResponse<MessageDTO>>> GetTopicMessages(PaginationSearchQueryParams pagination, MessagesGetDTO messagesGet, User? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse<PagedResponse<MessageDTO>>> GetPrivateMessages(PaginationSearchQueryParams pagination, MessagesGetDTO messagesGet, User? requestingUser = default, CancellationToken cancellationToken = default);
-    public Task<ServiceResponse> DeleteMessage(MessageDeleteDTO topic, User? requestingUser = default, CancellationToken cancellationToken = default);
 }

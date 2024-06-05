@@ -9,8 +9,6 @@ using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
-using System.Diagnostics.Metrics;
-using System.Net;
 using System.Web;
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
@@ -39,7 +37,7 @@ public class GroupService : IGroupService
 
         group.Name = group.Name.Trim();
 
-        if (group.Name.Length < 2)
+        if (group.Name.Length < 2 || group.Name.Length > 4095)
         {
             return ServiceResponse.FromError(CommonErrors.BadName);
         }
@@ -48,21 +46,23 @@ public class GroupService : IGroupService
 
         if (result != null)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "A group made by you with the same name already exists!", ErrorCodes.GroupAlreadyExists));
+            return ServiceResponse.FromError(CommonErrors.GroupAlreadyExists);
         }
 
-        List<string> colors = new List<string> { "#e03f4f", "#c16ca8", "#a86cc1", "#6ca8c1", "#98fb98", "#3fe0d0", "#26abff" };
-        Random random = new Random();
+        List<string> colors = ["#e03f4f", "#c16ca8", "#a86cc1", "#6ca8c1", "#98fb98", "#3fe0d0", "#26abff"];
+        Random random = new();
         int randomIndex = random.Next(0, colors.Count);
 
         var newGroup = new Group
         {
             Name = group.Name,
             FirstAdminId = requestingUser.Id,
-            Admins = new List<User>(),
-            Users = new List<User>(),
+            Admins = [],
+            Users = [],
             ShortName = group.Name.Split(' ').Length > 1 ? $"{group.Name.Split(' ')[0][0]}{group.Name.Split(' ')[1][0]}" : group.Name.Substring(0, 2),
-            Color = colors[randomIndex]
+            Color = colors[randomIndex],
+            isPublic = false,
+            ChildrenGroups = [],
         };
 
         newGroup.Admins.Add(requestingUser);
@@ -84,6 +84,11 @@ public class GroupService : IGroupService
         return ServiceResponse<PagedResponse<GroupDTO>>.ForSuccess(result);
     }
 
+    public async Task<ServiceResponse<PagedResponse<GroupDTO>>> GetPublicGroups(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
+    {
+        var result = await _repository.PageAsync(pagination, new PublicGroupProjectionSpec(pagination.Search), cancellationToken);
+        return ServiceResponse<PagedResponse<GroupDTO>>.ForSuccess(result);
+    }
     public async Task<ServiceResponse<GroupLinkResponse>> GenerateLink(Guid groupId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
         if (requestingUser == null)
@@ -98,9 +103,18 @@ public class GroupService : IGroupService
             return ServiceResponse<GroupLinkResponse>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (entity.Admins.All(e => e.Id != requestingUser.Id))
+        if (entity.isPublic)
         {
-            return ServiceResponse<GroupLinkResponse>.FromError(CommonErrors.NotAnAdmin);
+            if (requestingUser.Role != UserRoleEnum.Admin)
+            {
+                return ServiceResponse<GroupLinkResponse>.FromError(CommonErrors.NotAnAdmin);
+            }
+        } else
+        {
+            if (entity.Admins.All(e => e.Id != requestingUser.Id))
+            {
+                return ServiceResponse<GroupLinkResponse>.FromError(CommonErrors.NotAnAdmin);
+            }
         }
 
         var result = await _repository.GetAsync(new LinkGroupSpec(groupId), cancellationToken);
@@ -172,6 +186,11 @@ public class GroupService : IGroupService
             return ServiceResponse.FromError(CommonErrors.GroupNotFound);
         }
 
+        if (group.isPublic && group.Admins.Any(e => e.Id == requestingUser.Id))
+        {
+            return ServiceResponse.FromError(CommonErrors.CannotLeavePublicGroup);
+        }
+
         group.Users.Remove(requestingUser);
         group.Admins.Remove(requestingUser);
         
@@ -213,6 +232,11 @@ public class GroupService : IGroupService
         if (group == null)
         {
             return ServiceResponse.FromError(CommonErrors.GroupNotFound);
+        }
+
+        if (group.isPublic)
+        {
+            return ServiceResponse.FromError(CommonErrors.CannotChangePublicRoles);
         }
 
         var user = await _repository.GetAsync(new UserSpec(change.UserId), cancellationToken);
@@ -261,7 +285,7 @@ public class GroupService : IGroupService
             return ServiceResponse<PagedResponse<GroupMemberDTO>>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!group.Users.Contains(requestingUser))
+        if (!group.Users.Contains(requestingUser) && !group.Admins.Contains(requestingUser))
         {
             return ServiceResponse<PagedResponse<GroupMemberDTO>>.FromError(CommonErrors.NotMember);
         }
@@ -276,6 +300,14 @@ public class GroupService : IGroupService
             } else
             {
                 member.isAdmin = false;
+            }
+            if (group.Users.Any(u => u.Id == member.User.Id))
+            {
+                member.isMember = true;
+            }
+            else
+            {
+                member.isMember = false;
             }
         }
 
@@ -296,7 +328,7 @@ public class GroupService : IGroupService
             return ServiceResponse<GroupMemberDTO>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!group.Users.Contains(requestingUser))
+        if (!group.Users.Contains(requestingUser) && !group.Admins.Contains(requestingUser))
         {
             return ServiceResponse<GroupMemberDTO>.FromError(CommonErrors.NotMember);
         }
@@ -322,6 +354,15 @@ public class GroupService : IGroupService
                 member.isAdmin = false;
             }
 
+            if (group.Users.Any(u => u.Id == result.Id))
+            {
+                member.isMember = true;
+            }
+            else
+            {
+                member.isMember = false;
+            }
+
             return ServiceResponse<GroupMemberDTO>.ForSuccess(member);
         }
     }
@@ -340,7 +381,7 @@ public class GroupService : IGroupService
             return ServiceResponse<GroupGetDTO>.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (!entity.Users.Contains(requestingUser))
+        if (!entity.Users.Contains(requestingUser) && !entity.Admins.Contains(requestingUser))
         {
             return ServiceResponse<GroupGetDTO>.FromError(CommonErrors.NotMember);
         }
@@ -351,10 +392,17 @@ public class GroupService : IGroupService
             {
                 Id = groupId,
                 Name = entity.Name,
-                NumberMembers = entity.Users.Count
+                NumberMembers = entity.Users.Count,
+                isPublic = entity.isPublic,
             },
-            GroupRole = GroupRoleEnum.Member,
+            GroupRole = GroupRoleEnum.NotMember,
+            UserRole = requestingUser.Role
         };
+
+        if (entity.Users.Contains(requestingUser))
+        {
+            group.GroupRole = GroupRoleEnum.Member;
+        }
 
         if (entity.Admins.Contains(requestingUser))
         {
@@ -386,7 +434,8 @@ public class GroupService : IGroupService
                 Color = entity.Color,
                 Name = entity.Name,
                 NumberMembers = entity.Users.Count,
-                ShortName = entity.ShortName
+                ShortName = entity.ShortName,
+                isPublic = entity.isPublic
             },
             IsMember = entity.Users.Any(e => e.Id == requestingUser.Id),
         };
@@ -415,18 +464,23 @@ public class GroupService : IGroupService
             return ServiceResponse.FromError(CommonErrors.UserNotFound);
         }
 
+
         if (group.Admins.All(e => e.Id != requestingUser.Id))
         {
             return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
         }
 
-        if (user.Id == group.FirstAdminId)
+        if (user.Id == group.FirstAdminId && group.Admins.Any(e => e.Id == user.Id))
         {
             return ServiceResponse.FromError(CommonErrors.NotCreator);
         }
 
         group.Users.Remove(user);
-        group.Admins.Remove(user);
+
+        if (!group.isPublic)
+        {
+            group.Admins.Remove(user);
+        }
         await _repository.UpdateAsync(group, cancellationToken);
 
         return ServiceResponse.ForSuccess();
@@ -446,19 +500,47 @@ public class GroupService : IGroupService
             return ServiceResponse.FromError(CommonErrors.GroupNotFound);
         }
 
-        if (requestingUser.Role == UserRoleEnum.Client)
+        if(group.isPublic)
         {
-            if (group.Admins.All(e => e.Id != requestingUser.Id))
+            if(requestingUser.Role != UserRoleEnum.Admin)
             {
-                return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
+                return ServiceResponse.FromError(CommonErrors.CannotDeletePublicGroup);
             }
-
-            if (group.Admins.Any(e => e.Id == group.FirstAdminId))
+        } else
+        {
+            if (requestingUser.Role == UserRoleEnum.Client)
             {
-                return ServiceResponse.FromError(CommonErrors.NotCreator);
+                if (group.Admins.All(e => e.Id != requestingUser.Id))
+                {
+                    return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
+                }
+
+                if (group.Admins.Any(e => e.Id == group.FirstAdminId))
+                {
+                    return ServiceResponse.FromError(CommonErrors.NotCreator);
+                }
             }
         }
-        await _repository.DeleteAsync(new GroupSpec(id), cancellationToken);
+
+        if (group.isPublic)
+        {
+            if(group.ChildrenGroups.Count != 0)
+            {
+                foreach (var childGroup in group.ChildrenGroups)
+                {
+                    var child = await _repository.GetAsync(new GroupSpec(childGroup.Id), cancellationToken);
+                    if (child != null)
+                    {
+                        child.ParentGroupId = group.ParentGroupId;
+                        await _repository.UpdateAsync(child, cancellationToken);
+                    }
+                }
+            }
+            await _repository.DeleteAsync(new GroupSpec(id), cancellationToken);
+        } else
+        {
+            await _repository.DeleteAsync(new GroupSpec(id), cancellationToken);
+        }
 
         return ServiceResponse.ForSuccess();
     }

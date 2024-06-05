@@ -19,7 +19,7 @@ export const $ChangeRoleDTO = {
 } as const;
 
 export const $ErrorCodes = {
-    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAMember', 'WrongName', 'WrongEmail'],
+    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAnAppAdmin', 'NotAMember', 'WrongName', 'WrongEmail', 'WrongIndustry', 'UserNotFound', 'BadCredentials', 'GroupNotFound', 'WrongTitle', 'WrongDescription', 'ConvNotFound', 'TopicNotFound', 'WrongMessage'],
     type: 'string'
 } as const;
 
@@ -124,6 +124,9 @@ export const $GroupDTO = {
         color: {
             type: 'string',
             nullable: true
+        },
+        isPublic: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -202,6 +205,9 @@ export const $GroupGetDTO = {
         },
         groupRole: {
             '$ref': '#/components/schemas/GroupRoleEnum'
+        },
+        userRole: {
+            '$ref': '#/components/schemas/UserRoleEnum'
         }
     },
     additionalProperties: false
@@ -251,6 +257,9 @@ export const $GroupMemberDTO = {
             '$ref': '#/components/schemas/UserDTO'
         },
         isAdmin: {
+            type: 'boolean'
+        },
+        isMember: {
             type: 'boolean'
         }
     },
@@ -310,7 +319,7 @@ export const $GroupMemberDTORequestResponse = {
 } as const;
 
 export const $GroupRoleEnum = {
-    enum: ['Admin', 'Member'],
+    enum: ['Admin', 'Staff', 'Member', 'NotMember'],
     type: 'string'
 } as const;
 
@@ -467,25 +476,6 @@ export const $MessageDTOPagedResponseRequestResponse = {
     additionalProperties: false
 } as const;
 
-export const $MessageDeleteDTO = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            format: 'uuid'
-        },
-        groupId: {
-            type: 'string',
-            format: 'uuid'
-        },
-        topicId: {
-            type: 'string',
-            format: 'uuid'
-        }
-    },
-    additionalProperties: false
-} as const;
-
 export const $PrivateConversationDTO = {
     type: 'object',
     properties: {
@@ -593,6 +583,10 @@ export const $RegisterDTO = {
         password: {
             type: 'string',
             nullable: true
+        },
+        groupId: {
+            type: 'string',
+            format: 'uuid'
         }
     },
     additionalProperties: false
@@ -762,36 +756,6 @@ export const $TopicDeleteDTO = {
     additionalProperties: false
 } as const;
 
-export const $UserAddDTO = {
-    type: 'object',
-    properties: {
-        name: {
-            type: 'string',
-            nullable: true
-        },
-        email: {
-            type: 'string',
-            nullable: true
-        },
-        password: {
-            type: 'string',
-            nullable: true
-        },
-        shortName: {
-            type: 'string',
-            nullable: true
-        },
-        color: {
-            type: 'string',
-            nullable: true
-        },
-        role: {
-            '$ref': '#/components/schemas/UserRoleEnum'
-        }
-    },
-    additionalProperties: false
-} as const;
-
 export const $UserDTO = {
     type: 'object',
     properties: {
@@ -886,6 +850,6 @@ export const $UserDTORequestResponse = {
 } as const;
 
 export const $UserRoleEnum = {
-    enum: ['Admin', 'Personnel', 'Client'],
+    enum: ['Admin', 'Staff', 'Client'],
     type: 'string'
 } as const;

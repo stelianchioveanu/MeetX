@@ -27,11 +27,13 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
         builder.HasOne(e => e.Topic)
             .WithMany(e => e.Messages)
             .HasForeignKey(e => e.TopicId)
-            .IsRequired(false);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(e => e.Conversation)
             .WithMany(e => e.Messages)
             .HasForeignKey(e => e.ConversationId)
-            .IsRequired(false);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

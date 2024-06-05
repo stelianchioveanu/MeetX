@@ -17,7 +17,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.27")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
@@ -117,6 +117,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasMaxLength(4095)
                         .HasColumnType("character varying(4095)");
 
+                    b.Property<Guid?>("ParentGroupId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ShortName")
                         .IsRequired()
                         .HasMaxLength(2)
@@ -125,9 +128,14 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("isPublic")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FirstAdminId");
+
+                    b.HasIndex("ParentGroupId");
 
                     b.ToTable("Group");
                 });
@@ -434,11 +442,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Message", "Message")
                         .WithMany("Files")
-                        .HasForeignKey("MessageId");
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Topic", "Topic")
                         .WithMany("Files")
-                        .HasForeignKey("TopicId");
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Message");
 
@@ -453,7 +463,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Group", "ParentGroup")
+                        .WithMany("ChildrenGroups")
+                        .HasForeignKey("ParentGroupId");
+
                     b.Navigation("FirstAdmin");
+
+                    b.Navigation("ParentGroup");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.LinkGroup", b =>
@@ -471,11 +487,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.PrivateConversation", "Conversation")
                         .WithMany("Messages")
-                        .HasForeignKey("ConversationId");
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Topic", "Topic")
                         .WithMany("Messages")
-                        .HasForeignKey("TopicId");
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
                         .WithMany("Messages")
@@ -571,6 +589,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Group", b =>
                 {
+                    b.Navigation("ChildrenGroups");
+
                     b.Navigation("LinkGroup")
                         .IsRequired();
 

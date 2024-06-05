@@ -4,9 +4,9 @@ using System.Net;
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Win32;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
@@ -19,8 +19,6 @@ using MobyLabWebProgramming.Infrastructure.Configurations;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
-using Serilog;
-
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
 public class UserService : IUserService
@@ -62,8 +60,18 @@ public class UserService : IUserService
             ServiceResponse<User>.FromError(CommonErrors.UserNotFound);
     }
 
-    public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(PaginationSearchQueryParams pagination, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
+        if (requestingUser == null)
+        {
+            return ServiceResponse<PagedResponse<UserDTO>>.FromError(CommonErrors.UserNotFound);
+        }
+
+        if (requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse<PagedResponse<UserDTO>>.FromError(CommonErrors.NotAnAppAdmin);
+        }
+
         var result = await _repository.PageAsync(pagination, new UserProjectionSpec(pagination.Search), cancellationToken);
 
         return ServiceResponse<PagedResponse<UserDTO>>.ForSuccess(result);
@@ -130,41 +138,12 @@ public class UserService : IUserService
         return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
         {
             User = user,
-            Token = _loginService.GetToken(user, DateTime.UtcNow, new(0, 0, 1, 0), TokenTypeEnum.Auth)
+            Token = _loginService.GetToken(user, DateTime.UtcNow, new(0, 1, 0, 0), TokenTypeEnum.Auth)
         });
     }
 
-    public async Task<ServiceResponse<int>> GetUserCount(CancellationToken cancellationToken = default) => 
-        ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<User>(cancellationToken)); // Get the count of all user entities in the database.
-
-    public async Task<ServiceResponse> AddUser(UserAddDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
-    {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add users!", ErrorCodes.CannotAdd));
-        }
-
-        var result = await _repository.GetAsync(new UserSpec(user.Email), cancellationToken);
-
-        if (result != null)
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The user already exists!", ErrorCodes.UserAlreadyExists));
-        }
-
-        await _repository.AddAsync(new User
-        {
-            Email = user.Email,
-            Name = user.Name,
-            Role = user.Role,
-            Password = user.Password,
-            ShortName = user.ShortName,
-            Color = user.Color
-        }, cancellationToken);
-
-        //await _mailService.SendMail(user.Email, "Welcome!", MailTemplates.UserAddTemplate(user.Name), true, "My App", cancellationToken);
-
-        return ServiceResponse.ForSuccess();
-    }
+    public async Task<ServiceResponse<int>> GetUserCount(CancellationToken cancellationToken = default) =>
+        ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<User>(cancellationToken));
 
     public async Task<ServiceResponse> UpdateUser(UserUpdateDTO user, User? requestingUser, CancellationToken cancellationToken = default)
     {
@@ -182,7 +161,7 @@ public class UserService : IUserService
         {
             var name = user.Name.Trim();
 
-            if (name.Length < 2)
+            if (name.Length < 2 || name.Length > 4095)
             {
                 return ServiceResponse.FromError(CommonErrors.BadName);
             }
@@ -192,7 +171,7 @@ public class UserService : IUserService
 
         if (user.Password != null && user.Password != "")
         {
-            if (_validationService.VerifyPassword(user.Password))
+            if (_validationService.VerifyPassword(user.Password) || user.Password.Length > 4095)
             {
                 return ServiceResponse.FromError(CommonErrors.BadPassword);
             }
@@ -232,24 +211,29 @@ public class UserService : IUserService
     {
         if (register == null || register.Email.IsNullOrEmpty() || register.Name.IsNullOrEmpty() || register.Password.IsNullOrEmpty())
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Every input should have at least 1 character!", ErrorCodes.WrongInputs));
+            return ServiceResponse.FromError(CommonErrors.BadRequets);
         }
 
         var name = register.Name.Trim();
 
-        if (name.Length < 2)
+        if (name.Length < 2 || name.Length > 255)
         {
             return ServiceResponse.FromError(CommonErrors.BadName);
         }
 
-        if (!_validationService.VerifyEmail(register.Email))
+        if (!_validationService.VerifyEmail(register.Email) || register.Email.Length > 255)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Email is not valid!", ErrorCodes.WrongEmail));
+            return ServiceResponse.FromError(CommonErrors.BadEmail);
         }
 
-        if (_validationService.VerifyPassword(register.Password))
+        if (_validationService.VerifyPassword(register.Password) || register.Password.Length > 255)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Password is not valid!", ErrorCodes.WrongPassword));
+            return ServiceResponse.FromError(CommonErrors.BadPassword);
+        }
+
+        if (register.GroupId == Guid.Empty)
+        {
+            return ServiceResponse.FromError(CommonErrors.BadIndustry);
         }
 
         var result = await _repository.GetAsync(new UserSpec(register.Email), cancellationToken);
@@ -259,11 +243,18 @@ public class UserService : IUserService
             return ServiceResponse.FromError(CommonErrors.UserAlreadyExists);
         }
 
+        var group = await _repository.GetAsync(new GroupSpec(register.GroupId), cancellationToken);
+
+        if (group == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.GroupNotFound);
+        }
+
         List<string> colors = new List<string> { "#e03f4f", "#c16ca8", "#a86cc1", "#6ca8c1", "#98fb98", "#3fe0d0", "#26abff" };
         Random random = new Random();
         int randomIndex = random.Next(0, colors.Count);
 
-        await _repository.AddAsync(new User
+        var user = await _repository.AddAsync(new User
         {
             Email = register.Email,
             Name = register.Name,
@@ -273,7 +264,36 @@ public class UserService : IUserService
             Color = colors[randomIndex]
         }, cancellationToken);
 
+        while (group != null)
+        {
+            group.Users.Add(user);
+            group = await _repository.UpdateAsync(group, cancellationToken);
+            Guid parentGroupId = group.ParentGroupId ?? Guid.Empty;
+            group = await _repository.GetAsync(new GroupSpec(parentGroupId), cancellationToken);
+        }
+
         //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken + " " + "id"), true, "MeetX", cancellationToken);
+
+        return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse> Logout(HttpContext context, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
+        }
+
+        await _repository.DeleteAsync(new RefreshTokenSpec(requestingUser.Id), cancellationToken);
+
+        if (context.Request.Cookies.ContainsKey("MeetxRefresh"))
+        {
+            context.Response.Cookies.Append("MeetxRefresh", "", new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddDays(-10),
+                Path = "/"
+            });
+        }
 
         return ServiceResponse.ForSuccess();
     }
@@ -282,7 +302,7 @@ public class UserService : IUserService
     {
         if (!_validationService.VerifyEmail(requestReset.Email))
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Email is not valid!", ErrorCodes.WrongInputs));
+            return ServiceResponse.FromError(CommonErrors.BadEmail);
         }
 
         var entity = await _repository.GetAsync(new UserSpec(requestReset.Email), cancellationToken);
@@ -316,6 +336,81 @@ public class UserService : IUserService
         return ServiceResponse.ForSuccess();
     }
 
+    public async Task<ServiceResponse> MakeStaff(Guid userId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
+        }
+
+        if (requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(CommonErrors.NotAnAppAdmin);
+        }
+
+        if (requestingUser.Id == userId)
+        {
+            return ServiceResponse.FromError(CommonErrors.ChangeMyRole);
+        }
+
+        var user = await _repository.GetAsync(new UserSpec(userId), cancellationToken);
+
+        if (user == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
+        }
+
+        user.Role = UserRoleEnum.Staff;
+        user = await _repository.UpdateAsync(user, cancellationToken);
+
+        var groups = await _repository.ListAsync(new GroupSpec(true), cancellationToken);
+
+        foreach (var group in groups)
+        {
+            group.Admins.Add(user);
+            await _repository.UpdateAsync(group, cancellationToken);
+        }
+
+        return ServiceResponse.ForSuccess();
+    }
+    public async Task<ServiceResponse> RemoveStaff(Guid userId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
+        }
+
+        if (requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(CommonErrors.NotAnAppAdmin);
+        }
+
+        if (requestingUser.Id == userId)
+        {
+            return ServiceResponse.FromError(CommonErrors.ChangeMyRole);
+        }
+
+        var user = await _repository.GetAsync(new UserSpec(userId), cancellationToken);
+
+        if (user == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
+        }
+
+        user.Role = UserRoleEnum.Client;
+        user = await _repository.UpdateAsync(user, cancellationToken);
+
+        var groups = await _repository.ListAsync(new GroupSpec(true), cancellationToken);
+
+        foreach (var group in groups)
+        {
+            group.Admins.Remove(user);
+            await _repository.UpdateAsync(group, cancellationToken);
+        }
+
+        return ServiceResponse.ForSuccess();
+    }
+
     public async Task<ServiceResponse> ResetPassword(ResetPasswordDTO reset, CancellationToken cancellationToken = default)
     {
         Console.WriteLine(reset.Token);
@@ -323,7 +418,7 @@ public class UserService : IUserService
 
         if (token == null || token.Token != reset.Token)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Unauthorized, "Token expired!", ErrorCodes.TokenExpired));
+            return ServiceResponse.FromError(CommonErrors.ResetTokenExpired);
         }
 
         var user = await _repository.GetAsync(new UserSpec(token.UserId), cancellationToken);
@@ -331,18 +426,18 @@ public class UserService : IUserService
         if (user == null)
         {
             await _repository.DeleteAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
-            return ServiceResponse.FromError(new(HttpStatusCode.Unauthorized, "Token expired!", ErrorCodes.TokenExpired));
+            return ServiceResponse.FromError(CommonErrors.ResetTokenExpired);
         }
 
         if (token.UpdatedAt.AddMinutes(30) < DateTime.UtcNow)
         {
             await _repository.DeleteAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
-            return ServiceResponse.FromError(new(HttpStatusCode.Unauthorized, "Token expired!", ErrorCodes.TokenExpired));
-        } 
+            return ServiceResponse.FromError(CommonErrors.ResetTokenExpired);
+        }
 
-        if (_validationService.VerifyPassword(reset.Password))
+        if (_validationService.VerifyPassword(reset.Password) || reset.Password.Length > 255)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Password is not valid!", ErrorCodes.WrongInputs));
+            return ServiceResponse.FromError(CommonErrors.BadPassword);
         }
 
         await _repository.DeleteAsync(new ResetTokenSpec(reset.Id, SpecEnum.ByTokenId), cancellationToken);
@@ -420,17 +515,17 @@ public class UserService : IUserService
 
                             return ServiceResponse<RefreshResponseDTO>.ForSuccess(new()
                             {
-                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 0, 1, 0), TokenTypeEnum.Auth)
+                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 1, 0, 0), TokenTypeEnum.Auth)
                             });
                         }
                     }
                     catch
                     {
-                        return ServiceResponse<RefreshResponseDTO>.FromError(new(HttpStatusCode.Unauthorized, "Refresh token expired!", ErrorCodes.TokenExpired));
+                        return ServiceResponse<RefreshResponseDTO>.FromError(CommonErrors.RefreshTokenExpired);
                     }
                 }
             }
         }
-        return ServiceResponse<RefreshResponseDTO>.FromError(new(HttpStatusCode.Unauthorized, "Refresh token expired!", ErrorCodes.TokenExpired));
+        return ServiceResponse<RefreshResponseDTO>.FromError(CommonErrors.RefreshTokenExpired);
     }
 }

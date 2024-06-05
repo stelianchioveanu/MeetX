@@ -31,7 +31,6 @@ const ChatFrame = (props:{isGroup: boolean}) => {
             return TopicService.getApiTopicGetTopic({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined});
         },
         retry: false,
-        enabled: false
     });
 
     const conv = useQuery({
@@ -40,7 +39,6 @@ const ChatFrame = (props:{isGroup: boolean}) => {
             return PrivateConversationService.getApiPrivateConversationGetPrivateConversation({convId: selectedConvId === null ? undefined : selectedConvId});
         },
         retry: false,
-        enabled: false
     });
 
     useEffect(() => {

@@ -96,7 +96,7 @@ const Login = () => {
                         {isPending ? <Loader2 className="animate-spin"></Loader2> :
                         "Login"}
                     </Button>
-                    <Link to="/resetPassword" className="text-white hover:text-purple-800 hover:cursor-pointer font text-xs -mt-3 w-fit justify-self-end">Forgot password?</Link>
+                    <Link to="/requestResetPassword" className="text-white hover:text-purple-800 hover:cursor-pointer font text-xs -mt-3 w-fit justify-self-end">Forgot password?</Link>
                 </form>
             </Form>
             <div className="flex justify-center items-center w-full gap-1 -mb-4 -mt-9">
@@ -104,10 +104,12 @@ const Login = () => {
                 <span className="text-neutral-400">or</span>
                 <div className="w-full h-px bg-neutral-400 mt-1"></div>
             </div>
-            <Button className="font w-full gap-3 bg-[#0a66c2]">
-                <Linkedin className="h-5"></Linkedin>
-                Continue with LinkedIn
-            </Button>
+            <a className="w-full h-fit" href="http://localhost:5000/signin-linkedin-link">
+                <Button className="font w-full gap-3 bg-[#0a66c2]">
+                    <Linkedin className="h-5"></Linkedin>
+                    Continue with LinkedIn
+                </Button>
+            </a>
             <div className="text-white font">
                 Not a member? 
                 <span className="text-purple-700 hover:text-purple-800 hover:cursor-pointer">

@@ -9,6 +9,7 @@ public interface IGroupService
     public Task<ServiceResponse> AddGroup(GroupAddDTO group, User? requestingUser = default, CancellationToken cancellationToken = default);
 
     public Task<ServiceResponse<PagedResponse<GroupDTO>>> GetGroups(PaginationQueryParams pagination, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<PagedResponse<GroupDTO>>> GetPublicGroups(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default);
 
     public Task<ServiceResponse<GroupLinkResponse>> GenerateLink(Guid groupId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 

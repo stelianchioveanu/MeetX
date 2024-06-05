@@ -78,7 +78,7 @@ const Reset = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input placeholder="New Password" type="password" className="font" {...field}/>
+                                <Input maxLength={255} placeholder="New Password" type="password" className="font" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -90,7 +90,7 @@ const Reset = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input placeholder="Confirm Password" type="password" className="font" {...field}/>
+                                <Input maxLength={255} placeholder="Confirm Password" type="password" className="font" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>

@@ -6,4 +6,5 @@ public class GroupMemberDTO
 {
     public UserDTO User { get; set; } = default!;
     public bool isAdmin { get; set; } = default!;
+    public bool isMember { get; set; } = default!;
 }

@@ -12,10 +12,11 @@ namespace MobyLabWebProgramming.Core.Enums;
 public sealed class UserRoleEnum : SmartEnum<UserRoleEnum, string>
 {
     public static readonly UserRoleEnum Admin = new(nameof(Admin), "Admin");
-    public static readonly UserRoleEnum Personnel = new(nameof(Personnel), "Personnel");
+    public static readonly UserRoleEnum Staff = new(nameof(Staff), "Staff");
     public static readonly UserRoleEnum Client = new(nameof(Client), "Client");
 
     private UserRoleEnum(string name, string value) : base(name, value)
     {
     }
 }
+ 

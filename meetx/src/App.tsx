@@ -11,6 +11,8 @@ import Reset from './pages/auth/Reset';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import JoinPage from './pages/join/JoinPage';
+import RedirectLogin from './pages/auth/RedirectLogin';
+import ErrorPage from './pages/auth/ErrorPage';
 
 const queryClient = new QueryClient();
 
@@ -31,7 +33,7 @@ function App() {
               draggable
               pauseOnHover
               theme="light"
-              limit={1}
+              limit={10}
               />
           <Routes>
             <Route path="/"/>
@@ -42,6 +44,8 @@ function App() {
             <Route path="resetPassword" element={<Reset/>} />
             <Route path="dashboard" element={<Dashboard/>} />
             <Route path="invite" element={<JoinPage/>} />
+            <Route path="redirectLogin" element={<RedirectLogin/>} />
+            <Route path="error" element={<ErrorPage/>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

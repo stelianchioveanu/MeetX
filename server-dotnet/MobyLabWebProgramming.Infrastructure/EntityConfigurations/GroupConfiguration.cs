@@ -17,6 +17,8 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.Property(e => e.ShortName)
             .HasMaxLength(2)
             .IsRequired();
+        builder.Property(e => e.isPublic)
+            .IsRequired();
         builder.Property(e => e.Color)
             .HasMaxLength(7)
             .IsRequired();
@@ -36,5 +38,10 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 
         builder.HasMany(e => e.Admins)
             .WithMany(e => e.MyGroups);
+
+        builder.HasOne(e => e.ParentGroup)
+            .WithMany(e => e.ChildrenGroups)
+            .HasForeignKey(e => e.ParentGroupId)
+            .IsRequired(false);
     }
 }

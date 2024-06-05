@@ -19,6 +19,7 @@ public sealed class GroupProjectionSpec : BaseSpec<GroupProjectionSpec, Group, G
         NumberMembers = e.Users.Count,
         ShortName = e.ShortName,
         Color = e.Color,
+        isPublic = e.isPublic
     };
 
     public GroupProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -29,10 +30,10 @@ public sealed class GroupProjectionSpec : BaseSpec<GroupProjectionSpec, Group, G
     {
         if (spec == SpecEnum.ByGroupId)
         {
-            Query.Where(e => e.Id == Id).Include(e => e.Users).OrderByDescending(x => x.CreatedAt, true);
+            Query.Where(e => e.Id == Id).Include(e => e.Users);
         } else
         {
-            Query.Where(e => e.Users.Any(u => u.Id == Id)).OrderByDescending(x => x.CreatedAt, true);
+            Query.Where(e => e.Users.Any(u => u.Id == Id) || e.Admins.Any(u => u.Id == Id)).OrderBy(x => x.Name.ToLower(), true);
         }
             
     }

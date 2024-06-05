@@ -21,6 +21,7 @@ import { toast } from "react-toastify"
 import { RequestResponse } from "../../../openapi/requests/types.gen"
 import { ApiError } from "../../../openapi/requests/core/ApiError"
 import { Skeleton } from "../ui/skeleton"
+import { LogoutButtonAlert } from "./logout-button-alert"
 
 const loginFormSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters!"})
@@ -37,7 +38,7 @@ const loginFormSchema = z.object({
     path: ["confPassword"],
 });
 
-const ProfileForm = (props :  {name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean, isFetching: boolean}) => {
+const ProfileForm = (props :  {name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean, isFetching: boolean, isLoading: boolean}) => {
     const queryClient = useQueryClient();
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -65,7 +66,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
         },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useUserServiceGetApiUserGetMeKey]});
-            toast("Profile updated successfully");
+            toast.success("Profile updated successfully");
         }
     });
 
@@ -82,7 +83,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
     
         var ext = mimeString.split('/')[1];
         if (!ext) {
-            toast("Extract extension failed!");
+            toast.error("Extract extension failed!");
             return undefined;
         }
         var filename = "avatar" + "." + ext;
@@ -110,7 +111,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
     return ( <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 gap-6 w-[80%] max-w-xl">
             {
-                props.isFetching ?
+                props.isLoading ?
                 <Skeleton className="w-full h-10"/> :
                 <FormField
                 control={form.control}
@@ -127,7 +128,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
             />
             }
             {
-                props.isFetching ?
+                props.isLoading ?
                 <Skeleton className="w-full h-10"/> :
                 <FormField
                 control={form.control}
@@ -136,7 +137,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                     <FormItem className="space-y-1">
                         <FormLabel className="text-white">Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="Name" className="font bg-transparent text-white" {...field}/>
+                            <Input maxLength={255} placeholder="Name" className="font bg-transparent text-white" {...field}/>
                         </FormControl>
                         <FormMessage/>
                     </FormItem>
@@ -144,7 +145,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 />
             }
             {
-                props.isFetching ?
+                props.isLoading ?
                 <Skeleton className="w-full h-10"/> :
                 <FormField
                 control={form.control}
@@ -152,7 +153,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 render={({ field }) => (
                     <FormItem className="space-y-1">
                         <FormControl>
-                            <Input placeholder="New Password" type="password" className="font bg-transparent" {...field} />
+                            <Input maxLength={255} placeholder="New Password" type="password" className="font bg-transparent" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -160,7 +161,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 />
             }
             {
-                props.isFetching ?
+                props.isLoading ?
                 <Skeleton className="w-full h-10"/> :
                 <FormField
                 control={form.control}
@@ -176,12 +177,15 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 />
             }
             {
-                props.isFetching ?
+                props.isLoading ?
                 null :
-                <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
-                    {false ? <Loader2 className="animate-spin"></Loader2> :
-                    "Save"}
-                </Button>
+                <>
+                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
+                        {props.isFetching ? <Loader2 className="animate-spin"></Loader2> :
+                        "Save"}
+                    </Button>
+                    <LogoutButtonAlert/>
+                </>
             }
         </form>
     </Form> );

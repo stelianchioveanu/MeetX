@@ -31,10 +31,10 @@ const NavigationBar = () => {
             <>
                 <Profile id="0"/>
                 <Separator className="bg-neutral-600 w-3/4"></Separator>
-                <ScrollArea>
+                <ScrollArea className="w-full">
                     {
                         data?.response?.data !== null && data?.response?.data !== undefined && data?.response?.data.length !== 0 ?
-                        <div className="w-full flex items-center flex-col gap-3 overflow-auto">
+                        <div className="w-full flex items-center flex-col gap-3">
                             {data?.response?.data.map(function(group : GroupDTO){
                                 return (
                                     <Group key={group.id} group={group}></Group>

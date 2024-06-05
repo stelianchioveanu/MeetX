@@ -94,7 +94,7 @@ const AddGroup = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input placeholder="Group Name" className="font" {...field}/>
+                                    <Input maxLength={4095} placeholder="Group Name" className="font" {...field}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>

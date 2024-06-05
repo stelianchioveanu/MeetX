@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { AuthorizationService, GroupService, LinkedInService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 export type GroupServiceGetApiGroupGetGroupsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetGroups>>;
 export type GroupServiceGetApiGroupGetGroupsQueryResult<TData = GroupServiceGetApiGroupGetGroupsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGroupServiceGetApiGroupGetGroupsKey = "GroupServiceGetApiGroupGetGroups";
@@ -10,6 +10,14 @@ export const UseGroupServiceGetApiGroupGetGroupsKeyFn = ({ page, pageSize, searc
   pageSize?: number;
   search?: string;
 } = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetGroupsKey, ...(queryKey ?? [{ page, pageSize, search }])];
+export type GroupServiceGetApiGroupGetPublicGroupsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetPublicGroups>>;
+export type GroupServiceGetApiGroupGetPublicGroupsQueryResult<TData = GroupServiceGetApiGroupGetPublicGroupsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useGroupServiceGetApiGroupGetPublicGroupsKey = "GroupServiceGetApiGroupGetPublicGroups";
+export const UseGroupServiceGetApiGroupGetPublicGroupsKeyFn = ({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetPublicGroupsKey, ...(queryKey ?? [{ page, pageSize, search }])];
 export type GroupServiceGetApiGroupGetInviteLinkDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetInviteLink>>;
 export type GroupServiceGetApiGroupGetInviteLinkQueryResult<TData = GroupServiceGetApiGroupGetInviteLinkDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGroupServiceGetApiGroupGetInviteLinkKey = "GroupServiceGetApiGroupGetInviteLink";
@@ -44,6 +52,22 @@ export const useGroupServiceGetApiGroupGetGroupDetailsKey = "GroupServiceGetApiG
 export const UseGroupServiceGetApiGroupGetGroupDetailsKeyFn = ({ groupId }: {
   groupId?: string;
 } = {}, queryKey?: Array<unknown>) => [useGroupServiceGetApiGroupGetGroupDetailsKey, ...(queryKey ?? [{ groupId }])];
+export type LinkedInServiceGetSigninLinkedinLinkDefaultResponse = Awaited<ReturnType<typeof LinkedInService.getSigninLinkedinLink>>;
+export type LinkedInServiceGetSigninLinkedinLinkQueryResult<TData = LinkedInServiceGetSigninLinkedinLinkDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useLinkedInServiceGetSigninLinkedinLinkKey = "LinkedInServiceGetSigninLinkedinLink";
+export const UseLinkedInServiceGetSigninLinkedinLinkKeyFn = (queryKey?: Array<unknown>) => [useLinkedInServiceGetSigninLinkedinLinkKey, ...(queryKey ?? [])];
+export type LinkedInServiceGetSignupLinkedinLinkDefaultResponse = Awaited<ReturnType<typeof LinkedInService.getSignupLinkedinLink>>;
+export type LinkedInServiceGetSignupLinkedinLinkQueryResult<TData = LinkedInServiceGetSignupLinkedinLinkDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useLinkedInServiceGetSignupLinkedinLinkKey = "LinkedInServiceGetSignupLinkedinLink";
+export const UseLinkedInServiceGetSignupLinkedinLinkKeyFn = (queryKey?: Array<unknown>) => [useLinkedInServiceGetSignupLinkedinLinkKey, ...(queryKey ?? [])];
+export type LinkedInServiceGetSigninLinkedinDefaultResponse = Awaited<ReturnType<typeof LinkedInService.getSigninLinkedin>>;
+export type LinkedInServiceGetSigninLinkedinQueryResult<TData = LinkedInServiceGetSigninLinkedinDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useLinkedInServiceGetSigninLinkedinKey = "LinkedInServiceGetSigninLinkedin";
+export const UseLinkedInServiceGetSigninLinkedinKeyFn = (queryKey?: Array<unknown>) => [useLinkedInServiceGetSigninLinkedinKey, ...(queryKey ?? [])];
+export type LinkedInServiceGetSignupLinkedinDefaultResponse = Awaited<ReturnType<typeof LinkedInService.getSignupLinkedin>>;
+export type LinkedInServiceGetSignupLinkedinQueryResult<TData = LinkedInServiceGetSignupLinkedinDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useLinkedInServiceGetSignupLinkedinKey = "LinkedInServiceGetSignupLinkedin";
+export const UseLinkedInServiceGetSignupLinkedinKeyFn = (queryKey?: Array<unknown>) => [useLinkedInServiceGetSignupLinkedinKey, ...(queryKey ?? [])];
 export type MessageServiceGetApiMessageGetTopicMessagesDefaultResponse = Awaited<ReturnType<typeof MessageService.getApiMessageGetTopicMessages>>;
 export type MessageServiceGetApiMessageGetTopicMessagesQueryResult<TData = MessageServiceGetApiMessageGetTopicMessagesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useMessageServiceGetApiMessageGetTopicMessagesKey = "MessageServiceGetApiMessageGetTopicMessages";
@@ -143,11 +167,12 @@ export type GroupServicePostApiGroupAddGroupMutationResult = Awaited<ReturnType<
 export type GroupServicePostApiGroupJoinGroupMutationResult = Awaited<ReturnType<typeof GroupService.postApiGroupJoinGroup>>;
 export type MessageFilesServicePostApiMessageFilesAddFilesTopicMessageMutationResult = Awaited<ReturnType<typeof MessageFilesService.postApiMessageFilesAddFilesTopicMessage>>;
 export type TopicServicePostApiTopicAddTopicMutationResult = Awaited<ReturnType<typeof TopicService.postApiTopicAddTopic>>;
-export type UserServicePostApiUserAddMutationResult = Awaited<ReturnType<typeof UserService.postApiUserAdd>>;
+export type UserServicePostApiUserLogoutMutationResult = Awaited<ReturnType<typeof UserService.postApiUserLogout>>;
 export type GroupServicePutApiGroupLeaveGroupMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupLeaveGroup>>;
 export type GroupServicePutApiGroupChangeRoleMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupChangeRole>>;
 export type GroupServicePutApiGroupRemoveMemberMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupRemoveMember>>;
 export type UserServicePutApiUserUpdateMutationResult = Awaited<ReturnType<typeof UserService.putApiUserUpdate>>;
+export type UserServicePutApiUserMakeStaffMutationResult = Awaited<ReturnType<typeof UserService.putApiUserMakeStaff>>;
+export type UserServicePutApiUserRemoveStaffMutationResult = Awaited<ReturnType<typeof UserService.putApiUserRemoveStaff>>;
 export type GroupServiceDeleteApiGroupDeleteGroupMutationResult = Awaited<ReturnType<typeof GroupService.deleteApiGroupDeleteGroup>>;
-export type MessageServiceDeleteApiMessageDeleteMessageMutationResult = Awaited<ReturnType<typeof MessageService.deleteApiMessageDeleteMessage>>;
 export type TopicServiceDeleteApiTopicDeleteTopicMutationResult = Awaited<ReturnType<typeof TopicService.deleteApiTopicDeleteTopic>>;

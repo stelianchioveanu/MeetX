@@ -17,7 +17,7 @@ import { useGroupServiceGetApiGroupGetMemberKey, useUserServiceGetApiUserGetById
 
 const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, isGroup: boolean}) => {
     const { userId } = useAppSelector(x => x.profileReducer);
-    const { isAdmin, selectedGroupId } = useAppSelector(x => x.selectedReducer);
+    const { isAdmin, selectedGroupId, isPublic } = useAppSelector(x => x.selectedReducer);
     const [input, setInput] = useState("");
     const { newPrivateMessage } = Connector();
     const [opened, setOpened] = useState<boolean>(false);
@@ -81,31 +81,47 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
                 </div>
                 <div className="flex flex-col p-3 gap-1 font">
                     {props.isGroup ?
+                        <p className=" text-[#244783]">
+                            {member.data?.response?.user?.role === "Admin" || member.data?.response?.user?.role === "Staff" ? "Platform Staff" : null}
+                        </p> :
+                        <p className=" text-[#244783]">
+                            {user.data?.response?.role === "Admin" || user.data?.response?.role === "Staff" ? "Platform Staff" : null}
+                        </p>
+                    }
+
+                    {props.isGroup ?
                     <p className=" text-[#248379]">
-                        {member.data?.response?.isAdmin ? "Admin" : "Member"}
+                        {member.data?.response?.isMember ? (isPublic ? "Member" : (member.data.response.isAdmin ? "Admin" : "Member")) : "Not a member"}
                     </p> : null }
+
                     <p className=" text-purple-700 text-xl font-semibold truncate">
                         {props.isGroup ? member.data?.response?.user?.name :
                         user.data?.response?.name}
                     </p>
+
                     <p className="text-sm truncate">
                         {props.isGroup ? member.data?.response?.user?.email :
                         user.data?.response?.email}
                     </p>
+
                     <p className="text-xs text-[#5c6682]">
                         Registered since: {props.isGroup ? member.data?.response?.user?.registeredDate :
                         user.data?.response?.registeredDate}
                     </p>
+
                 </div>
-                {props.isGroup && member.data?.response?.user?.id !== userId && isAdmin ?
+                {props.isGroup && member.data?.response?.user?.id !== userId && isAdmin && member.data?.response?.isMember ?
                 <div className="flex px-3 gap-2">
-                    <ChangeRole userId={member.data?.response?.user?.id} isAdmin={member.data?.response?.isAdmin}/>
+                    {
+                        isPublic ? null :
+                        <ChangeRole userId={member.data?.response?.user?.id} isAdmin={member.data?.response?.isAdmin}/>
+                    }
                     <RemoveUser userId={member.data?.response?.user?.id}/>
                 </div> : null }
                 {(props.isGroup ? member.data?.response?.user?.id !== userId : user.data?.response?.id !== userId) ?
                     <div className="p-3">
                         <Input className="bg-transparent border-[#272D3D]" placeholder="#Send message" value={input}
-                        onChange={handleChange} onKeyDown={handleKeyPress} />
+                        onChange={handleChange} onKeyDown={handleKeyPress} maxLength={4095}/>
                     </div> : null
                 }
             </PopoverContent>

@@ -5,8 +5,9 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { GroupService, TopicService } from "../../../openapi/requests/services.gen";
 import { useQuery } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/application/store";
-import { useGroupServiceGetApiGroupGetGroupKey, useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey } from "../../../openapi/queries/common";
-import { setAdmin } from "@/application/state-slices";
+import { useGroupServiceGetApiGroupGetGroupKey, useTopicServiceGetApiTopicGetMyTopicsKey,
+    useTopicServiceGetApiTopicGetRecentTopicsKey } from "../../../openapi/queries/common";
+import { setAdmin, setAppRole, setPublic } from "@/application/state-slices";
 import { TopicDTO } from "openapi/requests/types.gen";
 import LeaveGroupDialog from "./leave-group-dialog";
 import DeleteGroupDialog from "./delete-group-dialog";
@@ -15,9 +16,10 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { Loader2 } from "lucide-react";
+import { GroupNameCard } from "./group-name-card";
 
 const GroupFrame = () => {
-    const { selectedGroupId, isAdmin } = useAppSelector(x => x.selectedReducer);
+    const { selectedGroupId, isAdmin, isPublic, appRole } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
     const [pageMyTopics, setPageMyTopics] = useState<number>(1);
     const [pageRecentTopics, setPageRecentTopics] = useState<number>(1);
@@ -30,7 +32,10 @@ const GroupFrame = () => {
         retry: false,
     });
 
-    useEffect(() => {dispatch(setAdmin(group.data?.response?.groupRole === "Admin"))}, [group.data])
+    useEffect(() => {dispatch(setAdmin(group.data?.response?.groupRole === "Admin"));
+    dispatch(setPublic(group.data?.response?.group?.isPublic ? group.data?.response?.group?.isPublic : false));
+    dispatch(setAppRole(group.data?.response?.userRole === "Admin" ? true : false))
+    }, [group.dataUpdatedAt])
 
     const myTopics = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey, selectedGroupId],
@@ -62,9 +67,7 @@ const GroupFrame = () => {
             {
                 group.isLoading ? 
                 <Skeleton className="w-full h-full"/> :
-                <p className="w-full h-full truncate">
-                    {group.data?.response?.group?.name}
-                </p>
+                <GroupNameCard name={group.data?.response?.group?.name}/>
             }
         </div>
         {
@@ -133,25 +136,54 @@ const GroupFrame = () => {
             null :
             <Separator className="bg-neutral-600 w-4/5"/>
         }
+        
         {
-            isAdmin ?
+            isPublic ?
             <>
                 {
+                    appRole ?
+                    <>
+                        {
+                            group.isFetching ?
+                            null :
+                            <GenerateLinkDialog/>
+                        }
+                        {
+                            group.isFetching ?
+                            null :
+                            <DeleteGroupDialog/>
+                        }
+                    </> : null
+                }
+                {
+                    isAdmin ? null :
                     group.isFetching ?
-                    null :
-                    <GenerateLinkDialog/>
+                    <Skeleton className="w-3/4 h-12"/> :
+                    <LeaveGroupDialog/>
+                }
+            </> :
+            <>
+                {
+                    isAdmin ?
+                    <>
+                        {
+                            group.isFetching ?
+                            null :
+                            <GenerateLinkDialog/>
+                        }
+                        {
+                            group.isFetching ?
+                            null :
+                            <DeleteGroupDialog/>
+                        }
+                    </> : null
                 }
                 {
                     group.isFetching ?
-                    null :
-                    <DeleteGroupDialog/>
+                    <Skeleton className="w-3/4 h-12"/> :
+                    <LeaveGroupDialog/>
                 }
-            </> : null
-        }
-        {
-            group.isFetching ?
-            <Skeleton className="w-3/4 h-12"/> :
-            <LeaveGroupDialog/>
+            </>
         }
     </div> );
 }

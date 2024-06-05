@@ -28,11 +28,13 @@ public class FileConfiguration : IEntityTypeConfiguration<FileEntity>
         builder.HasOne(e => e.Message)
             .WithMany(e => e.Files)
             .HasForeignKey(e => e.MessageId)
-            .IsRequired(false);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(e => e.Topic)
             .WithMany(e => e.Files)
             .HasForeignKey(e => e.TopicId)
-            .IsRequired(false);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

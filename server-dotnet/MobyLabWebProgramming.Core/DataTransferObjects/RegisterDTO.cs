@@ -1,3 +1,3 @@
 ﻿namespace MobyLabWebProgramming.Core.DataTransferObjects;
 
-public record RegisterDTO(string Name, string Email, string Password);
+public record RegisterDTO(string Name, string Email, string Password, Guid GroupId);

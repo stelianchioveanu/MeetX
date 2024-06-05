@@ -44,7 +44,7 @@ const ChangeRole = (props: {userId?: string, isAdmin?: boolean}) => {
     return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-                <Button className="w-[50%] h-8 bg-blue-950 text-white hover:bg-blue-700">
+                <Button className="w-[100%] h-8 bg-blue-950 text-white hover:bg-blue-700">
                     {
                         props.isAdmin ?
                         "Make Member" :

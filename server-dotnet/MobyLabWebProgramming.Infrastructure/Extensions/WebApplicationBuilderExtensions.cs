@@ -95,27 +95,27 @@ public static class WebApplicationBuilderExtensions
     private static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // This is to use the JWT token with the "Bearer" scheme
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                var jwtConfiguration = builder.Configuration.GetSection(nameof(JwtConfiguration)).Get<JwtConfiguration>(); // Here we use the JWT configuration from the application.json.
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // This is to use the JWT token with the "Bearer" scheme
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            var jwtConfiguration = builder.Configuration.GetSection(nameof(JwtConfiguration)).Get<JwtConfiguration>(); // Here we use the JWT configuration from the application.json.
 
-                var key = Encoding.ASCII.GetBytes(jwtConfiguration.Key); // Use configured key to verify the JWT signature.
-                options.TokenValidationParameters = new()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true, // Validate the issuer claim in the JWT. 
-                    ValidateAudience = true, // Validate the audience claim in the JWT.
-                    ValidAudience = jwtConfiguration.Audience, // Sets the intended audience.
-                    ValidIssuer = jwtConfiguration.Issuer, // Sets the issuing authority.
-                    ClockSkew = TimeSpan.Zero // No clock skew is added, when the token expires it will immediately become unusable.
-                };
-                options.RequireHttpsMetadata = false;
-                options.IncludeErrorDetails = true;
-            }).Services
+            var key = Encoding.ASCII.GetBytes(jwtConfiguration.Key); // Use configured key to verify the JWT signature.
+            options.TokenValidationParameters = new()
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true, // Validate the issuer claim in the JWT. 
+                ValidateAudience = true, // Validate the audience claim in the JWT.
+                ValidAudience = jwtConfiguration.Audience, // Sets the intended audience.
+                ValidIssuer = jwtConfiguration.Issuer, // Sets the issuing authority.
+                ClockSkew = TimeSpan.Zero // No clock skew is added, when the token expires it will immediately become unusable.
+            };
+            options.RequireHttpsMetadata = false;
+            options.IncludeErrorDetails = true;
+        }).Services
             .AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder().AddDefaultPolicy().Build(); // Adds the default policy for the JWT claims.
@@ -166,6 +166,7 @@ public static class WebApplicationBuilderExtensions
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection(nameof(JwtConfiguration)));
+        builder.Services.Configure<LinkedInConfiguration>(builder.Configuration.GetSection(nameof(LinkedInConfiguration)));
         builder.Services.Configure<RefreshJwtConfiguration>(builder.Configuration.GetSection(nameof(RefreshJwtConfiguration)));
         builder.Services.Configure<FileStorageConfiguration>(builder.Configuration.GetSection(nameof(FileStorageConfiguration)));
         builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection(nameof(MailConfiguration)));

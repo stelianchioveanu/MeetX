@@ -18,4 +18,9 @@ public sealed class UserSpec : BaseSpec<UserSpec, User>
     {
         Query.Where(e => e.Email == email);
     }
+
+    public UserSpec(string staff, Guid groupId)
+    {
+        Query.Where(e => (e.Role == Enums.UserRoleEnum.Admin || e.Role == Enums.UserRoleEnum.Staff) && e.Groups.All(x => x.Id != groupId)).Include(e => e.Groups);
+    }
 }
