@@ -17,15 +17,19 @@ import { GroupService } from "../../../openapi/requests/services.gen"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { NIL } from "uuid"
+import { fetchQuery } from "@/App"
+import { useAppDispatch } from "@/application/store"
+import { GroupDTO } from "openapi/requests/types.gen"
  
 export function SelectIndustry(props: {groupId: string; setGroupId: any}) {
   const [open, setOpen] = useState<boolean>(false);
   const [name, setName] = useState<string | undefined | null>("");
   const [search, setSearch] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   const { data, refetch, isFetching } = useQuery({
     queryKey: [useGroupServiceGetApiGroupGetPublicGroupsKey],
-    queryFn: () => GroupService.getApiGroupGetPublicGroups({ search: search, pageSize: 800 }),
+    queryFn: () => fetchQuery(GroupService.getApiGroupGetPublicGroups({ search: search, pageSize: 800 }), dispatch),
     enabled: false,
     retry: false,
     });
@@ -72,7 +76,7 @@ export function SelectIndustry(props: {groupId: string; setGroupId: any}) {
                         null
                     }
                     {
-                        data?.response?.data?.map((group) => (
+                        data?.response?.data?.map((group: GroupDTO) => (
                             <div className="w-full h-fit hover:cursor-pointer hover:bg-[#aaaaaa] transition-all rounded-sm mb-1 p-1"
                             onClick={() => {props.setGroupId(group.id); setName(group.name); setOpen(false);}} key={group.id}>
                                 <p>

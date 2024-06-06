@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
 using System.Web;
+using Ardalis.Specification;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
@@ -272,7 +273,7 @@ public class UserService : IUserService
             group = await _repository.GetAsync(new GroupSpec(parentGroupId), cancellationToken);
         }
 
-        //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken + " " + "id"), true, "MeetX", cancellationToken);
+        _mailService.SendMail(register.Email, "Welcome!", MobyLabWebProgramming.Core.Constants.MailTemplates.Register(register.Name), true, "MeetX", cancellationToken);
 
         return ServiceResponse.ForSuccess();
     }
@@ -329,9 +330,8 @@ public class UserService : IUserService
 
             await _repository.UpdateAsync(token, cancellationToken);
         }
-        var email = $"http://localhost:5173/resetPassword?token={HttpUtility.UrlEncode(token.Token)}&id={token.Id}";
-        Console.WriteLine(email);
-        //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken + " " + "id"), true, "MeetX", cancellationToken);
+        var link = $"http://localhost:5173/resetPassword?token={HttpUtility.UrlEncode(token.Token)}&id={token.Id}";
+        _mailService.SendMail(requestReset.Email, "Password Reset Request", MobyLabWebProgramming.Core.Constants.MailTemplates.PasswordResetTemplate(entity.Name, link), true, "MeetX", cancellationToken);
 
         return ServiceResponse.ForSuccess();
     }
@@ -444,7 +444,7 @@ public class UserService : IUserService
         user.Password = PasswordUtils.HashPassword(reset.Password) ?? user.Password;
         await _repository.UpdateAsync(user, cancellationToken);
 
-        //await _mailService.SendMail(requestReset.Email, "Welcome!", MailTemplates.RequestResetTemplate(resetToken), true, "MeetX", cancellationToken);
+        _mailService.SendMail(user.Email, "Password Changed Successfully", MobyLabWebProgramming.Core.Constants.MailTemplates.PasswordChangeSuccessTemplate(user.Name), true, "MeetX", cancellationToken);
 
         return ServiceResponse.ForSuccess();
     }
@@ -515,7 +515,7 @@ public class UserService : IUserService
 
                             return ServiceResponse<RefreshResponseDTO>.ForSuccess(new()
                             {
-                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 1, 0, 0), TokenTypeEnum.Auth)
+                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 0, 1, 0), TokenTypeEnum.Auth)
                             });
                         }
                     }

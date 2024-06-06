@@ -6,6 +6,7 @@ class Connector {
     private connection: signalR.HubConnection;
     public events: (onMessageReceived: (message: any) => void) => void;
     public update: (onMessageReceived: (message: any) => void) => void;
+    public error: (onMessageReceived: (message: any) => void) => void;
     static instance: Connector | null = null;
     public isConnected: boolean;
     private setConnected?: (isConnected: boolean) => void;
@@ -17,8 +18,6 @@ class Connector {
             .withUrl(URL, { accessTokenFactory: () => localStorage.getItem("token") || "" })
             .withAutomaticReconnect()
             .build();
-
-        this.startConnection();
 
         this.connection.onclose(() => {
             if (this.setConnected) this.setConnected(false);
@@ -42,9 +41,13 @@ class Connector {
         this.update = (onMessageReceived) => {
             this.connection.on("UpdateConv", onMessageReceived);
         };
+
+        this.error = (onMessageReceived) => {
+            this.connection.on("ErrorMessage", onMessageReceived);
+        };
     }
 
-    private startConnection() {
+    public startConnection() {
         this.connection.start()
             .then(() => {
                 if (this.setConnected) this.setConnected(true);
@@ -55,7 +58,20 @@ class Connector {
                 if (this.setConnected) this.setConnected(false);
                 this.isConnected = false;
                 console.log('Failed to connect to SignalR hub:', err);
+                //this.startConnection();
             });
+    }
+
+    public stopConnection() {
+        this.connection.stop()
+            .then(() => {
+                if (this.setConnected) this.setConnected(false);
+                this.isConnected = false;
+                console.log('Disconnected from SignalR hub');
+            })
+            .catch(err => {
+                console.log('Failed to disconnect from SignalR hub:', err);
+        });
     }
 
     public newMessage = (GroupId: string, TopicId: string, Text: string, files: any) => {
@@ -80,7 +96,6 @@ class Connector {
     }
 
     public removeEvent(event: string, handler: (message: any) => void) {
-        //console.log("Removing event listener for:", event);
         this.connection.off(event, handler);
     }
 }

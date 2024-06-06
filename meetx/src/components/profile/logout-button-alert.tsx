@@ -1,4 +1,4 @@
-import { resetProfile } from "@/application/state-slices"
+import { resetProfile, setGroup, setTopic } from "@/application/state-slices"
 import { useAppDispatch } from "@/application/store"
 import {
     AlertDialog,
@@ -14,6 +14,8 @@ import {
   import { Button } from "@/components/ui/button"
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { useUserServicePostApiUserLogout } from "../../../openapi/queries/queries";
+import { RequestResponse } from "../../../openapi/requests/types.gen";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
    
   export function LogoutButtonAlert() {
 	const dispatch = useAppDispatch();
@@ -22,7 +24,18 @@ import { useUserServicePostApiUserLogout } from "../../../openapi/queries/querie
 	const { mutate } = useUserServicePostApiUserLogout({
         onSuccess: () => {
             dispatch(resetProfile());
-			redirectToLogin()
+			      redirectToLogin()
+        },
+        onError: (error: ApiError) => {
+			const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
         }
     });
 

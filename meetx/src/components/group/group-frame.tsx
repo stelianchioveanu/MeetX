@@ -17,6 +17,8 @@ import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { Loader2 } from "lucide-react";
 import { GroupNameCard } from "./group-name-card";
+import ChangeNameGroup from "../navigation/change-name-group";
+import { fetchQuery } from "@/App";
 
 const GroupFrame = () => {
     const { selectedGroupId, isAdmin, isPublic, appRole } = useAppSelector(x => x.selectedReducer);
@@ -27,7 +29,7 @@ const GroupFrame = () => {
     const group = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupKey, selectedGroupId],
         queryFn: () => {
-            return GroupService.getApiGroupGetGroup({groupId: selectedGroupId === null ? undefined : selectedGroupId});
+            return fetchQuery(GroupService.getApiGroupGetGroup({groupId: selectedGroupId === null ? undefined : selectedGroupId}), dispatch);
         },
         retry: false,
     });
@@ -40,7 +42,7 @@ const GroupFrame = () => {
     const myTopics = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey, selectedGroupId],
         queryFn: () => {
-            return TopicService.getApiTopicGetMyTopics({search: "", pageSize: 5 * pageMyTopics, groupId: selectedGroupId === null ? undefined : selectedGroupId});
+            return fetchQuery(TopicService.getApiTopicGetMyTopics({search: "", pageSize: 5 * pageMyTopics, groupId: selectedGroupId === null ? undefined : selectedGroupId}), dispatch);
         },
         retry: false
     });
@@ -48,7 +50,7 @@ const GroupFrame = () => {
     const recentTopics = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey, selectedGroupId],
         queryFn: () => {
-            return TopicService.getApiTopicGetRecentTopics({search: "", pageSize: 5 * pageRecentTopics, groupId: selectedGroupId === null ? undefined : selectedGroupId});
+            return fetchQuery(TopicService.getApiTopicGetRecentTopics({search: "", pageSize: 5 * pageRecentTopics, groupId: selectedGroupId === null ? undefined : selectedGroupId}), dispatch);
         },
         retry: false
     });
@@ -63,11 +65,17 @@ const GroupFrame = () => {
 
     return (
     <div className="h-full w-60 bg-[#171b25] flex flex-col gap-4 items-center">
-        <div className="w-full h-12 shadow-lg flex items-center p-3 text-white">
+        <div className="w-full h-12 shadow-lg flex items-center p-3 text-white gap-2">
             {
                 group.isLoading ? 
                 <Skeleton className="w-full h-full"/> :
-                <GroupNameCard name={group.data?.response?.group?.name}/>
+                <>
+                    <GroupNameCard name={group.data?.response?.group?.name} className={isAdmin ? "w-[calc(100%-24px)]" : "w-full"}/>
+                    {
+                        isAdmin ?
+                        <ChangeNameGroup/> : null
+                    }
+                </>
             }
         </div>
         {

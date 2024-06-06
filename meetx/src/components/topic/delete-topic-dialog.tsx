@@ -13,9 +13,10 @@ import {
   import { useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey } from "../../../openapi/queries/common";
   import { useQueryClient } from "@tanstack/react-query";
   import { useAppDispatch, useAppSelector } from "@/application/store";
-  import { setTopic } from "@/application/state-slices";
-import { TopicDeleteDTO } from "openapi/requests/types.gen";
+  import { setGroup, setTopic } from "@/application/state-slices";
+import { RequestResponse, TopicDeleteDTO } from "../../../openapi/requests/types.gen";
 import { Trash2 } from "lucide-react";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
   
   const DeleteTopicDialog = () => {
     const queryClient = useQueryClient();
@@ -27,6 +28,17 @@ import { Trash2 } from "lucide-react";
             dispatch(setTopic("0"));
             queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey]});
             queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
+        },
+        onError: (error: ApiError) => {
+          const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
         }
     });
   

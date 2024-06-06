@@ -159,4 +159,15 @@ public class GroupController : AuthorizedController
             this.FromServiceResponse(await _groupService.GetGroupDetails(groupId, currentUser.Result)) :
             this.ErrorMessageResult<GroupDetailsDTO>(currentUser.Error);
     }
+
+    [Authorize]
+    [HttpPut]
+    public async Task<ActionResult<RequestResponse>> UpdateGroupName([FromBody] GroupNameUpdateDTO group)
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _groupService.UpdateGroupName(group, currentUser.Result)) :
+            this.ErrorMessageResult(currentUser.Error);
+    }
 }

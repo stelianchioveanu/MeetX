@@ -10,13 +10,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { GroupService } from "../../../openapi/requests/services.gen";
 import { Skeleton } from "../ui/skeleton";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { ScrollArea } from "../ui/scroll-area";
+import { useAppDispatch } from "@/application/store";
+import { fetchQuery } from "@/App";
 
 const NavigationBar = () => {
+    const dispatch = useAppDispatch();
     const {data, status, isFetching} = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupsKey],
         queryFn: () => {
-            return GroupService.getApiGroupGetGroups({pageSize: 1000000000});
+            return fetchQuery(GroupService.getApiGroupGetGroups({pageSize: 1000000000}), dispatch);
         },
         retry: false
     });

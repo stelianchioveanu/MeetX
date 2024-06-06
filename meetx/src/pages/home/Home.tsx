@@ -7,9 +7,17 @@ import Section5 from "./sections/Section5";
 import Footer from "@/components/footer/Footer";
 import Section6 from "./sections/Section6";
 import { useMediaQuery } from "react-responsive";
+import Connector from '../../signalRConnection/signalr-connection';
+import { useEffect } from "react";
 
 const Home = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
+    const connector = Connector();
+    
+    useEffect(() => {
+        connector.stopConnection();
+    }, [])
+
     return (
     <div className="flex flex-col items-center font bg-[rgba(17,20,28,1)]">
         <TopBar></TopBar>

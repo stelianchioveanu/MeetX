@@ -7,9 +7,13 @@ import { store } from './application/store.ts';
 import { Middleware, OpenAPI as OpenAPIConfig } from "../openapi/requests/core/OpenAPI.ts";
 import axios, { AxiosResponse } from "axios";
 import { toast } from 'react-toastify';
+import { ThemeProvider } from './components/themes/theme-provider.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Set pentru a ține evidența mesajelor toast active
 const activeToasts = new Set();
+
+const queryClient = new QueryClient();
 
 // Funcție pentru a afișa toast-urile de eroare fără duplicate
 export const showErrorToast = (message: string) => {
@@ -86,7 +90,11 @@ OpenAPIConfig.interceptors.response.use(responseInterceptor);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <ParallaxProvider>
     <Provider store={store}>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
       <App />
+      </QueryClientProvider>
+    </ThemeProvider>
     </Provider>
   </ParallaxProvider>,
 )

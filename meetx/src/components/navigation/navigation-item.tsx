@@ -12,10 +12,12 @@ const NavigationItem = (props: { children: ReactNode, id: string | undefined }) 
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     return (
     <button onClick={() => {props.id !== undefined ? dispatch(setGroup(props.id)) : null;
+      if (props.id !== "0") {
       queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupKey]});
       queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetTopicsKey]});
       queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey]});
       queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
+      }
     }} className="group flex items-center relative">
         <div className={cn(
           "absolute -left-2 bg-white rounded-r-full transition-all w-[4px] z-40",

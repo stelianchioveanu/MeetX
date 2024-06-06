@@ -182,6 +182,7 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IGroupService, GroupService>()
             .AddTransient<IMessageService, MessageService>()
             .AddTransient<IFileService, FileService>()
+            .AddTransient<IContactFormService, ContactFormService>()
             .AddTransient<IPrivateConversationService, PrivateConversationService>()
             .AddTransient<ITopicService, TopicService>();
 

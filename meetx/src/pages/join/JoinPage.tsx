@@ -8,12 +8,20 @@ import { Loader2 } from 'lucide-react';
 import { useGroupServicePostApiGroupJoinGroup } from '../../../openapi/queries/queries';
 import { JoinGroupDTO } from 'openapi/requests/types.gen';
 import { useAppRouter } from '@/hooks/useAppRouter';
+import Connector from '../../signalRConnection/signalr-connection';
+import { useEffect } from 'react';
 
 const JoinPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const id = searchParams.get('groupId');
     const token = searchParams.get('token');
     const { redirectToHome } = useAppRouter();
+
+    const connector = Connector();
+    
+    useEffect(() => {
+        connector.stopConnection();
+    }, [])
 
     const {data, status} = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupDetailsKey],
@@ -28,7 +36,7 @@ const JoinPage = () => {
             redirectToHome();
             toast.success("Congratulations! You've successfully joined the group!")
         }
-      });
+    });
 
     const joinSubmit = () => {
         const groupId = id !== null ? id : undefined;

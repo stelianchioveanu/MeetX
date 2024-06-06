@@ -6,17 +6,20 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupMembersKey } from "../../../openapi/queries/common";
 import { GroupService } from "../../../openapi/requests/services.gen";
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
 import { Skeleton } from "../ui/skeleton";
+import { fetchQuery } from "@/App";
+import { GroupMemberDTO } from "openapi/requests/types.gen";
 
 const GroupUsers = () => {
     const [page, setPage] = useState(1);
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+    const dispatch = useAppDispatch();
 
     const { data, isFetching } = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey],
         queryFn: () => {
-            return GroupService.getApiGroupGetGroupMembers({page: page, groupId: selectedGroupId ? selectedGroupId : undefined});
+            return fetchQuery(GroupService.getApiGroupGetGroupMembers({page: page, groupId: selectedGroupId ? selectedGroupId : undefined}), dispatch);
         },
         retry: false
     });
@@ -34,7 +37,7 @@ const GroupUsers = () => {
                     </p>
                     {
                         data?.response?.data !== null && data?.response?.data !== undefined ?
-                        data?.response?.data.map((user, index) => {
+                        data?.response?.data.map((user: GroupMemberDTO, index: number) => {
                             return (
                                 <PopoverUser userId={user.user?.id} side="left" key={index} isGroup={true}>
                                     <UserButton variant={"ghost"}

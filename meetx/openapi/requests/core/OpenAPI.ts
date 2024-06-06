@@ -2,7 +2,7 @@ import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 
 type Headers = Record<string, string>;
-export type Middleware<T> = (value: T) => T | Promise<T>;
+type Middleware<T> = (value: T) => T | Promise<T>;
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
 export class Interceptors<T> {

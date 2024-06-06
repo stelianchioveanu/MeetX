@@ -5,11 +5,12 @@ import TopicScrollItem from "./topic-scroll-item";
 import { TopicDTO } from "../../../openapi/requests/types.gen";
 import { useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
 import { TopicService } from "../../../openapi/requests/services.gen";
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
 import { Button } from "../ui/button";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Loader2 } from "lucide-react";
+import { fetchQuery } from "@/App";
 
 const GroupPage = () => {
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
@@ -17,6 +18,7 @@ const GroupPage = () => {
     const [searched, setSearched] = useState<string>("");
     const [search, setSearch] = useState<string>("");
     const chatRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
 
     const scrollToTop = () => {
         if (chatRef.current) {
@@ -34,7 +36,7 @@ const GroupPage = () => {
     const {data, refetch, isFetchedAfterMount, isRefetching} = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetTopicsKey, selectedGroupId],
         queryFn: () => {
-            return TopicService.getApiTopicGetTopics({search: searched, pageSize: 10 * page, groupId: selectedGroupId ? selectedGroupId : undefined});
+            return fetchQuery(TopicService.getApiTopicGetTopics({search: searched, pageSize: 10 * page, groupId: selectedGroupId ? selectedGroupId : undefined}), dispatch);
         },
         retry: false
     });

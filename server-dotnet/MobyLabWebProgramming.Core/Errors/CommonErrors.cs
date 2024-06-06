@@ -8,6 +8,7 @@ namespace MobyLabWebProgramming.Core.Errors;
 public static class CommonErrors
 {
     public static ErrorMessage UserNotFound => new(HttpStatusCode.NotFound, "User doesn't exist!", ErrorCodes.UserNotFound);
+    public static ErrorMessage ContactNotFound => new(HttpStatusCode.NotFound, "The message doesn't exist!", ErrorCodes.ContactNotFound);
     public static ErrorMessage FileNotFound => new(HttpStatusCode.NotFound, "File not found on disk!", ErrorCodes.PhysicalFileNotFound);
     public static ErrorMessage GroupNotFound => new(HttpStatusCode.NotFound, "Group doesn't exist!", ErrorCodes.GroupNotFound);
     public static ErrorMessage TopicNotFound => new(HttpStatusCode.NotFound, "Topic doesn't exist!", ErrorCodes.TopicNotFound);

@@ -1,9 +1,22 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, LinkedInService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
-import { ChangeRoleDTO, GroupAddDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicDeleteDTO } from "../requests/types.gen";
+import { AuthorizationService, ContactFormService, GroupService, LinkedInService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { ChangeRoleDTO, ContactFormAddDTO, ContactFormUpdateDTO, GroupAddDTO, GroupNameUpdateDTO, JoinGroupDTO, LeaveGroupDTO, LoginDTO, RegisterDTO, RemoveMemberDTO, RequestResetDTO, ResetPasswordDTO, TopicDeleteDTO } from "../requests/types.gen";
 import * as Common from "./common";
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns ContactFormDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useContactFormServiceGetApiContactFormGetContactForms = <TData = Common.ContactFormServiceGetApiContactFormGetContactFormsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseContactFormServiceGetApiContactFormGetContactFormsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => ContactFormService.getApiContactFormGetContactForms({ page, pageSize, search }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -245,11 +258,11 @@ export const useUserServiceGetApiUserGetMe = <TData = Common.UserServiceGetApiUs
 * @returns UserDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const useUserServiceGetApiUserGetPage = <TData = Common.UserServiceGetApiUserGetPageDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+export const useUserServiceGetApiUserGetUsers = <TData = Common.UserServiceGetApiUserGetUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetPageKeyFn({ page, pageSize, search }, queryKey), queryFn: () => UserService.getApiUserGetPage({ page, pageSize, search }) as TData, ...options });
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetUsersKeyFn({ page, pageSize, search }, queryKey), queryFn: () => UserService.getApiUserGetUsers({ page, pageSize, search }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.requestBody
@@ -305,6 +318,17 @@ export const useAuthorizationServicePostApiAuthorizationRefreshToken = <TData = 
 * @returns RequestResponse Success
 * @throws ApiError
 */
+export const useContactFormServicePostApiContactFormAddContactForm = <TData = Common.ContactFormServicePostApiContactFormAddContactFormMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody?: ContactFormAddDTO;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody?: ContactFormAddDTO;
+}, TContext>({ mutationFn: ({ requestBody }) => ContactFormService.postApiContactFormAddContactForm({ requestBody }) as unknown as Promise<TData>, ...options });
+/**
+* @param data The data for the request.
+* @param data.requestBody
+* @returns RequestResponse Success
+* @throws ApiError
+*/
 export const useGroupServicePostApiGroupAddGroup = <TData = Common.GroupServicePostApiGroupAddGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody?: GroupAddDTO;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
@@ -354,6 +378,17 @@ export const useUserServicePostApiUserLogout = <TData = Common.UserServicePostAp
 * @returns RequestResponse Success
 * @throws ApiError
 */
+export const useContactFormServicePutApiContactFormUpdateContactForm = <TData = Common.ContactFormServicePutApiContactFormUpdateContactFormMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody?: ContactFormUpdateDTO;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody?: ContactFormUpdateDTO;
+}, TContext>({ mutationFn: ({ requestBody }) => ContactFormService.putApiContactFormUpdateContactForm({ requestBody }) as unknown as Promise<TData>, ...options });
+/**
+* @param data The data for the request.
+* @param data.requestBody
+* @returns RequestResponse Success
+* @throws ApiError
+*/
 export const useGroupServicePutApiGroupLeaveGroup = <TData = Common.GroupServicePutApiGroupLeaveGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody?: LeaveGroupDTO;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
@@ -381,6 +416,17 @@ export const useGroupServicePutApiGroupRemoveMember = <TData = Common.GroupServi
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody?: RemoveMemberDTO;
 }, TContext>({ mutationFn: ({ requestBody }) => GroupService.putApiGroupRemoveMember({ requestBody }) as unknown as Promise<TData>, ...options });
+/**
+* @param data The data for the request.
+* @param data.requestBody
+* @returns RequestResponse Success
+* @throws ApiError
+*/
+export const useGroupServicePutApiGroupUpdateGroupName = <TData = Common.GroupServicePutApiGroupUpdateGroupNameMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody?: GroupNameUpdateDTO;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody?: GroupNameUpdateDTO;
+}, TContext>({ mutationFn: ({ requestBody }) => GroupService.putApiGroupUpdateGroupName({ requestBody }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.
 * @param data.formData

@@ -43,6 +43,7 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
 
         if (search == null)
         {
+            Query.OrderByDescending(x => x.CreatedAt, true);
             return;
         }
 

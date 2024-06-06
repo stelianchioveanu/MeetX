@@ -1,7 +1,15 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { AuthorizationService, GroupService, LinkedInService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { AuthorizationService, ContactFormService, GroupService, LinkedInService, MessageFilesService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+export type ContactFormServiceGetApiContactFormGetContactFormsDefaultResponse = Awaited<ReturnType<typeof ContactFormService.getApiContactFormGetContactForms>>;
+export type ContactFormServiceGetApiContactFormGetContactFormsQueryResult<TData = ContactFormServiceGetApiContactFormGetContactFormsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useContactFormServiceGetApiContactFormGetContactFormsKey = "ContactFormServiceGetApiContactFormGetContactForms";
+export const UseContactFormServiceGetApiContactFormGetContactFormsKeyFn = ({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: Array<unknown>) => [useContactFormServiceGetApiContactFormGetContactFormsKey, ...(queryKey ?? [{ page, pageSize, search }])];
 export type GroupServiceGetApiGroupGetGroupsDefaultResponse = Awaited<ReturnType<typeof GroupService.getApiGroupGetGroups>>;
 export type GroupServiceGetApiGroupGetGroupsQueryResult<TData = GroupServiceGetApiGroupGetGroupsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGroupServiceGetApiGroupGetGroupsKey = "GroupServiceGetApiGroupGetGroups";
@@ -150,27 +158,30 @@ export type UserServiceGetApiUserGetMeDefaultResponse = Awaited<ReturnType<typeo
 export type UserServiceGetApiUserGetMeQueryResult<TData = UserServiceGetApiUserGetMeDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useUserServiceGetApiUserGetMeKey = "UserServiceGetApiUserGetMe";
 export const UseUserServiceGetApiUserGetMeKeyFn = (queryKey?: Array<unknown>) => [useUserServiceGetApiUserGetMeKey, ...(queryKey ?? [])];
-export type UserServiceGetApiUserGetPageDefaultResponse = Awaited<ReturnType<typeof UserService.getApiUserGetPage>>;
-export type UserServiceGetApiUserGetPageQueryResult<TData = UserServiceGetApiUserGetPageDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
-export const useUserServiceGetApiUserGetPageKey = "UserServiceGetApiUserGetPage";
-export const UseUserServiceGetApiUserGetPageKeyFn = ({ page, pageSize, search }: {
+export type UserServiceGetApiUserGetUsersDefaultResponse = Awaited<ReturnType<typeof UserService.getApiUserGetUsers>>;
+export type UserServiceGetApiUserGetUsersQueryResult<TData = UserServiceGetApiUserGetUsersDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useUserServiceGetApiUserGetUsersKey = "UserServiceGetApiUserGetUsers";
+export const UseUserServiceGetApiUserGetUsersKeyFn = ({ page, pageSize, search }: {
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}, queryKey?: Array<unknown>) => [useUserServiceGetApiUserGetPageKey, ...(queryKey ?? [{ page, pageSize, search }])];
+} = {}, queryKey?: Array<unknown>) => [useUserServiceGetApiUserGetUsersKey, ...(queryKey ?? [{ page, pageSize, search }])];
 export type AuthorizationServicePostApiAuthorizationLoginMutationResult = Awaited<ReturnType<typeof AuthorizationService.postApiAuthorizationLogin>>;
 export type AuthorizationServicePostApiAuthorizationRegisterMutationResult = Awaited<ReturnType<typeof AuthorizationService.postApiAuthorizationRegister>>;
 export type AuthorizationServicePostApiAuthorizationRequestResetMutationResult = Awaited<ReturnType<typeof AuthorizationService.postApiAuthorizationRequestReset>>;
 export type AuthorizationServicePostApiAuthorizationResetPasswordMutationResult = Awaited<ReturnType<typeof AuthorizationService.postApiAuthorizationResetPassword>>;
 export type AuthorizationServicePostApiAuthorizationRefreshTokenMutationResult = Awaited<ReturnType<typeof AuthorizationService.postApiAuthorizationRefreshToken>>;
+export type ContactFormServicePostApiContactFormAddContactFormMutationResult = Awaited<ReturnType<typeof ContactFormService.postApiContactFormAddContactForm>>;
 export type GroupServicePostApiGroupAddGroupMutationResult = Awaited<ReturnType<typeof GroupService.postApiGroupAddGroup>>;
 export type GroupServicePostApiGroupJoinGroupMutationResult = Awaited<ReturnType<typeof GroupService.postApiGroupJoinGroup>>;
 export type MessageFilesServicePostApiMessageFilesAddFilesTopicMessageMutationResult = Awaited<ReturnType<typeof MessageFilesService.postApiMessageFilesAddFilesTopicMessage>>;
 export type TopicServicePostApiTopicAddTopicMutationResult = Awaited<ReturnType<typeof TopicService.postApiTopicAddTopic>>;
 export type UserServicePostApiUserLogoutMutationResult = Awaited<ReturnType<typeof UserService.postApiUserLogout>>;
+export type ContactFormServicePutApiContactFormUpdateContactFormMutationResult = Awaited<ReturnType<typeof ContactFormService.putApiContactFormUpdateContactForm>>;
 export type GroupServicePutApiGroupLeaveGroupMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupLeaveGroup>>;
 export type GroupServicePutApiGroupChangeRoleMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupChangeRole>>;
 export type GroupServicePutApiGroupRemoveMemberMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupRemoveMember>>;
+export type GroupServicePutApiGroupUpdateGroupNameMutationResult = Awaited<ReturnType<typeof GroupService.putApiGroupUpdateGroupName>>;
 export type UserServicePutApiUserUpdateMutationResult = Awaited<ReturnType<typeof UserService.putApiUserUpdate>>;
 export type UserServicePutApiUserMakeStaffMutationResult = Awaited<ReturnType<typeof UserService.putApiUserMakeStaff>>;
 export type UserServicePutApiUserRemoveStaffMutationResult = Awaited<ReturnType<typeof UserService.putApiUserRemoveStaff>>;

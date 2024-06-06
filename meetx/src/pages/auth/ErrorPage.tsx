@@ -1,11 +1,18 @@
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import Connector from '../../signalRConnection/signalr-connection';
 
 const ErrorPage = () => {
     const [queryParameters] = useSearchParams();
      const { redirectToLogin, redirectToRegister, redirectToHomePage } = useAppRouter();
     const [count, setCount] = useState<number>(5);
+
+    const connector = Connector();
+    
+    useEffect(() => {
+        connector.stopConnection();
+    }, [])
   
     useEffect(() => {
         if (count === 0) {

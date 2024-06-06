@@ -14,7 +14,9 @@ import { useGroupServiceDeleteApiGroupDeleteGroup } from "../../../openapi/queri
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/application/store";
-import { setGroup } from "@/application/state-slices";
+import { setAdmin, setGroup, setPublic, setTopic } from "@/application/state-slices";
+import { RequestResponse } from "../../../openapi/requests/types.gen";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
 
 const DeleteGroupDialog = () => {
   const queryClient = useQueryClient();
@@ -23,10 +25,22 @@ const DeleteGroupDialog = () => {
   
   const { mutate } = useGroupServiceDeleteApiGroupDeleteGroup({
     onSuccess: () => {
+		dispatch(setGroup("0"));
+		dispatch(setPublic(false));
+		dispatch(setAdmin(false));
+		queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
+    },
+    onError: (error: ApiError) => {
+      const body: RequestResponse = error.body as RequestResponse;
+      if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
           dispatch(setGroup("0"));
-          queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
+          return;
       }
-  });
+      if (body.errorMessage?.code === "TopicNotFound") {
+          dispatch(setTopic("0"));
+          return;
+      }
+  }});
 
   const handleSubmit = (groupId : string) => {
       mutate({requestBody : groupId});

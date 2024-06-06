@@ -16,15 +16,17 @@ import { Label } from "@/components/ui/label"
 import { useQuery } from "@tanstack/react-query"
 import { useGroupServiceGetApiGroupGetInviteLinkKey } from "../../../openapi/queries/common"
 import { GroupService } from "../../../openapi/requests/services.gen"
-import { useAppSelector } from "@/application/store"
+import { useAppDispatch, useAppSelector } from "@/application/store"
+import { fetchQuery } from "@/App"
  
 export function GenerateLinkDialog() {
-  const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+  	const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+  	const dispatch = useAppDispatch();
 
   const {data, refetch, isFetching} = useQuery({
       queryKey: [useGroupServiceGetApiGroupGetInviteLinkKey],
       queryFn: () => {
-          return GroupService.getApiGroupGetInviteLink({id: selectedGroupId === null ? undefined : selectedGroupId});
+          return fetchQuery(GroupService.getApiGroupGetInviteLink({id: selectedGroupId === null ? undefined : selectedGroupId}), dispatch);
       },
       retry: false,
       enabled: false

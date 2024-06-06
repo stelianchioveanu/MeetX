@@ -15,6 +15,8 @@ import { Link, useSearchParams } from "react-router-dom"
 import { ResetPasswordDTO } from "../../../openapi/requests/types.gen"
 import { useAuthorizationServicePostApiAuthorizationResetPassword } from "../../../openapi/queries/queries"
 import { Loader2 } from "lucide-react"
+import Connector from '../../signalRConnection/signalr-connection';
+import { useEffect } from "react"
 
 const loginFormSchema = z.object({
     password: z
@@ -31,6 +33,11 @@ const loginFormSchema = z.object({
 
 const Reset = () => {
     const [queryParameters] = useSearchParams();
+    const connector = Connector();
+    
+    useEffect(() => {
+        connector.stopConnection();
+    }, [])
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),

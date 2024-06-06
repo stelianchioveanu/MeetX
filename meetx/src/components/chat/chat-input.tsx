@@ -4,12 +4,15 @@ import data from '@emoji-mart/data'
 import Picker  from '@emoji-mart/react'
 import FilesUpload from "./files-upload";
 import { useDetectClickOutside } from 'react-detect-click-outside';
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
 import Connector from '../../signalRConnection/signalr-connection'
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import FileCard from "./file-card";
 import { useMessageFilesServicePostApiMessageFilesAddFilesTopicMessage } from "../../../openapi/queries/queries";
 import { toast } from "react-toastify";
+import { RequestResponse } from "../../../openapi/requests/types.gen";
+import { setGroup, setTopic } from "@/application/state-slices";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
 
 const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     const [input, setInput] = useState("");
@@ -25,6 +28,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     const imagesRef = useRef<HTMLInputElement>(null);
     const filesRef = useRef<HTMLInputElement>(null);
     const isSubmitting = useRef(false);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         setInput("");
@@ -122,6 +126,17 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             setImages([]);
             setFiles([]);
             isSubmitting.current = false;
+        },
+        onError: (error : ApiError) => {
+            const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
         }
     });
 

@@ -21,11 +21,14 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { GroupAddDTO } from "../../../openapi/requests/types.gen";
+import { GroupAddDTO, RequestResponse } from "../../../openapi/requests/types.gen";
 import { useGroupServicePostApiGroupAddGroup } from "../../../openapi/queries/queries";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useState } from "react";
+import { setGroup, setTopic } from "@/application/state-slices";
+import { useAppDispatch } from "@/application/store";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
  
 const formSchema = z.object({
   name: z
@@ -38,6 +41,7 @@ const AddGroup = () => {
     const queryClient = useQueryClient();
     const [clicked, setClicked] = useState(false);
     const [success, setSuccess] = useState(false);
+    const dispatch = useAppDispatch();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -47,11 +51,20 @@ const AddGroup = () => {
     });
 
     const { mutate, isPending } = useGroupServicePostApiGroupAddGroup({
-        onError: (error : any) => {
-            if (error.message !== "Unauthorized") {
-                form.setError('name', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
-            }
+        onError: (error : ApiError) => {
             setClicked(false);
+
+            const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
+
+            form.setError('name', { type: 'custom', message: body?.errorMessage?.message || error.message });
         },
         onSuccess: () => {
             setClicked(true);

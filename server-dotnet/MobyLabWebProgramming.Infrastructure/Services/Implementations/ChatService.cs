@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
@@ -11,7 +12,6 @@ using System.Security.Claims;
 
 namespace SignalRChat.Hubs
 {
-    [Authorize]
     public class ChatService : Hub
     {
         private readonly IRepository<WebAppDatabaseContext> _repository;
@@ -40,7 +40,6 @@ namespace SignalRChat.Hubs
                     foreach (var conv in user.StartedConversations)
                     {
                         List<string>? userConnections = null;
-                        Console.WriteLine(conv.User2Id);
                         lock (_lock)
                         {
                             if (_userConnections.ContainsKey(conv.User2Id.ToString()))
@@ -103,14 +102,14 @@ namespace SignalRChat.Hubs
             var connectionId = Context.ConnectionId;
             if (response.Error != null)
             {
-                await Clients.Caller.SendAsync(response.Error.Message);
+                await Clients.Caller.SendAsync("ErrorMessage", response.Error.Code);
                 return;
             }
 
             var group = await _repository.GetAsync(new GroupSpec(message.GroupId));
             if (group == null)
             {
-                await Clients.Caller.SendAsync("Group not found!");
+                await Clients.Caller.SendAsync("ErrorMessage", ErrorCodes.GroupNotFound);
                 return;
             }
 
@@ -164,15 +163,19 @@ namespace SignalRChat.Hubs
             var userId = Context.User?.Claims.ToList().Where(x => x.Type == ClaimTypes.NameIdentifier).Select(x => Guid.Parse(x.Value)).FirstOrDefault();
             var response = await _messageService.AddMessageToUser(message, userId);
             var connectionId = Context.ConnectionId;
-            if (response == null || response.Result == null)
+            if (response == null)
             {
-                await Clients.Caller.SendAsync("Sending message error");
+                await Clients.Caller.SendAsync("ErrorMessage", ErrorCodes.Unknown);
                 return;
             }
-
             if (response.Error != null)
             {
-                await Clients.Caller.SendAsync(response.Error.Message);
+                await Clients.Caller.SendAsync("ErrorMessage", response.Error.Message);
+                return;
+            }
+            if (response.Result == null)
+            {
+                await Clients.Caller.SendAsync("ErrorMessage", ErrorCodes.Unknown);
                 return;
             }
 

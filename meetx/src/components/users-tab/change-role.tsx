@@ -13,16 +13,30 @@ import {
 import { useGroupServicePutApiGroupChangeRole } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupMembersKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChangeRoleDTO, GroupRoleEnum } from "openapi/requests/types.gen";
-import { useAppSelector } from "@/application/store";
+import { ChangeRoleDTO, GroupRoleEnum, RequestResponse } from "openapi/requests/types.gen";
+import { useAppDispatch, useAppSelector } from "@/application/store";
+import { ApiError } from "openapi/requests/core/ApiError";
+import { setGroup, setTopic } from "@/application/state-slices";
 
 const ChangeRole = (props: {userId?: string, isAdmin?: boolean}) => {
     const queryClient = useQueryClient();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
+    const dispatch = useAppDispatch();
     
     const { mutate } = useGroupServicePutApiGroupChangeRole({
       onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey]});
+        },
+        onError: (error: ApiError) => {
+          const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+          }
         }
     });
 

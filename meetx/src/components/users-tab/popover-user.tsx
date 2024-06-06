@@ -6,7 +6,7 @@ import {
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import UserAvatar from "./user-avatar";
 import { Input } from "../ui/input";
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
 import RemoveUser from "./remove-user";
 import ChangeRole from "./change-role";
 import Connector from '../../signalRConnection/signalr-connection'
@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { GroupService, UserService } from "../../../openapi/requests/services.gen";
 import { NIL as NIL_UUID } from 'uuid';
 import { useGroupServiceGetApiGroupGetMemberKey, useUserServiceGetApiUserGetByIdByIdKey } from "../../../openapi/queries/common";
+import { fetchQuery } from "@/App";
 
 const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, isGroup: boolean}) => {
     const { userId } = useAppSelector(x => x.profileReducer);
@@ -21,6 +22,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
     const [input, setInput] = useState("");
     const { newPrivateMessage } = Connector();
     const [opened, setOpened] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setInput(event.target.value);
@@ -29,7 +31,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
     const user = useQuery({
         queryKey: [useUserServiceGetApiUserGetByIdByIdKey],
         queryFn: () => {
-            return UserService.getApiUserGetByIdById({id: props.userId === undefined ? NIL_UUID : props.userId});
+            return fetchQuery(UserService.getApiUserGetByIdById({id: props.userId === undefined ? NIL_UUID : props.userId}), dispatch);
         },
         retry: false,
         enabled: false
@@ -38,7 +40,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
     const member = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetMemberKey],
         queryFn: () => {
-            return GroupService.getApiGroupGetMember({userId: props.userId, groupId: selectedGroupId ? selectedGroupId : NIL_UUID});
+            return fetchQuery(GroupService.getApiGroupGetMember({userId: props.userId, groupId: selectedGroupId ? selectedGroupId : NIL_UUID}), dispatch);
         },
         retry: false,
         enabled: false

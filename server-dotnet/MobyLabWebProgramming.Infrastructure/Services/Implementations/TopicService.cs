@@ -211,7 +211,7 @@ public class TopicService : ITopicService
             return ServiceResponse.FromError(CommonErrors.TopicNotFound);
         }
 
-        if (!entity.Admins.Contains(requestingUser))
+        if (!entity.Admins.Contains(requestingUser) && entity2.UserId != requestingUser.Id)
         {
             return ServiceResponse<PagedResponse<TopicDTO>>.FromError(CommonErrors.NotAnAdmin);
         }

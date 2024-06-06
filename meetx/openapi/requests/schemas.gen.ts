@@ -18,8 +18,110 @@ export const $ChangeRoleDTO = {
     additionalProperties: false
 } as const;
 
+export const $ContactFormAddDTO = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        email: {
+            type: 'string',
+            nullable: true
+        },
+        message: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $ContactFormDTO = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        email: {
+            type: 'string',
+            nullable: true
+        },
+        message: {
+            type: 'string',
+            nullable: true
+        },
+        date: {
+            type: 'string',
+            nullable: true
+        },
+        isChecked: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $ContactFormDTOPagedResponse = {
+    type: 'object',
+    properties: {
+        page: {
+            type: 'integer',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            format: 'int32'
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int32'
+        },
+        data: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ContactFormDTO'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $ContactFormDTOPagedResponseRequestResponse = {
+    type: 'object',
+    properties: {
+        response: {
+            '$ref': '#/components/schemas/ContactFormDTOPagedResponse'
+        },
+        errorMessage: {
+            '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $ContactFormUpdateDTO = {
+    type: 'object',
+    properties: {
+        contactId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        check: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const $ErrorCodes = {
-    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAnAppAdmin', 'NotAMember', 'WrongName', 'WrongEmail', 'WrongIndustry', 'UserNotFound', 'BadCredentials', 'GroupNotFound', 'WrongTitle', 'WrongDescription', 'ConvNotFound', 'TopicNotFound', 'WrongMessage'],
+    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAnAppAdmin', 'NotAMember', 'WrongName', 'WrongEmail', 'WrongIndustry', 'UserNotFound', 'BadCredentials', 'GroupNotFound', 'WrongTitle', 'WrongDescription', 'ConvNotFound', 'TopicNotFound', 'WrongMessage', 'ContactNotFound'],
     type: 'string'
 } as const;
 
@@ -313,6 +415,21 @@ export const $GroupMemberDTORequestResponse = {
         },
         errorMessage: {
             '$ref': '#/components/schemas/ErrorMessage'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $GroupNameUpdateDTO = {
+    type: 'object',
+    properties: {
+        groupId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            type: 'string',
+            nullable: true
         }
     },
     additionalProperties: false

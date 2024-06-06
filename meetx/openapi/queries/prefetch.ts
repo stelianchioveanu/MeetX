@@ -1,8 +1,21 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { type QueryClient } from "@tanstack/react-query";
-import { GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { ContactFormService, GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns ContactFormDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const prefetchUseContactFormServiceGetApiContactFormGetContactForms = (queryClient: QueryClient, { page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useContactFormServiceGetApiContactFormGetContactFormsKey, [{ page, pageSize, search }]], queryFn: () => ContactFormService.getApiContactFormGetContactForms({ page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -244,8 +257,8 @@ export const prefetchUseUserServiceGetApiUserGetMe = (queryClient: QueryClient) 
 * @returns UserDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const prefetchUseUserServiceGetApiUserGetPage = (queryClient: QueryClient, { page, pageSize, search }: {
+export const prefetchUseUserServiceGetApiUserGetUsers = (queryClient: QueryClient, { page, pageSize, search }: {
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetPageKey, [{ page, pageSize, search }]], queryFn: () => UserService.getApiUserGetPage({ page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetUsersKey, [{ page, pageSize, search }]], queryFn: () => UserService.getApiUserGetUsers({ page, pageSize, search }) });

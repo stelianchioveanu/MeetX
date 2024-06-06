@@ -36,14 +36,14 @@ export const selectedSlice = createSlice({
             selectedTopicId: action.payload ?? null,
             selectedConvId: "0" ?? null,
             isAdmin: state.isAdmin,
-            isPublic: state .isPublic,
+            isPublic: state.isPublic,
             appRole: state.appRole
         };
     },
     setConv: (state, action: PayloadAction<string>) => {
         return {
             ...state,
-            selectedGroupId: state.selectedGroupId,
+            selectedGroupId: "0" ?? null,
             selectedTopicId: "0" ?? null,
             selectedConvId: action.payload ?? null,
             isAdmin: state.isAdmin,

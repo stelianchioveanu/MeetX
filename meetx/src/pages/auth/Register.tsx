@@ -18,6 +18,7 @@ import { RegisterDTO } from "../../../openapi/requests/types.gen"
 import { SelectIndustry } from "@/components/select-register/select-industry"
 import { useEffect, useState } from "react"
 import { NIL } from "uuid"
+import Connector from '../../signalRConnection/signalr-connection';
 
 const registerFormSchema = z.object({
     email: z
@@ -44,6 +45,12 @@ const registerFormSchema = z.object({
 const Register = () => {
     const [groupId, setGroupId] = useState<string>(NIL);
     const [queryParameters] = useSearchParams();
+    const connector = Connector();
+    
+    useEffect(() => {
+        connector.stopConnection();
+    }, [])
+
     const form = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
         defaultValues: {

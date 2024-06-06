@@ -18,6 +18,8 @@ import { LoginDTO } from "openapi/requests/types.gen";
 import { useAppDispatch } from "@/application/store";
 import { setToken } from "@/application/state-slices";
 import { useAppRouter } from "@/hooks/useAppRouter";
+import { useEffect } from "react";
+import Connector from '../../signalRConnection/signalr-connection';
 
 const loginFormSchema = z.object({
     email: z.string().min(1, {
@@ -31,6 +33,11 @@ const loginFormSchema = z.object({
 const Login = () => {
     const dispatch = useAppDispatch();
     const { redirectToHome } = useAppRouter();
+    const connector = Connector();
+    
+    useEffect(() => {
+        connector.stopConnection();
+    }, [])
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),

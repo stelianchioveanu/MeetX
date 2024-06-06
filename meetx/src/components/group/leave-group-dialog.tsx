@@ -13,9 +13,10 @@ import {
 import { useGroupServicePutApiGroupLeaveGroup } from "../../../openapi/queries/queries";
 import { useGroupServiceGetApiGroupGetGroupsKey } from "../../../openapi/queries/common";
 import { useQueryClient } from "@tanstack/react-query";
-import { LeaveGroupDTO } from "../../../openapi/requests/types.gen";
+import { LeaveGroupDTO, RequestResponse } from "../../../openapi/requests/types.gen";
 import { useAppDispatch, useAppSelector } from "@/application/store";
-import { setGroup } from "@/application/state-slices";
+import { setAdmin, setGroup, setPublic, setTopic } from "@/application/state-slices";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
 
 const LeaveGroupDialog = () => {
     const queryClient = useQueryClient();
@@ -23,10 +24,23 @@ const LeaveGroupDialog = () => {
     const dispatch = useAppDispatch();
     
     const { mutate } = useGroupServicePutApiGroupLeaveGroup({
-      onSuccess: () => {
+      	onSuccess: () => {
             dispatch(setGroup("0"));
+            dispatch(setPublic(false));
+            dispatch(setAdmin(false));
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
-        }
+        },
+		onError: (error: ApiError) => {
+			const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
+		}
     });
 
     const handleSubmit = (group : { groupId: string }) => {

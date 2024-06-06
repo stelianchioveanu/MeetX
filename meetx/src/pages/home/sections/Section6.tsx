@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Loader2, Check } from 'lucide-react';
  
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +13,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea";
+import { ContactFormAddDTO, RequestResponse } from "../../../../openapi/requests/types.gen";
+import { useContactFormServicePostApiContactFormAddContactForm } from "../../../../openapi/queries/queries";
+import { ApiError } from "../../../../openapi/requests/core/ApiError";
+import { useState } from "react";
  
 const contactFormSchema = z.object({
     name: z
@@ -26,19 +30,20 @@ const contactFormSchema = z.object({
       .string({
         required_error: "Email is required",
       })
-      .email({
-        message: "Invalid email address"
-      }),
+      .refine((value) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value ?? ""), 'Email is not valid!'),
     message: z
       .string({
         required_error: "Message is required"
       })
       .min(2, {
-        message: "Message must be at least 10 characters",
+        message: "Message must be at least 1 characters",
       })
   });
 
 const Section6 = () => {
+	const [clicked, setClicked] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
+
     const form = useForm<z.infer<typeof contactFormSchema>>({
         resolver: zodResolver(contactFormSchema),
         defaultValues: {
@@ -48,9 +53,34 @@ const Section6 = () => {
         },
       })
 
-    function onSubmit(values: z.infer<typeof contactFormSchema>) {
-        console.log(values)
-    }
+	  const { mutate, isPending } = useContactFormServicePostApiContactFormAddContactForm({
+        onError: (error : ApiError) => {
+            const body: RequestResponse = error.body as RequestResponse;
+
+			setClicked(false);
+
+            form.setError('name', { type: 'custom', message: body?.errorMessage?.message || error.message });
+        },
+        onSuccess: () => {
+			setClicked(true);
+            setSuccess(true);
+        }
+      });
+
+    const handleSubmit = (contact : { name: string, email: string, message: string }) => {
+		const name = contact.name;
+		const email = contact.email;
+		const message = contact.message;
+        const addContactData: ContactFormAddDTO = {
+            name,
+			email,
+			message
+        };
+        const dataToSend = {
+            requestBody: addContactData
+        };
+        mutate(dataToSend);
+    };
     
     return (
     <div id="contact" className="w-full h-fit flex justify-center items-center flex-col p-5 box-border pt-12 pb-20 gap-3 max-w-[1500px]">
@@ -61,14 +91,14 @@ const Section6 = () => {
         </div>
         <div className="flex w-full h-fit justify-center items-center gap-8 flex-wrap gap-y-16 p-3">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-sm w-full">
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-2 gap-4 max-w-sm w-full">
                     <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Name" className="bg-white text-stone-900" {...field}/>
+                                <Input maxLength={255} placeholder="Name" className="bg-white text-stone-900" {...field}/>
                             </FormControl>
                             <FormMessage className="text-red-700"/>
                         </FormItem>
@@ -80,7 +110,7 @@ const Section6 = () => {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Email" className="bg-white text-stone-900" {...field} />
+                                <Input maxLength={255} placeholder="Email" className="bg-white text-stone-900" {...field} />
                             </FormControl>
                             <FormMessage className="text-red-700"/>
                         </FormItem>
@@ -92,13 +122,17 @@ const Section6 = () => {
                     render={({ field }) => (
                         <FormItem className="col-span-2">
                             <FormControl>
-                                <Textarea placeholder="Your message" {...field} className="h-40 resize-none bg-white text-stone-900"></Textarea>
+                                <Textarea maxLength={4095} placeholder="Your message" {...field} className="h-40 resize-none bg-white text-stone-900"></Textarea>
                             </FormControl>
                             <FormMessage className="text-red-700"/>
                         </FormItem>
                     )}
                     />
-                    <Button className="col-span-2 text-white bg-stone-900 hover:bg-stone-950" type="submit">Submit</Button>
+					<Button type="submit" disabled={clicked ? true : false} className={success ? "col-span-2 px-3 bg-green-500 hover:bg-green-500" : "col-span-2 px-3"}>
+                            {isPending ? <Loader2 className="animate-spin h-4 w-4"></Loader2> :
+                            success ? <Check className="h-4 w-4"/> :
+                            "Submit"}
+                    </Button>
                 </form>
             </Form>
             <div className="flex justify-center gap-4 sm:gap-7 md:gap-10 max-w-sm w-full">

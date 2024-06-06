@@ -1,8 +1,21 @@
 // generated with @7nohe/openapi-react-query-codegen@1.4.0 
 
 import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
+import { ContactFormService, GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
 import * as Common from "./common";
+/**
+* @param data The data for the request.
+* @param data.search
+* @param data.page
+* @param data.pageSize
+* @returns ContactFormDTOPagedResponseRequestResponse Success
+* @throws ApiError
+*/
+export const useContactFormServiceGetApiContactFormGetContactFormsSuspense = <TData = Common.ContactFormServiceGetApiContactFormGetContactFormsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseContactFormServiceGetApiContactFormGetContactFormsKeyFn({ page, pageSize, search }, queryKey), queryFn: () => ContactFormService.getApiContactFormGetContactForms({ page, pageSize, search }) as TData, ...options });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -244,8 +257,8 @@ export const useUserServiceGetApiUserGetMeSuspense = <TData = Common.UserService
 * @returns UserDTOPagedResponseRequestResponse Success
 * @throws ApiError
 */
-export const useUserServiceGetApiUserGetPageSuspense = <TData = Common.UserServiceGetApiUserGetPageDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
+export const useUserServiceGetApiUserGetUsersSuspense = <TData = Common.UserServiceGetApiUserGetUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ page, pageSize, search }: {
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetPageKeyFn({ page, pageSize, search }, queryKey), queryFn: () => UserService.getApiUserGetPage({ page, pageSize, search }) as TData, ...options });
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseUserServiceGetApiUserGetUsersKeyFn({ page, pageSize, search }, queryKey), queryFn: () => UserService.getApiUserGetUsers({ page, pageSize, search }) as TData, ...options });

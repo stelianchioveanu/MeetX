@@ -53,6 +53,41 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("GroupUser1");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.ContactForms", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(4095)
+                        .HasColumnType("character varying(4095)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("isChecked")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactForms");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.FileEntity", b =>
                 {
                     b.Property<Guid>("Id")

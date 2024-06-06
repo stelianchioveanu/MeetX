@@ -18,10 +18,12 @@ import { useUserServicePutApiUserUpdate } from "../../../openapi/queries/queries
 import { useQueryClient } from "@tanstack/react-query"
 import { useUserServiceGetApiUserGetMeKey } from "../../../openapi/queries/common"
 import { toast } from "react-toastify"
-import { RequestResponse } from "../../../openapi/requests/types.gen"
+import { ErrorCodes, RequestResponse } from "../../../openapi/requests/types.gen"
 import { ApiError } from "../../../openapi/requests/core/ApiError"
 import { Skeleton } from "../ui/skeleton"
 import { LogoutButtonAlert } from "./logout-button-alert"
+import { useAppDispatch } from "@/application/store"
+import { setGroup, setTopic } from "@/application/state-slices"
 
 const loginFormSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters!"})
@@ -40,6 +42,8 @@ const loginFormSchema = z.object({
 
 const ProfileForm = (props :  {name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean, isFetching: boolean, isLoading: boolean}) => {
     const queryClient = useQueryClient();
+    const dispatch = useAppDispatch();
+
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
@@ -53,6 +57,15 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
     const { mutate } = useUserServicePutApiUserUpdate({
         onError: (error : ApiError) => {
             const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
+
             if (body.errorMessage?.code === "WrongName") {
                 form.setError("name", { type: 'custom', message: body.errorMessage.message === null || undefined
                 ? error.message : body.errorMessage.message});

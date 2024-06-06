@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
 import MessageItem from "./message-item";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import InfiniteScroll from './message-scroll-area';
 import { Loader2 } from "lucide-react";
 import { useMessageServiceGetApiMessageGetPrivateMessagesKey,
     useMessageServiceGetApiMessageGetTopicMessagesKey } from "../../../openapi/queries/common";
+import { fetchQuery } from "@/App";
 
 const MessagesFrame = (props: {isGroup: boolean}) => {
     const { selectedGroupId, selectedConvId, selectedTopicId } = useAppSelector(x => x.selectedReducer);
@@ -22,6 +23,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
     const [newMessage, setNewMessage] = useState(false);
     const [scrollValue, setScrollValue] = useState(0);
     const [isLoading, setIsloading] = useState(false);
+    const dispatch = useAppDispatch();
 
     const scrollToBottom = () => {
         if (chatRef.current) {
@@ -32,7 +34,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
     const topic = useQuery({
         queryKey: [useMessageServiceGetApiMessageGetTopicMessagesKey],
         queryFn: () => {
-            return MessageService.getApiMessageGetTopicMessages({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined, page: 1, lastMessageId: messages.length === 0 ? undefined : messages[0].id});
+            return fetchQuery(MessageService.getApiMessageGetTopicMessages({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined, page: 1, lastMessageId: messages.length === 0 ? undefined : messages[0].id}), dispatch);
         },
         retry:false,
         enabled: false,
@@ -41,7 +43,7 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
     const conv = useQuery({
         queryKey: [useMessageServiceGetApiMessageGetPrivateMessagesKey],
         queryFn: () => {
-            return MessageService.getApiMessageGetPrivateMessages({convId: selectedConvId ? selectedConvId : undefined, page: 1, lastMessageId: messages.length === 0 ? undefined : messages[0].id});
+            return fetchQuery(MessageService.getApiMessageGetPrivateMessages({convId: selectedConvId ? selectedConvId : undefined, page: 1, lastMessageId: messages.length === 0 ? undefined : messages[0].id}), dispatch);
         },
         retry:false,
         enabled: false,

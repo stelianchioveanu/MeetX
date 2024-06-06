@@ -25,11 +25,14 @@ import { useTopicServicePostApiTopicAddTopic } from "../../../openapi/queries/qu
 import { useQueryClient } from "@tanstack/react-query";
 import { useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetTopicsKey } from "../../../openapi/queries/common";
 import { ChangeEvent, useRef, useState } from "react";
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
 import { toast } from "react-toastify";
 import FilesUpload from "../chat/files-upload";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import FileCard from "../chat/file-card";
+import { RequestResponse } from "../../../openapi/requests/types.gen";
+import { setGroup, setTopic } from "@/application/state-slices";
+import { ApiError } from "../../../openapi/requests/core/ApiError";
  
 const formSchema = z.object({
     title: z
@@ -51,6 +54,7 @@ const AddTopic = () => {
     const [files, setFiles] = useState<File[]>([]);
     const imagesRef = useRef<HTMLInputElement>(null);
     const filesRef = useRef<HTMLInputElement>(null);
+    const dispatch = useAppDispatch();
 
     const fileHandleChange = (event: ChangeEvent<HTMLInputElement>, isImage: boolean) => {
         if (event.target.files) {
@@ -109,11 +113,20 @@ const AddTopic = () => {
     });
 
     const { mutate, isPending } = useTopicServicePostApiTopicAddTopic({
-        onError: (error : any) => {
-            if (error.message !== "Unauthorized") {
-                form.setError('title', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
-            }
+        onError: (error : ApiError) => {
             setClicked(false);
+
+            const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
+                dispatch(setGroup("0"));
+                return;
+            }
+            if (body.errorMessage?.code === "TopicNotFound") {
+                dispatch(setTopic("0"));
+                return;
+            }
+
+            form.setError('title', { type: 'custom', message: body.errorMessage?.message || error.message });
         },
         onSuccess: () => {
             setClicked(true);

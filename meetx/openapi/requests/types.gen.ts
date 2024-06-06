@@ -6,7 +6,39 @@ export type ChangeRoleDTO = {
     role?: GroupRoleEnum;
 };
 
-export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAnAppAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail' | 'WrongIndustry' | 'UserNotFound' | 'BadCredentials' | 'GroupNotFound' | 'WrongTitle' | 'WrongDescription' | 'ConvNotFound' | 'TopicNotFound' | 'WrongMessage';
+export type ContactFormAddDTO = {
+    name?: string | null;
+    email?: string | null;
+    message?: string | null;
+};
+
+export type ContactFormDTO = {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    message?: string | null;
+    date?: string | null;
+    isChecked?: boolean;
+};
+
+export type ContactFormDTOPagedResponse = {
+    page?: number;
+    pageSize?: number;
+    totalCount?: number;
+    data?: Array<ContactFormDTO> | null;
+};
+
+export type ContactFormDTOPagedResponseRequestResponse = {
+    response?: ContactFormDTOPagedResponse;
+    errorMessage?: ErrorMessage;
+};
+
+export type ContactFormUpdateDTO = {
+    contactId?: string;
+    check?: boolean;
+};
+
+export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAnAppAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail' | 'WrongIndustry' | 'UserNotFound' | 'BadCredentials' | 'GroupNotFound' | 'WrongTitle' | 'WrongDescription' | 'ConvNotFound' | 'TopicNotFound' | 'WrongMessage' | 'ContactNotFound';
 
 export type ErrorMessage = {
     message?: string | null;
@@ -107,6 +139,11 @@ export type GroupMemberDTOPagedResponseRequestResponse = {
 export type GroupMemberDTORequestResponse = {
     response?: GroupMemberDTO;
     errorMessage?: ErrorMessage;
+};
+
+export type GroupNameUpdateDTO = {
+    groupId?: string;
+    name?: string | null;
 };
 
 export type GroupRoleEnum = 'Admin' | 'Staff' | 'Member' | 'NotMember';
@@ -308,6 +345,26 @@ export type PostApiAuthorizationResetPasswordResponse = RequestResponse;
 
 export type PostApiAuthorizationRefreshTokenResponse = RefreshResponseDTORequestResponse;
 
+export type PostApiContactFormAddContactFormData = {
+    requestBody?: ContactFormAddDTO;
+};
+
+export type PostApiContactFormAddContactFormResponse = RequestResponse;
+
+export type GetApiContactFormGetContactFormsData = {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+};
+
+export type GetApiContactFormGetContactFormsResponse = ContactFormDTOPagedResponseRequestResponse;
+
+export type PutApiContactFormUpdateContactFormData = {
+    requestBody?: ContactFormUpdateDTO;
+};
+
+export type PutApiContactFormUpdateContactFormResponse = RequestResponse;
+
 export type PostApiGroupAddGroupData = {
     requestBody?: GroupAddDTO;
 };
@@ -393,6 +450,12 @@ export type GetApiGroupGetGroupDetailsData = {
 };
 
 export type GetApiGroupGetGroupDetailsResponse = GroupDetailsDTORequestResponse;
+
+export type PutApiGroupUpdateGroupNameData = {
+    requestBody?: GroupNameUpdateDTO;
+};
+
+export type PutApiGroupUpdateGroupNameResponse = RequestResponse;
 
 export type GetSigninLinkedinLinkResponse = unknown;
 
@@ -511,13 +574,13 @@ export type GetApiUserGetByIdByIdResponse = UserDTORequestResponse;
 
 export type GetApiUserGetMeResponse = UserDTORequestResponse;
 
-export type GetApiUserGetPageData = {
+export type GetApiUserGetUsersData = {
     page?: number;
     pageSize?: number;
     search?: string;
 };
 
-export type GetApiUserGetPageResponse = UserDTOPagedResponseRequestResponse;
+export type GetApiUserGetUsersResponse = UserDTOPagedResponseRequestResponse;
 
 export type PostApiUserLogoutResponse = RequestResponse;
 
@@ -596,6 +659,39 @@ export type $OpenApiTs = {
                  * Success
                  */
                 200: RefreshResponseDTORequestResponse;
+            };
+        };
+    };
+    '/api/ContactForm/AddContactForm': {
+        post: {
+            req: PostApiContactFormAddContactFormData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: RequestResponse;
+            };
+        };
+    };
+    '/api/ContactForm/GetContactForms': {
+        get: {
+            req: GetApiContactFormGetContactFormsData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: ContactFormDTOPagedResponseRequestResponse;
+            };
+        };
+    };
+    '/api/ContactForm/UpdateContactForm': {
+        put: {
+            req: PutApiContactFormUpdateContactFormData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: RequestResponse;
             };
         };
     };
@@ -739,6 +835,17 @@ export type $OpenApiTs = {
                  * Success
                  */
                 200: GroupDetailsDTORequestResponse;
+            };
+        };
+    };
+    '/api/Group/UpdateGroupName': {
+        put: {
+            req: PutApiGroupUpdateGroupNameData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: RequestResponse;
             };
         };
     };
@@ -924,9 +1031,9 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/User/GetPage': {
+    '/api/User/GetUsers': {
         get: {
-            req: GetApiUserGetPageData;
+            req: GetApiUserGetUsersData;
             res: {
                 /**
                  * Success

@@ -544,4 +544,38 @@ public class GroupService : IGroupService
 
         return ServiceResponse.ForSuccess();
     }
+
+    public async Task<ServiceResponse> UpdateGroupName(GroupNameUpdateDTO newGroup, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.UserNotFound);
+        }
+
+        var group = await _repository.GetAsync(new GroupSpec(newGroup.GroupId), cancellationToken);
+
+        if (group == null)
+        {
+            return ServiceResponse.FromError(CommonErrors.GroupNotFound);
+        }
+
+        if (group.Admins.All(u => u.Id != requestingUser.Id))
+        {
+            return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
+        }
+
+        newGroup.Name = newGroup.Name.Trim();
+
+        if (newGroup.Name.Length < 2 || newGroup.Name.Length > 4095)
+        {
+            return ServiceResponse.FromError(CommonErrors.BadName);
+        }
+
+        group.Name = newGroup.Name;
+        group.ShortName = newGroup.Name.Split(' ').Length > 1 ? $"{newGroup.Name.Split(' ')[0][0]}{newGroup.Name.Split(' ')[1][0]}" : newGroup.Name.Substring(0, 2);
+
+        await _repository.UpdateAsync(group, cancellationToken);
+
+        return ServiceResponse.ForSuccess();
+    }
 }

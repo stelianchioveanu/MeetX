@@ -8,7 +8,10 @@ import { useEffect, useState } from "react";
 import { usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey,
     useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicKey } from "../../../openapi/queries/common";
 import { PrivateConversationService, TopicService } from "../../../openapi/requests/services.gen";
-import { useAppSelector } from "@/application/store";
+import { useAppDispatch, useAppSelector } from "@/application/store";
+import { RequestResponse } from "../../../openapi/requests/types.gen";
+import { setGroup, setTopic } from "@/application/state-slices";
+import { fetchQuery } from "@/App";
 
 const ChatFrame = (props:{isGroup: boolean}) => {
     const queryClient = useQueryClient();
@@ -16,6 +19,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
     const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
     const { selectedConvId } = useAppSelector(x => x.selectedReducer);
     const { userId } = useAppSelector(x => x.profileReducer);
+    const dispatch = useAppDispatch();
 
     const [usersOpened, setUsersOpened] = useState(false);
     const [topicOpened, setTopicOpened] = useState(false);
@@ -28,7 +32,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
     const topic = useQuery({
         queryKey: [useTopicServiceGetApiTopicGetTopicKey, selectedGroupId, selectedTopicId, selectedConvId],
         queryFn: () => {
-            return TopicService.getApiTopicGetTopic({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined});
+            return fetchQuery(TopicService.getApiTopicGetTopic({groupId: selectedGroupId ? selectedGroupId : undefined, topicId: selectedTopicId ? selectedTopicId : undefined}), dispatch);
         },
         retry: false,
     });
@@ -36,7 +40,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
     const conv = useQuery({
         queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey, selectedGroupId, selectedTopicId, selectedConvId],
         queryFn: () => {
-            return PrivateConversationService.getApiPrivateConversationGetPrivateConversation({convId: selectedConvId === null ? undefined : selectedConvId});
+            return fetchQuery(PrivateConversationService.getApiPrivateConversationGetPrivateConversation({convId: selectedConvId === null ? undefined : selectedConvId}), dispatch)
         },
         retry: false,
     });
