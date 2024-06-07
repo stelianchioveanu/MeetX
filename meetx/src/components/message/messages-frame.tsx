@@ -11,6 +11,7 @@ import { Loader2 } from "lucide-react";
 import { useMessageServiceGetApiMessageGetPrivateMessagesKey,
     useMessageServiceGetApiMessageGetTopicMessagesKey } from "../../../openapi/queries/common";
 import { fetchQuery } from "@/App";
+import { NIL } from "uuid";
 
 const MessagesFrame = (props: {isGroup: boolean}) => {
     const { selectedGroupId, selectedConvId, selectedTopicId } = useAppSelector(x => x.selectedReducer);

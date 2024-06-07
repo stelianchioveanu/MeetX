@@ -37,5 +37,6 @@ public enum ErrorCodes
     ConvNotFound,
     TopicNotFound,
     WrongMessage,
-    ContactNotFound
+    ContactNotFound,
+    NotFromStaff
 }

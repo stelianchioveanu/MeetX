@@ -31,6 +31,17 @@ public class PrivateConversationService : IPrivateConversationService
 
         var result = await _repository.PageAsync(pagination, new PrivateConversationProjectionSpec(pagination.Search, requestingUser.Id), cancellationToken);
 
+        foreach (var conv in result.Data)
+        {
+            if (conv.User1 != null && conv.User1.Id == requestingUser.Id)
+            {
+                conv.User1 = new UserDTO();
+            } else if (conv.User2 != null && conv.User2.Id == requestingUser.Id)
+            {
+                conv.User2 = new UserDTO();
+            }
+        }
+
         return ServiceResponse<PagedResponse<PrivateConversationDTO>>.ForSuccess(result);
     }
 
@@ -45,6 +56,14 @@ public class PrivateConversationService : IPrivateConversationService
         if (result == null)
         {
             return ServiceResponse<PrivateConversationDTO>.FromError(CommonErrors.ConvNotFound);
+        }
+
+        if (result.User1.Id == requestingUser.Id)
+        {
+            result.User1 = new UserDTO();
+        } else
+        {
+            result.User2 = new UserDTO();
         }
 
         return ServiceResponse<PrivateConversationDTO>.ForSuccess(result);

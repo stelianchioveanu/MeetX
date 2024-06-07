@@ -28,7 +28,7 @@ const ChatTopBar = (props: {topic?: TopicDTO, conv?: PrivateConversationDTO, set
             <p className="grow truncate">
                 {props.isGroup ?
                     props.topic?.title :
-                    props.conv?.user1?.id !== userId ? props.conv?.user1?.name : props.conv?.user2?.name}
+                    props.conv?.user1?.name !== null && props.conv?.user1?.name !== undefined ? props.conv?.user1?.name : props.conv?.user2?.name}
             </p>
         }
         <div className="flex items-center gap-1 w-fit">

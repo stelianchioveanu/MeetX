@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from '@/application/store';
 import { setGroup } from '@/application/state-slices';
 import { useQueryClient } from '@tanstack/react-query';
-import { useGroupServiceGetApiGroupGetGroupKey, useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicsKey } from '../../../openapi/queries/common';
+import { UseUserServiceGetApiUserGetUsersKeyFn, useContactFormServiceGetApiContactFormGetContactFormsKey, useGroupServiceGetApiGroupGetGroupKey, useGroupServiceGetApiGroupGetGroupsKey, usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey, usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey, useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicsKey, useUserServiceGetApiUserGetMeKey, useUserServiceGetApiUserGetUsersKey } from '../../../openapi/queries/common';
 
 const NavigationItem = (props: { children: ReactNode, id: string | undefined }) => {
     const dispatch = useAppDispatch();
@@ -12,12 +12,19 @@ const NavigationItem = (props: { children: ReactNode, id: string | undefined }) 
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     return (
     <button onClick={() => {props.id !== undefined ? dispatch(setGroup(props.id)) : null;
-      if (props.id !== "0") {
+      if (props.id !== "0" && props.id === selectedGroupId) {
       queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupKey]});
       queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetTopicsKey]});
       queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetMyTopicsKey]});
       queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
       }
+      if (props.id === "0") {
+        queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
+        queryClient.invalidateQueries({queryKey: [useUserServiceGetApiUserGetMeKey]});
+        queryClient.invalidateQueries({queryKey: [useContactFormServiceGetApiContactFormGetContactFormsKey]});
+        queryClient.invalidateQueries({queryKey: [useUserServiceGetApiUserGetUsersKey]});
+        queryClient.invalidateQueries({queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey]});
+        }
     }} className="group flex items-center relative">
         <div className={cn(
           "absolute -left-2 bg-white rounded-r-full transition-all w-[4px] z-40",

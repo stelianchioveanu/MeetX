@@ -36,6 +36,7 @@ public static class CommonErrors
 
 
     public static ErrorMessage NotAnAdmin => new(HttpStatusCode.Forbidden, "You are not the group admin!", ErrorCodes.NotAnAdmin);
+    public static ErrorMessage NotFromStaff => new(HttpStatusCode.Forbidden, "You are not the part of the staff!", ErrorCodes.NotFromStaff);
     public static ErrorMessage NotAnAppAdmin => new(HttpStatusCode.Forbidden, "You are not the app admin!", ErrorCodes.NotAnAppAdmin);
     public static ErrorMessage ChangeMyRole => new(HttpStatusCode.Forbidden, "You can't change your role!", ErrorCodes.CannotUpdate);
     public static ErrorMessage NotMember => new(HttpStatusCode.Forbidden, "Your are not part of the group!", ErrorCodes.NotAMember);

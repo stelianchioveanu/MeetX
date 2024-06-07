@@ -54,12 +54,12 @@ public sealed class PrivateConversationProjectionSpec : BaseSpec<PrivateConversa
 
         if (search == null)
         {
-            Query.Where(e => e.User1Id == userId || e.User2Id == userId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
+            Query.Where(e => e.User1Id == userId || e.User2Id == userId).Include(e => e.Messages).OrderByDescending(e => e.Messages.OrderByDescending(m => m.CreatedAt).FirstOrDefault().CreatedAt);
             return;
         }
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => e.User1Id == userId || e.User2Id == userId).OrderByDescending(x => x.CreatedAt, true).Include(e => e.Messages);
+        Query.Where(e => e.User1Id == userId || e.User2Id == userId).Include(e => e.Messages).OrderByDescending(e => e.Messages.OrderByDescending(m => m.CreatedAt).FirstOrDefault().CreatedAt);
     }
 }

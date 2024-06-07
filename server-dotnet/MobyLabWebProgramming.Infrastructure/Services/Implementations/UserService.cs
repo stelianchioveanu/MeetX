@@ -515,7 +515,7 @@ public class UserService : IUserService
 
                             return ServiceResponse<RefreshResponseDTO>.ForSuccess(new()
                             {
-                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 0, 1, 0), TokenTypeEnum.Auth)
+                                Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(0, 1, 0, 0), TokenTypeEnum.Auth)
                             });
                         }
                     }

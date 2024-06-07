@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useAppDispatch } from "@/application/store";
 import { fetchQuery } from "@/App";
+import { NIL } from "uuid";
 
 const PrivateFrame = () => {
     const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ const PrivateFrame = () => {
     const {data, isLoading} = useQuery({
         queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey],
         queryFn: () => {
-            return fetchQuery(PrivateConversationService.getApiPrivateConversationGetPrivateConversations(), dispatch);
+            return fetchQuery(PrivateConversationService.getApiPrivateConversationGetPrivateConversations({page: 1, pageSize: 1000000}), dispatch);
         },
         retry: false
     });
@@ -29,6 +30,24 @@ const PrivateFrame = () => {
         });
     }, 
     [])
+
+    useEffect(() => {
+        const connector = Connector();
+        
+        const messageHandler1 = (message : any) => {
+
+            if (message.convId !== NIL && message.topicId === NIL && message.groupId === NIL)
+            {
+                queryClient.invalidateQueries({queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey]})
+            }
+        };
+
+        connector.events(messageHandler1);
+
+        return () => {
+            connector.removeEvent("ReceiveMessage", messageHandler1);
+        };
+    }, []);
 
     return (
     <div className="h-full w-60 bg-[#171b25] flex flex-col gap-4 items-center">

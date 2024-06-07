@@ -3,7 +3,7 @@ import {
     CardContent,
     CardFooter
   } from "@/components/ui/card"
-import { Download, Eye, File, Image, X } from 'lucide-react';
+import { Download, Eye, File, Image } from 'lucide-react';
 import { FileGetDTO } from "../../../openapi/requests/types.gen";
 import { useAppSelector } from "@/application/store";
 import axios from "axios";

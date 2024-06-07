@@ -1,4 +1,4 @@
-import { Copy, Loader2 } from "lucide-react"
+import { Check, Copy, Loader2 } from "lucide-react"
  
 import { Button } from "@/components/ui/button"
 import {
@@ -18,10 +18,12 @@ import { useGroupServiceGetApiGroupGetInviteLinkKey } from "../../../openapi/que
 import { GroupService } from "../../../openapi/requests/services.gen"
 import { useAppDispatch, useAppSelector } from "@/application/store"
 import { fetchQuery } from "@/App"
+import { useState } from "react"
  
 export function GenerateLinkDialog() {
   	const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
   	const dispatch = useAppDispatch();
+    const [copied, setCopied] = useState<boolean>(false);
 
   const {data, refetch, isFetching} = useQuery({
       queryKey: [useGroupServiceGetApiGroupGetInviteLinkKey],
@@ -32,7 +34,7 @@ export function GenerateLinkDialog() {
       enabled: false
   });
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => setCopied(false)}>
       <DialogTrigger asChild>
             <Button onClick={() => {refetch()}} className="w-3/4
                     dark:bg-neutral-900 dark:text-white
@@ -63,12 +65,16 @@ export function GenerateLinkDialog() {
               }
             />
           </div>
-          <Button type="submit" size="sm" className="px-3" onClick={() =>  navigator.clipboard.writeText(data?.response?.link === null || data?.response?.link === undefined ? "" : data.response.link)}>
+          <Button type="submit" size="sm" disabled={copied} className={copied ? "bg-green-500 " : "" + "px-3"} onClick={() =>  navigator.clipboard.writeText(data?.response?.link === null || data?.response?.link === undefined ? "" : data.response.link).then(() => setCopied(true))}>
             <span className="sr-only">Copy</span>
             {
               isFetching ?
               <Loader2 className="h-4 w-4 animate-spin"/>:
-              <Copy className="h-4 w-4"/>
+              (
+                copied ?
+                <Check className="h-4 w-4"/> :
+                <Copy className="h-4 w-4"/>
+              )
             }
           </Button>
         </div>

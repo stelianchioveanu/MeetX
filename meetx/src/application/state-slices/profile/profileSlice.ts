@@ -63,13 +63,25 @@ export const profileSlice = createSlice({
         email: null,
         exp: null
       };
-    }
+    },
+    setUserId: (state, action: PayloadAction<string>) => {
+      return {
+          ...state,
+          loggedIn: state.loggedIn,
+          token: state.token,
+          userId: action.payload ?? null,
+          name: state.name,
+          email: state.email,
+          exp: state.exp
+      };
+    },
   }
 });
 
 export const { 
   setToken,
-  resetProfile
+  resetProfile,
+  setUserId
 } = profileSlice.actions; // Export the slice actions, they are used to wrap the data that is send via the dispatch function to the reducer.
 
 export const profileReducer = profileSlice.reducer; // Export the reducer.

@@ -7,8 +7,8 @@ import { UserService } from '../../../openapi/requests/services.gen';
 import { Skeleton } from '../ui/skeleton';
 import { UsersTable } from './users-table';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import { setAppRole } from '@/application/state-slices';
-import { useAppDispatch, useAppSelector } from '@/application/store';
+import { setAppRole, setUserId } from '@/application/state-slices';
+import { useAppDispatch } from '@/application/store';
 import { fetchQuery } from '@/App';
 import { ContactTable } from './contact-table';
 
@@ -18,7 +18,6 @@ const ProfileFrame = () => {
     const [email, setEmail] = useState<string>("");
     const [imageChanged, setImageChanged] = useState<boolean>(false);
     const [imageRemoved, setImageRemoved] = useState<boolean>(false);
-    const { appRole } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
 
     const {data, status, isFetching, isLoading, dataUpdatedAt} = useQuery({
@@ -37,12 +36,12 @@ const ProfileFrame = () => {
             setEmail(data.response?.email === null || data.response?.email === undefined ? "" : data.response?.email);
             setName(data.response?.name === null || data.response?.name === undefined ? "" : data.response?.name);
             dispatch(setAppRole(data?.response?.role === "Admin" ? true : false));
+            dispatch(setUserId(data.response?.id));
         }
-
     }, [data, status, dataUpdatedAt])
 
     return (
-    <ScrollArea className='h-[100vh] w-full'>
+    <ScrollArea className='h-[100vh] w-[calc(100%-304px)]'>
     <ScrollBar className='flex'/>
         <div className='max-w-72 w-[80%] aspect-square relative'>
             {
@@ -61,13 +60,13 @@ const ProfileFrame = () => {
         <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}
         isFetching={isFetching} isLoading={isLoading}/>
         {
-            appRole ?
+            data?.response?.role === "Admin" ?
             <div className='h-fit w-[90%]'>
                 <UsersTable/>
             </div> : null
         }
         {
-            appRole ?
+            data?.response?.role === "Admin" || data?.response?.role === "Staff" ?
             <div className='h-fit w-[90%]'>
                 <ContactTable/>
             </div> : null

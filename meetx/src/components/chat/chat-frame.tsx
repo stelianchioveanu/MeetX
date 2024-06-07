@@ -9,8 +9,6 @@ import { usePrivateConversationServiceGetApiPrivateConversationGetPrivateConvers
     useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicKey } from "../../../openapi/queries/common";
 import { PrivateConversationService, TopicService } from "../../../openapi/requests/services.gen";
 import { useAppDispatch, useAppSelector } from "@/application/store";
-import { RequestResponse } from "../../../openapi/requests/types.gen";
-import { setGroup, setTopic } from "@/application/state-slices";
 import { fetchQuery } from "@/App";
 
 const ChatFrame = (props:{isGroup: boolean}) => {
@@ -18,7 +16,6 @@ const ChatFrame = (props:{isGroup: boolean}) => {
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
     const { selectedConvId } = useAppSelector(x => x.selectedReducer);
-    const { userId } = useAppSelector(x => x.profileReducer);
     const dispatch = useAppDispatch();
 
     const [usersOpened, setUsersOpened] = useState(false);
@@ -55,7 +52,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
 
     useEffect(() => {
         queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
-    }, [selectedTopicId, topic.dataUpdatedAt])
+    }, [topic.data])
 
     return (
         <div className="w-[calc(100%-304px)] h-full flex flex-col">
@@ -70,7 +67,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
                         null
                     }
                     <MessagesFrame isGroup={props.isGroup}/>
-                    <ChatInput userId={conv !== null && conv !== undefined ? (conv.data?.response?.user1?.id !== userId ? conv.data?.response?.user1?.id : conv.data?.response?.user2?.id) : undefined} isGroup={props.isGroup}/>
+                    <ChatInput userId={conv !== null && conv !== undefined ? (conv.data?.response?.user1?.name !== null && conv.data?.response?.user1?.name !== undefined ? conv.data?.response?.user1?.id : conv.data?.response?.user2?.id) : undefined} isGroup={props.isGroup}/>
                 </div>
                 {usersOpened && props.isGroup ?
                     <GroupUsers/> :

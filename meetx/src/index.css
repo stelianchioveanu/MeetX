@@ -12,6 +12,11 @@ body,
   fill: #d8ddeb !important
 }
 
+.linkify a {
+  color: blue;
+  text-decoration: underline;
+}
+
 .truncate-to-2-lines {
   display: -webkit-box;
   -webkit-line-clamp: 2;

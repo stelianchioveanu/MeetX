@@ -33,7 +33,7 @@ public class ContactFormService : IContactFormService
 
         if (_requestingUser.Role == UserRoleEnum.Client)
         {
-            return ServiceResponse<PagedResponse<ContactFormDTO>>.FromError(CommonErrors.NotAnAdmin);
+            return ServiceResponse<PagedResponse<ContactFormDTO>>.FromError(CommonErrors.NotFromStaff);
         }
 
         var result = await _repository.PageAsync(pagination, new ContactFormProjectionSpec(), cancellationToken);
@@ -55,7 +55,7 @@ public class ContactFormService : IContactFormService
 
         if (_requestingUser.Role == UserRoleEnum.Client)
         {
-            return ServiceResponse<PagedResponse<ContactFormDTO>>.FromError(CommonErrors.NotAnAdmin);
+            return ServiceResponse<PagedResponse<ContactFormDTO>>.FromError(CommonErrors.NotFromStaff);
         }
 
         var currForm = await _repository.GetAsync(new ContactformSpec(form.ContactId), cancellationToken);

@@ -10,6 +10,7 @@ import { setGroup, setTopic } from "@/application/state-slices";
 import { toast } from "react-toastify";
 import { ErrorCodes } from "../../../openapi/requests/types.gen";
 import { useEffect } from "react";
+import { showErrorToast } from "@/main";
 
 const Dashboard = () => {
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
@@ -25,16 +26,16 @@ const Dashboard = () => {
     const messageHandler = (message : ErrorCodes) => {
         if (message === "GroupNotFound") {
             dispatch(setGroup("0"));
-            toast.error("Group doesn't exist!");
+            showErrorToast("Group doesn't exist!");
         } else if (message === "NotAMember") {
             dispatch(setGroup("0"));
-            toast.error("Your are not part of the group");
+            showErrorToast("Your are not part of the group");
         } else if (message === "ConvNotFound") {
             dispatch(setGroup("0"));
-            toast.error("Conversation doesn't exist!");
+            showErrorToast("Conversation doesn't exist!");
         } else if (message === "TopicNotFound") {
             dispatch(setTopic("0"));
-            toast.error("Topic doesn't exist!");
+            showErrorToast("Topic doesn't exist!");
         }
     };
     connector.error(messageHandler);

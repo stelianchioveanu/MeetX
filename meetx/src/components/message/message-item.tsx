@@ -6,6 +6,12 @@ import { FileGetDTO, MessageDTO } from "../../../openapi/requests/types.gen";
 import FileMessageCard from "./file-message-card";
 
 const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: boolean, isTopic: boolean, topic: string | null | undefined}) => {
+    const linkifyDecorator = (href: string, text: string, key: number) => (
+        <a href={href} key={key} style={{ color: 'blue', textDecoration: 'underline' }} target="_blank" rel="noopener noreferrer">
+          {text}
+        </a>
+      );
+    
     return (
     <div className={cn("w-full h-fit py-2 hover:bg-[#00000020] flex gap-3 p-2", props.className)}>
         <UserAvatar status="hidden" user={props.message.user?.user} className="h-10 min-w-10 text-xs"/>
@@ -26,7 +32,9 @@ const MessageItem = (props: {message: MessageDTO, className?: string, isGroup: b
                     #{props.topic}
                 </p> : null
             }
-            <p className="flex text-[14px]">{props.message.text}</p>
+            <p className="flex text-[14px]">
+                {props.message.text}
+            </p>
             <div className="w-full h-fit flex flex-wrap gap-3">
                 {
                     props.message.files?.map(function(file : FileGetDTO, id){
