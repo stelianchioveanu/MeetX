@@ -30,15 +30,15 @@ const ErrorPage = () => {
             setCount((prevCount) => prevCount - 1);
         }, 1000);
   
-        return () => clearInterval(interval); // Curăță intervalul când componenta este demontată sau când count se schimbă
+        return () => clearInterval(interval);
     }, [count]);
 
     return (
     <div className="w-full h-full bg flex justify-center items-center bg-auth">
         <div className="h-fit backdrop-blur-3xl auth-form-bg rounded-2xl box-border px-10 py-12 flex justify-center items-center flex-col gap-5 w-96 shadow-xl shadow-neutral-900">
-            <p className="text-4xl font-bold">Error</p>
-            <p>An error has occurred</p>
-            <p>You will be redirected in {count}...</p>
+            <p className="text-4xl font-bold text-white">Error</p>
+            <p className="text-white">An error has occurred</p>
+            <p className="text-white">You will be redirected in {count}...</p>
         </div>
     </div> );
 }

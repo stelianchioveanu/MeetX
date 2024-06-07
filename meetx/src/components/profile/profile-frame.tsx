@@ -41,33 +41,37 @@ const ProfileFrame = () => {
     }, [data, status, dataUpdatedAt])
 
     return (
-    <ScrollArea className='h-[100vh] w-[calc(100%-304px)]'>
+    <ScrollArea className='w-[calc(100%-304px)]'>
     <ScrollBar className='flex'/>
-        <div className='max-w-72 w-[80%] aspect-square relative'>
-            {
-                isFetching ? 
-                <Skeleton className='w-full h-full rounded-full'/> :
-                <>
-                    {image ?
-                    <img className='w-full h-full rounded-full bg-white' src={image ? image : undefined}></img> :
-                    <div className="w-full h-full rounded-full flex justify-center items-center" style={{backgroundColor: "" + data?.response?.color}}>
-                        <p className='text-9xl text-white'>{data?.response?.shortName}</p>
-                    </div>}
-                    <AvatarDialog setImage={setImage} setImageChanged={setImageChanged} setImageRemoved={setImageRemoved}/>
-                </>
-            }
+        <div className={!isFetching && (data?.response?.role === "Admin" || data?.response?.role === "Staff") ? "w-full h-fit flex justify-center items-center gap-10 p-14 flex-wrap" :  
+        "w-full h-fit min-h-[100vh] flex justify-center items-center gap-10 p-14 flex-wrap"
+        }>
+            <div className='w-[80%] max-w-[320px] aspect-square relative'>
+                {
+                    isFetching ? 
+                    <Skeleton className='w-full h-full rounded-full'/> :
+                    <>
+                        {image ?
+                        <img className='w-full h-full rounded-full bg-white' src={image ? image : undefined}></img> :
+                        <div className="w-full h-full rounded-full flex justify-center items-center" style={{backgroundColor: "" + data?.response?.color}}>
+                            <p className='text-7xl sm:text-8xl md:text-9xl text-white'>{data?.response?.shortName}</p>
+                        </div>}
+                        <AvatarDialog setImage={setImage} setImageChanged={setImageChanged} setImageRemoved={setImageRemoved}/>
+                    </>
+                }
+            </div>
+            <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}
+            isFetching={isFetching} isLoading={isLoading}/>
         </div>
-        <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}
-        isFetching={isFetching} isLoading={isLoading}/>
         {
-            data?.response?.role === "Admin" ?
-            <div className='h-fit w-[90%]'>
+            data?.response?.role === "Admin" && !isFetching ?
+            <div className='h-fit w-full flex justify-center items-center p-14'>
                 <UsersTable/>
             </div> : null
         }
         {
-            data?.response?.role === "Admin" || data?.response?.role === "Staff" ?
-            <div className='h-fit w-[90%]'>
+            !isFetching && (data?.response?.role === "Admin" || data?.response?.role === "Staff") ?
+            <div className='h-fit w-full flex justify-center items-center p-14'>
                 <ContactTable/>
             </div> : null
         }

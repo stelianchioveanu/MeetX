@@ -24,7 +24,7 @@ export const AvatarDialog = (props: {setImage: React.Dispatch<React.SetStateActi
     return (
         <Dialog>
         <DialogTrigger asChild>
-            <Button className='bg-[#873dff] rounded-full w-16 h-16 absolute bottom-0 right-0 p-2 hover:bg-[#873dff]'>
+            <Button className='bg-[#171b25] rounded-full w-16 h-16 absolute bottom-0 right-0 p-2 hover:bg-[#3d4351]'>
                 <Camera className='text-white w-full h-full'/>
             </Button>
         </DialogTrigger>
@@ -35,7 +35,8 @@ export const AvatarDialog = (props: {setImage: React.Dispatch<React.SetStateActi
                 <AvatarEditorComponent setImage={props.setImage} setImageChanged={props.setImageChanged} ref={cropRef}/>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button onClick={() => {props.setImage(null); props.setImageRemoved(true)} } className="bg-red-700" type="submit">Remove avatar</Button>
+                    <Button onClick={() => {props.setImage(null); props.setImageRemoved(true)} } className="bg-red-900 text-white
+          hover:bg-red-500 hover:text-neutral-100" type="submit">Remove avatar</Button>
                 </DialogClose>
                 <DialogClose asChild>
                     <Button onClick={() => {cropRef.current?.saveImageCropped(); props.setImageRemoved(false)}} type="submit">Add avatar</Button>

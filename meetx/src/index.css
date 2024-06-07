@@ -8,90 +8,101 @@ body,
   height: 100%;
 }
 
-.react-input-emoji--button svg {
-  fill: #d8ddeb !important
-}
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+  }
+  
+  .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
 
-.linkify a {
-  color: blue;
-  text-decoration: underline;
-}
+  .react-input-emoji--button svg {
+    fill: #d8ddeb !important
+  }
+  
+  .truncate-to-2-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .link {
+    text-decoration: underline;
+    color: blueviolet;
+  }
 
-.truncate-to-2-lines {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.font {
-  font-family: "Poppins" !important;
-}
-
-.aspect-feature {
-  aspect-ratio: 1.4/1;
-}
-
-.shadow-feature {
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-.shadow-app {
-  filter:drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.25));
-}
-
-.bg-feature {
-  background-color: rgba(0, 0, 0, 0.9);
-}
-
-.auth-form-bg {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.bg-title-feature {
-  background: linear-gradient(
-    to right,
-    rgb(126, 34, 206) 0%,
-    rgb(126, 34, 206) 8px,
-    rgba(0, 0, 0, 0) 8px,
-    rgba(0, 0, 0, 0) 100%
-  );
-}
-
-.bg-auth {
-  background: rgb(17,20,28);
-  background: linear-gradient(90deg, rgba(17,20,28,1) 0%, rgba(126,34,206,1) 100%);
-}
-
-.text {
-  background: linear-gradient(
-    130deg,
-    hsl(346deg 83% 64%) 0%,
-    hsl(341deg 80% 63%) 5%,
-    hsl(335deg 75% 62%) 9%,
-    hsl(330deg 70% 61%) 14%,
-    hsl(323deg 63% 60%) 18%,
-    hsl(315deg 54% 59%) 23%,
-    hsl(304deg 45% 58%) 27%,
-    hsl(290deg 46% 59%) 32%,
-    hsl(277deg 50% 61%) 36%,
-    hsl(263deg 54% 64%) 41%,
-    hsl(249deg 58% 65%) 45%,
-    hsl(234deg 63% 65%) 50%,
-    hsl(217deg 77% 60%) 55%,
-    hsl(206deg 85% 52%) 59%,
-    hsl(200deg 100% 47%) 64%,
-    hsl(196deg 100% 46%) 68%,
-    hsl(193deg 100% 45%) 73%,
-    hsl(189deg 100% 44%) 77%,
-    hsl(186deg 75% 49%) 82%,
-    hsl(182deg 62% 56%) 86%,
-    hsl(176deg 57% 63%) 91%,
-    hsl(167deg 56% 70%) 95%,
-    hsl(156deg 55% 76%) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  .font {
+    font-family: "Poppins" !important;
+  }
+  
+  .aspect-feature {
+    aspect-ratio: 1.4/1;
+  }
+  
+  .shadow-feature {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  }
+  
+  .shadow-app {
+    filter:drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.25));
+  }
+  
+  .bg-feature {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .auth-form-bg {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  .bg-title-feature {
+    background: linear-gradient(
+      to right,
+      rgb(126, 34, 206) 0%,
+      rgb(126, 34, 206) 8px,
+      rgba(0, 0, 0, 0) 8px,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  
+  .bg-auth {
+    background: rgb(17,20,28);
+    background: linear-gradient(90deg, rgba(17,20,28,1) 0%, rgba(126,34,206,1) 100%);
+  }
+  
+  .text {
+    background: linear-gradient(
+      130deg,
+      hsl(346deg 83% 64%) 0%,
+      hsl(341deg 80% 63%) 5%,
+      hsl(335deg 75% 62%) 9%,
+      hsl(330deg 70% 61%) 14%,
+      hsl(323deg 63% 60%) 18%,
+      hsl(315deg 54% 59%) 23%,
+      hsl(304deg 45% 58%) 27%,
+      hsl(290deg 46% 59%) 32%,
+      hsl(277deg 50% 61%) 36%,
+      hsl(263deg 54% 64%) 41%,
+      hsl(249deg 58% 65%) 45%,
+      hsl(234deg 63% 65%) 50%,
+      hsl(217deg 77% 60%) 55%,
+      hsl(206deg 85% 52%) 59%,
+      hsl(200deg 100% 47%) 64%,
+      hsl(196deg 100% 46%) 68%,
+      hsl(193deg 100% 45%) 73%,
+      hsl(189deg 100% 44%) 77%,
+      hsl(186deg 75% 49%) 82%,
+      hsl(182deg 62% 56%) 86%,
+      hsl(176deg 57% 63%) 91%,
+      hsl(167deg 56% 70%) 95%,
+      hsl(156deg 55% 76%) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
  
 @layer base {
@@ -128,13 +139,13 @@ body,
   }
  
   .dark {
-    --background: 20 14.3% 4.1%;
+    --background: 240 15% 7%;
     --foreground: 60 9.1% 97.8%;
  
-    --card: 20 14.3% 4.1%;
+    --card: 240 15% 7%;
     --card-foreground: 60 9.1% 97.8%;
  
-    --popover: 20 14.3% 4.1%;
+    --popover: 240 15% 7%;
     --popover-foreground: 60 9.1% 97.8%;
  
     --primary: 60 9.1% 97.8%;

@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
+import { ChevronsUpDown, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -49,7 +49,7 @@ export function SelectIndustry(props: {groupId: string; setGroupId: any}) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between font bg-white text-black dark:bg-white dark:text-black"
         >
           {
             props.groupId !== NIL ?
@@ -60,14 +60,14 @@ export function SelectIndustry(props: {groupId: string; setGroupId: any}) {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[304px] p-0">
-        <Command>
-          <CommandInput onValueChange={handleValueChange} placeholder="Search group..." />
-          <CommandList>
+      <PopoverContent className="w-[304px] p-0 border-[#e5e7eb]">
+        <Command className="bg-white text-black border-[#e5e7eb]">
+          <CommandInput onValueChange={handleValueChange} placeholder="Search group..." className="bg-white text-black border-[#e5e7eb]" />
+          <CommandList className="bg-white border-[#e5e7eb]">
             {
                 isFetching ?
                 <div className="w-full h-8 flex justify-center items-center">
-                    <Loader2 className="h-4 w-4 animate-spin"/>
+                    <Loader2 className="h-4 w-4 animate-spin text-black"/>
                 </div> :
                 <>
                     {
@@ -79,7 +79,7 @@ export function SelectIndustry(props: {groupId: string; setGroupId: any}) {
                         data?.response?.data?.map((group: GroupDTO) => (
                             <div className="w-full h-fit hover:cursor-pointer hover:bg-[#aaaaaa] transition-all rounded-sm mb-1 p-1"
                             onClick={() => {props.setGroupId(group.id); setName(group.name); setOpen(false);}} key={group.id}>
-                                <p>
+                                <p className="text-black">
                                     {group.name}
                                 </p>
                             </div>

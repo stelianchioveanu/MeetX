@@ -64,7 +64,7 @@ const GroupFrame = () => {
     }, [pageRecentTopics]);
 
     return (
-    <div className="h-full w-60 bg-[#171b25] flex flex-col gap-4 items-center">
+    <div className="h-full w-60 bg-[rgb(119,125,141)] dark:bg-[#171b25] flex flex-col gap-4 items-center pb-4">
         <div className="w-full h-12 shadow-lg flex items-center p-3 text-white gap-2">
             {
                 group.isLoading ? 
@@ -86,7 +86,7 @@ const GroupFrame = () => {
         {
             group.isLoading ?
             null :
-            <Separator className="bg-neutral-600 w-4/5"/>
+            <Separator className="dark:bg-neutral-600 bg-neutral-50 w-4/5"/>
         }
         <ScrollArea className="flex w-full flex-col p-2">
             <ScrollBar className="flex"/>
@@ -94,7 +94,7 @@ const GroupFrame = () => {
                 group.isFetching ?
                 <Skeleton className="w-full h-8"/>:
                 <>
-                    <div className="min-h-12 flex items-center mb-2 px-2">
+                    <div className="min-h-12 flex items-center mb-2 px-2 text-white">
                         #Recent topics
                     </div>
                     {
@@ -110,12 +110,12 @@ const GroupFrame = () => {
                         (
                             recentTopics.isFetching ?
                             <div className="w-full h-fit flex items-center justify-center">
-                                <Loader2 className="h-5 w-5 animate-spin"/>
+                                <Loader2 className="h-5 w-5 animate-spin text-white"/>
                             </div> :
                             <Button variant={"link"} className="w-full text-blue-700" onClick={() => {setPageRecentTopics(pageRecentTopics + 1);}}>Load more...</Button>
                         ) : null
                     }
-                    <div className="min-h-12 flex items-center mb-2 px-2">
+                    <div className="min-h-12 flex items-center mb-2 px-2 text-white">
                         #Your topics
                     </div>
                     {
@@ -131,7 +131,7 @@ const GroupFrame = () => {
                         (
                             myTopics.isFetching ?
                             <div className="w-full h-fit flex items-center justify-center">
-                                <Loader2 className="h-5 w-5 animate-spin"/>
+                                <Loader2 className="h-5 w-5 animate-spin text-white"/>
                             </div> :
                             <Button variant={"link"} className="w-full text-blue-700" onClick={() => {setPageMyTopics(pageMyTopics + 1);}}>Load more...</Button>
                         ) : null
@@ -142,7 +142,7 @@ const GroupFrame = () => {
         {
             group.isFetching ?
             null :
-            <Separator className="bg-neutral-600 w-4/5"/>
+            <Separator className="dark:bg-neutral-600 bg-neutral-50 w-4/5"/>
         }
         
         {

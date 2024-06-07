@@ -5,7 +5,6 @@ const URL = "http://localhost:5000/chatHub";
 class Connector {
     private connection: signalR.HubConnection;
     public events: (onMessageReceived: (message: any) => void) => void;
-    public update: (onMessageReceived: (message: any) => void) => void;
     public error: (onMessageReceived: (message: any) => void) => void;
     static instance: Connector | null = null;
     public isConnected: boolean;
@@ -38,10 +37,6 @@ class Connector {
             this.connection.on("ReceiveMessage", onMessageReceived);
         };
 
-        this.update = (onMessageReceived) => {
-            this.connection.on("UpdateConv", onMessageReceived);
-        };
-
         this.error = (onMessageReceived) => {
             this.connection.on("ErrorMessage", onMessageReceived);
         };
@@ -56,9 +51,15 @@ class Connector {
             })
             .catch(err => {
                 if (this.setConnected) this.setConnected(false);
+                if(this.connection.connectionId !== null) {
+                    this.isConnected = true;
+                    return;
+                }
                 this.isConnected = false;
                 console.log('Failed to connect to SignalR hub:', err);
-                //this.startConnection();
+                setTimeout(() => {
+                    this.startConnection();
+                }, 2000);
             });
     }
 

@@ -75,38 +75,38 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
                 {props.children}
             </PopoverTrigger>
             <PopoverContent  hideWhenDetached side={props.side} sideOffset={30} className="h-fit
-            w-64 flex flex-col bg-[#171b25] p-0 rounded-md overflow-hidden">
-                <div className="bg-purple-700 w-full h-14"></div>
+            w-64 flex flex-col bg-[rgb(119,125,141)] dark:bg-[#171b25] p-0 rounded-md overflow-hidden border-[#00000000]">
+                <div className="bg-[rgb(26,61,121)] dark:bg-purple-700 w-full h-14"></div>
                 <div className="w-52 h-14 relative">
                     <UserAvatar user={props.isGroup ? member.data?.response?.user :
                         user.data?.response} className="w-20 h-20 absolute bottom-4 left-3 text-2xl" status="visible"/>
                 </div>
                 <div className="flex flex-col p-3 gap-1 font">
                     {props.isGroup ?
-                        <p className=" text-[#244783]">
+                        <p className="text-[rgb(172,199,248)] dark:text-[#244783]">
                             {member.data?.response?.user?.role === "Admin" || member.data?.response?.user?.role === "Staff" ? "Platform Staff" : null}
                         </p> :
-                        <p className=" text-[#244783]">
+                        <p className="text-purple-400 dark:text-[#244783]">
                             {user.data?.response?.role === "Admin" || user.data?.response?.role === "Staff" ? "Platform Staff" : null}
                         </p>
                     }
 
                     {props.isGroup ?
-                    <p className=" text-[#248379]">
+                    <p className="text-[rgb(106,201,191)] dark:text-[#248379]">
                         {member.data?.response?.isMember ? (isPublic ? "Member" : (member.data.response.isAdmin ? "Admin" : "Member")) : "Not a member"}
                     </p> : null }
 
-                    <p className=" text-purple-700 text-xl font-semibold truncate">
+                    <p className="text-[rgb(26,61,121)] dark:text-purple-700 text-xl font-semibold truncate">
                         {props.isGroup ? member.data?.response?.user?.name :
                         user.data?.response?.name}
                     </p>
 
-                    <p className="text-sm truncate">
+                    <p className="text-sm truncate text-white">
                         {props.isGroup ? member.data?.response?.user?.email :
                         user.data?.response?.email}
                     </p>
 
-                    <p className="text-xs text-[#5c6682]">
+                    <p className="text-xs text-[#a5adc3] dark:text-[#5c6682]">
                         Registered since: {props.isGroup ? member.data?.response?.user?.registeredDate :
                         user.data?.response?.registeredDate}
                     </p>
@@ -122,7 +122,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
                 </div> : null }
                 {(props.isGroup ? member.data?.response?.user?.id !== userId : user.data?.response?.id !== userId) ?
                     <div className="p-3">
-                        <Input className="bg-transparent border-[#272D3D]" placeholder="#Send message" value={input}
+                        <Input className="bg-transparent border-white placeholder:text-white" placeholder="#Send message" value={input}
                         onChange={handleChange} onKeyDown={handleKeyPress} maxLength={4095}/>
                     </div> : null
                 }

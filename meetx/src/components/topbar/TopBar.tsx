@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button"
 import { Link } from 'react-router-dom';
+import { ModeToggle } from '../themes/mode-toggle';
 
 function TopBar() {
     const [pressed, setPressed] = useState(0);

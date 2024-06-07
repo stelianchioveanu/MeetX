@@ -14,7 +14,6 @@ import { NIL } from "uuid";
 const PrivateFrame = () => {
     const queryClient = useQueryClient();
     const dispatch = useAppDispatch();
-    const { update } = Connector();
 
     const {data, isLoading} = useQuery({
         queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey],
@@ -23,13 +22,6 @@ const PrivateFrame = () => {
         },
         retry: false
     });
-
-    useEffect(() => {
-        update(() => {
-            queryClient.invalidateQueries({queryKey: [usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey]})
-        });
-    }, 
-    [])
 
     useEffect(() => {
         const connector = Connector();
@@ -50,12 +42,12 @@ const PrivateFrame = () => {
     }, []);
 
     return (
-    <div className="h-full w-60 bg-[#171b25] flex flex-col gap-4 items-center">
+    <div className="h-full w-60 bg-[rgb(119,125,141)] dark:bg-[#171b25] flex flex-col gap-4 items-center">
         <div className="w-full h-12 shadow-lg flex items-center p-3 text-white">
             {
                 isLoading ?
                 <Skeleton className="w-full h-8"/> :
-                "Private Chats"
+                <p className="text-white">Private Chats</p>
             }
         </div>
         <ScrollArea className="flex w-full flex-col p-2">

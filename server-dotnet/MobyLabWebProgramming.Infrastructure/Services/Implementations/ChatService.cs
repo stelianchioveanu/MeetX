@@ -37,45 +37,6 @@ namespace SignalRChat.Hubs
                 {
                     user.Status = true;
                     user = await _repository.UpdateAsync(user);
-                    foreach (var conv in user.StartedConversations)
-                    {
-                        List<string>? userConnections = null;
-                        lock (_lock)
-                        {
-                            if (_userConnections.ContainsKey(conv.User2Id.ToString()))
-                            {
-                                userConnections = new List<string>(_userConnections[conv.User2Id.ToString()]);
-                            }
-                        }
-
-                        if (userConnections != null)
-                        {
-                            foreach (var connection in userConnections)
-                            {
-                                await Clients.Client(connection).SendAsync("UpdateConv");
-                            }
-                        }
-                    }
-
-                    foreach (var conv in user.ReceivedConversations)
-                    {
-                        List<string>? userConnections = null;
-                        lock (_lock)
-                        {
-                            if (_userConnections.ContainsKey(conv.User1Id.ToString()))
-                            {
-                                userConnections = new List<string>(_userConnections[conv.User1Id.ToString()]);
-                            }
-                        }
-
-                        if (userConnections != null)
-                        {
-                            foreach (var connection in userConnections)
-                            {
-                                await Clients.Client(connection).SendAsync("UpdateConv");
-                            }
-                        }
-                    }
                 }
             }
 
@@ -242,45 +203,6 @@ namespace SignalRChat.Hubs
                 {
                     user.Status = false;
                     await _repository.UpdateAsync(user);
-                    foreach (var conv in user.StartedConversations)
-                    {
-                        List<string>? userConnections = null;
-                        lock (_lock)
-                        {
-                            if (_userConnections.ContainsKey(conv.User2Id.ToString()))
-                            {
-                                userConnections = new List<string>(_userConnections[conv.User2Id.ToString()]);
-                            }
-                        }
-
-                        if (userConnections != null)
-                        {
-                            foreach (var connection in userConnections)
-                            {
-                                await Clients.Client(connection).SendAsync("UpdateConv");
-                            }
-                        }
-                    }
-
-                    foreach (var conv in user.ReceivedConversations)
-                    {
-                        List<string>? userConnections = null;
-                        lock (_lock)
-                        {
-                            if (_userConnections.ContainsKey(conv.User1Id.ToString()))
-                            {
-                                userConnections = new List<string>(_userConnections[conv.User1Id.ToString()]);
-                            }
-                        }
-
-                        if (userConnections != null)
-                        {
-                            foreach (var connection in userConnections)
-                            {
-                                await Clients.Client(connection).SendAsync("UpdateConv");
-                            }
-                        }
-                    }
                 }
             }
 

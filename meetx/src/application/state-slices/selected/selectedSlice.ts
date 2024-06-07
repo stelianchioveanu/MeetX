@@ -83,7 +83,17 @@ export const selectedSlice = createSlice({
             isPublic: state.isPublic,
             appRole: action.payload ?? null
         };
-    }
+    },
+    resetSelected: () => {
+        return {
+            selectedGroupId: "0",
+            selectedTopicId: "0",
+            selectedConvId: "0",
+            isAdmin: false,
+            isPublic: false,
+            appRole: false
+        };
+    },
   }
 });
 
@@ -93,7 +103,8 @@ export const {
   setConv,
   setAdmin,
   setPublic,
-  setAppRole
+  setAppRole,
+  resetSelected
 } = selectedSlice.actions;
 
 export const selectedReducer = selectedSlice.reducer;

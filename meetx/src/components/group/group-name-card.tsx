@@ -10,7 +10,7 @@ export function GroupNameCard(props: {name: string | null | undefined, className
     <HoverCard>
       <HoverCardTrigger asChild>
             <Button variant={"link"} className={"h-full p-0 flex " + props.className}>
-                <p className="w-full h-full truncate font-normal text-base text-start">
+                <p className="w-full h-full truncate font-normal text-base text-start text-white">
                     {props.name}
                 </p>
             </Button>

@@ -19,7 +19,7 @@ public sealed class ContactFormProjectionSpec : BaseSpec<ContactFormProjectionSp
         Name = e.Name,
         Email = e.Email,
         Message = e.Message,
-        Date = DateTime.Parse(e.CreatedAt.ToLocalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+        Date = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         IsChecked = e.isChecked
     };
 

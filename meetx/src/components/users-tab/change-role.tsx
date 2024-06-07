@@ -68,10 +68,9 @@ const ChangeRole = (props: {userId?: string, isAdmin?: boolean}) => {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>Are you sure you want to change the role of this user?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+              This action will modify the user's permissions!
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

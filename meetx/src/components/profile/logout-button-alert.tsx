@@ -1,4 +1,4 @@
-import { resetProfile, setGroup, setTopic } from "@/application/state-slices"
+import { resetProfile, resetSelected, setGroup, setTopic } from "@/application/state-slices"
 import { useAppDispatch } from "@/application/store"
 import {
     AlertDialog,
@@ -24,6 +24,7 @@ import { ApiError } from "../../../openapi/requests/core/ApiError";
 	const { mutate } = useUserServicePostApiUserLogout({
         onSuccess: () => {
             dispatch(resetProfile());
+            dispatch(resetSelected());
 			      redirectToLogin()
         },
         onError: (error: ApiError) => {
@@ -42,7 +43,8 @@ import { ApiError } from "../../../openapi/requests/core/ApiError";
     return (
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          	<Button type="button" className="bg-red-800 hover:bg-red-500 font">
+          	<Button type="button" className="bg-red-900 text-white
+          hover:bg-red-500 hover:text-neutral-100 font">
                 Logout
             </Button>
         </AlertDialogTrigger>
@@ -50,8 +52,7 @@ import { ApiError } from "../../../openapi/requests/core/ApiError";
           	<AlertDialogHeader>
             	<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             	<AlertDialogDescription>
-              		This action cannot be undone. This will permanently delete your
-              		account and remove your data from our servers.
+                This action will log you out and redirect you to the login page.
             	</AlertDialogDescription>
           	</AlertDialogHeader>
           	<AlertDialogFooter>

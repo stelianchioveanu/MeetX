@@ -4,7 +4,13 @@ import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from '@/application/store';
 import { setGroup } from '@/application/state-slices';
 import { useQueryClient } from '@tanstack/react-query';
-import { UseUserServiceGetApiUserGetUsersKeyFn, useContactFormServiceGetApiContactFormGetContactFormsKey, useGroupServiceGetApiGroupGetGroupKey, useGroupServiceGetApiGroupGetGroupsKey, usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey, usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey, useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey, useTopicServiceGetApiTopicGetTopicsKey, useUserServiceGetApiUserGetMeKey, useUserServiceGetApiUserGetUsersKey } from '../../../openapi/queries/common';
+import { useContactFormServiceGetApiContactFormGetContactFormsKey,
+  useGroupServiceGetApiGroupGetGroupKey,
+  useGroupServiceGetApiGroupGetGroupsKey,
+  usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey,
+  useTopicServiceGetApiTopicGetMyTopicsKey, useTopicServiceGetApiTopicGetRecentTopicsKey,
+  useTopicServiceGetApiTopicGetTopicsKey, useUserServiceGetApiUserGetMeKey,
+  useUserServiceGetApiUserGetUsersKey } from '../../../openapi/queries/common';
 
 const NavigationItem = (props: { children: ReactNode, id: string | undefined }) => {
     const dispatch = useAppDispatch();

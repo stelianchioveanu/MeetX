@@ -85,7 +85,7 @@ const Reset = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input maxLength={255} placeholder="New Password" type="password" className="font" {...field}/>
+                                <Input maxLength={255} placeholder="New Password" type="password" className="font bg-white text-black" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -97,20 +97,20 @@ const Reset = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input maxLength={255} placeholder="Confirm Password" type="password" className="font" {...field}/>
+                                <Input maxLength={255} placeholder="Confirm Password" type="password" className="font bg-white text-black" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
                     )}
                     />
-                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
-                        {isPending ? <Loader2 className="animate-spin"></Loader2> :
+                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 text-white font">
+                        {isPending ? <Loader2 className="animate-spin text-white"></Loader2> :
                         "Submit"}
                     </Button>
                 </form>
             </Form> : null}
             <div className="text-white">
-              <span className="text-purple-700 hover:text-purple-800 hover:cursor-pointer font">
+              <span className="text-purple-700 hover:text-purple-600  font">
                 <Link to="/login">Back to Login</Link>
               </span>
             </div>

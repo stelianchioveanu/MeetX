@@ -31,9 +31,9 @@ const FileMessageCard = (props: {file: FileGetDTO, isGroup: boolean}) => {
 
     return ( 
         <Card className="w-[140px] min-w-[140px] aspect-square flex flex-col
-        justify-between items-center p-4 bg-[#424b60] border-0 relative">
+        justify-between items-center p-4 bg-[rgb(185,191,205)] dark:bg-[#424b60] border-0 relative">
             <Download className="absolute right-[2px] top-[2px] w-5 h-5
-            text-white hover:text-green-600 hover:cursor-pointer" onClick={handleDownloadClick}>
+            text-white hover:text-green-600 hover:cursor-pointer transition-all" onClick={handleDownloadClick}>
             </Download>
             <CardContent className="w-[85%] aspect-square p-0">
                 {
@@ -43,17 +43,17 @@ const FileMessageCard = (props: {file: FileGetDTO, isGroup: boolean}) => {
                     `http://localhost:5000/${selectedConvId}/Users/${props.file.path}`} className="w-full
                     aspect-square object-contain" loading="lazy"></img> :
                     <div className="w-full h-full relative">
-                        <Image className="w-full h-full"/>
+                        <Image className="w-full h-full text-white"/>
                         <Eye className="text-green-600 absolute w-10 h-10 -right-1
                         -bottom-1 hover:cursor-pointer hover:text-green-400
-                        transition-all" fill="#424b60" onClick={() => setPreView(true)}></Eye>
+                        transition-all fill-[rgb(185,191,205)] dark:fill-[#424b60]" onClick={() => setPreView(true)}></Eye>
                     </div>
                     ) :
-                    <File className="w-full h-full"/>
+                    <File className="w-full h-full text-white"/>
                 }
             </CardContent>
             <CardFooter className="p-0 w-full overflow-hidden h-7">
-                <p className="w-full text-sm truncate">{props.file.name}</p>
+                <p className="w-full text-sm truncate text-white">{props.file.name}</p>
             </CardFooter>
         </Card>
     );

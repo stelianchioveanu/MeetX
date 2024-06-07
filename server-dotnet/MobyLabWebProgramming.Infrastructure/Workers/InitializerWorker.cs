@@ -8,6 +8,7 @@ using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using OfficeOpenXml;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Infrastructure.Repositories.Implementation;
 
 namespace MobyLabWebProgramming.Infrastructure.Workers;
 
@@ -75,6 +76,16 @@ public class InitializerWorker : BackgroundService
                 };
                 firstGroup.Admins.Add(user);
                 firstGroup = await repositoryService.AddAsync(firstGroup, cancellationToken);
+
+                var newTopic = new Topic
+                {
+                    Title = "general",
+                    Description = "Hello everyone!",
+                    UserId = user.Id,
+                    GroupId = firstGroup.Id,
+                };
+
+                await repositoryService.AddAsync(newTopic, cancellationToken);
             }
 
             using var package = new ExcelPackage(new FileInfo("../MobyLabWebProgramming.Infrastructure/Workers/public-groups.xlsx"));
@@ -133,6 +144,16 @@ public class InitializerWorker : BackgroundService
                         };
                         newGroup.Admins.Add(user);
                         newGroup = await repositoryService.AddAsync(newGroup, cancellationToken);
+
+                        var newTopic = new Topic
+                        {
+                            Title = "general",
+                            Description = "Hello everyone!",
+                            UserId = user.Id,
+                            GroupId = newGroup.Id,
+                        };
+
+                        await repositoryService.AddAsync(newTopic, cancellationToken);
                     }
                 }
             }

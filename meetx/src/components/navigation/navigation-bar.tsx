@@ -16,7 +16,7 @@ import { fetchQuery } from "@/App";
 
 const NavigationBar = () => {
     const dispatch = useAppDispatch();
-    const {data, status, isFetching} = useQuery({
+    const {data, status, isLoading} = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupsKey],
         queryFn: () => {
             return fetchQuery(GroupService.getApiGroupGetGroups({pageSize: 1000000000}), dispatch);
@@ -27,13 +27,13 @@ const NavigationBar = () => {
     useEffect(() => {if(status === "success") Connector()}, [status, data])
 
     return ( 
-    <div className="w-16 bg-[rgba(17,20,28,1)] flex items-center flex-col gap-3 py-2 box-border">
+    <div className="w-16 bg-[rgb(99,105,121)] dark:bg-[rgba(17,20,28,1)] flex items-center flex-col gap-3 py-2 box-border">
         {
-            isFetching ?
+            isLoading ?
             <Skeleton className="h-11 w-11 rounded-full"/> : 
             <>
                 <Profile id="0"/>
-                <Separator className="bg-neutral-600 w-3/4"></Separator>
+                <Separator className="dark:bg-neutral-600 bg-neutral-50 w-3/4"></Separator>
                 <ScrollArea className="w-full">
                     {
                         data?.response?.data !== null && data?.response?.data !== undefined && data?.response?.data.length !== 0 ?
@@ -47,7 +47,7 @@ const NavigationBar = () => {
                     }
                 </ScrollArea>
                 <AddGroup/>
-                <Separator className="bg-neutral-600 w-3/4"></Separator>
+                <Separator className="dark:bg-neutral-600 bg-neutral-50 w-3/4"></Separator>
                 <ModeToggle></ModeToggle>
             </>
         }

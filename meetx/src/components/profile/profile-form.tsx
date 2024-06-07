@@ -133,7 +133,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                     <FormItem className="space-y-1">
                         <FormLabel className="text-white">Email</FormLabel>
                         <FormControl>
-                            <Input placeholder="Email" className="font bg-transparent text-white" {...field} readOnly/>
+                            <Input placeholder="Email" className="font bg-transparent text-white border-white" {...field} readOnly/>
                         </FormControl>
                         <FormMessage/>
                     </FormItem>
@@ -150,7 +150,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                     <FormItem className="space-y-1">
                         <FormLabel className="text-white">Name</FormLabel>
                         <FormControl>
-                            <Input maxLength={255} placeholder="Name" className="font bg-transparent text-white" {...field}/>
+                            <Input maxLength={255} placeholder="Name" className="font bg-transparent text-white border-white" {...field}/>
                         </FormControl>
                         <FormMessage/>
                     </FormItem>
@@ -166,7 +166,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 render={({ field }) => (
                     <FormItem className="space-y-1">
                         <FormControl>
-                            <Input maxLength={255} placeholder="New Password" type="password" className="font bg-transparent" {...field} />
+                            <Input maxLength={255} placeholder="New Password" type="password" className="font bg-transparent text-white border-white" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -182,7 +182,7 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 render={({ field }) => (
                     <FormItem className="space-y-1">
                         <FormControl>
-                            <Input placeholder="Confirm Password" type="password" className="font bg-transparent" {...field} />
+                            <Input placeholder="Confirm Password" type="password" className="font bg-transparent text-white border-white" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -193,7 +193,8 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                 props.isLoading ?
                 null :
                 <>
-                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
+                    <Button type="submit" className="bg-neutral-100 text-neutral-900
+                    hover:bg-neutral-600 hover:text-neutral-100">
                         {props.isFetching ? <Loader2 className="animate-spin"></Loader2> :
                         "Save"}
                     </Button>

@@ -90,7 +90,7 @@ OpenAPIConfig.interceptors.response.use(responseInterceptor);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <ParallaxProvider>
     <Provider store={store}>
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
       <App />
       </QueryClientProvider>

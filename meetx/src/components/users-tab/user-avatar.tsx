@@ -14,7 +14,8 @@ const UserAvatar = (props: {user?: UserDTO, className: String, status: "hidden" 
         {
             props.status === "visible" && props.user?.status ?
             <>
-                <div className="w-[36%] h-[36%] bg-[#171b25]
+                <div className="w-[36%] h-[36%]
+                bg-[rgb(119,125,141)] dark:bg-[#171b25]
                 rounded-full absolute right-0 bottom-0
                 group-hover:bg-neutral-600 transition-colors"/>
                 <div className={className + (true ? "bg-green-600" : "bg-neutral-400")}/>

@@ -32,7 +32,7 @@ export const fetchQuery = async (call: Promise<any>, dispatch: any) => {
             dispatch(setTopic("0"));
             return error;
         }
-        if (body.errorMessage?.code === "NotFromStaff") {
+        if (body?.errorMessage?.code === "NotFromStaff") {
             useQueryClient().invalidateQueries({queryKey: [useUserServiceGetApiUserGetMeKey]});
             return error;
         }

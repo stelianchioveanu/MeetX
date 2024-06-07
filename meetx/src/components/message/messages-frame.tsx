@@ -11,7 +11,6 @@ import { Loader2 } from "lucide-react";
 import { useMessageServiceGetApiMessageGetPrivateMessagesKey,
     useMessageServiceGetApiMessageGetTopicMessagesKey } from "../../../openapi/queries/common";
 import { fetchQuery } from "@/App";
-import { NIL } from "uuid";
 
 const MessagesFrame = (props: {isGroup: boolean}) => {
     const { selectedGroupId, selectedConvId, selectedTopicId } = useAppSelector(x => x.selectedReducer);
@@ -157,9 +156,9 @@ const MessagesFrame = (props: {isGroup: boolean}) => {
                 <div id="loader" className="w-full h-8 top-auto">
                 {hasMore && 
                     <div className="w-full h-full flex justify-center items-center">
-                        <Loader2 className="h-8 w-8 animate-spin" />
+                        <Loader2 className="h-8 w-8 animate-spin text-white" />
                     </div>}
-                {!hasMore && <div className="w-full h-full text-center">This is the beginning of the topic!</div>}
+                {!hasMore && <p className="w-full h-full text-center truncate text-white">This is the beginning of the {props.isGroup ? "topic" : "conversation"}!</p>}
                 </div>
             </InfiniteScroll>
             {

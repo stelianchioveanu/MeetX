@@ -17,7 +17,7 @@ public sealed class MessageProjectionSpec : BaseSpec<MessageProjectionSpec, Mess
     {
         Id = e.Id,
         Text = e.Text,
-        CreatedDate = DateTime.Parse(e.CreatedAt.ToLocalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
+        CreatedDate = DateTime.Parse(e.CreatedAt.ToUniversalTime().ToString(), null, DateTimeStyles.RoundtripKind).ToString(),
         User = new GroupMemberDTO
         {
             User = new UserDTO

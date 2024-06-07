@@ -98,7 +98,7 @@ const Register = () => {
     }, [])
     
     return (
-    <div className="w-full h-full bg flex justify-center items-center bg-auth">
+    <div className="w-full h-fit min-h-full bg flex justify-center items-center bg-auth py-10">
         <div className="h-fit backdrop-blur-3xl auth-form-bg rounded-2xl box-border px-10 py-12 flex justify-center items-center flex-col gap-10 w-96 shadow-xl shadow-neutral-900">
             <div className="text-white text-4xl font-semibold text-center">{isSuccess ? "Success" : "Register"}</div>
             {!isSuccess ?
@@ -111,7 +111,7 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input maxLength={255} placeholder="Email" className="font" {...field}/>
+                                    <Input maxLength={255} placeholder="Email" className="font bg-white text-black" {...field}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -123,7 +123,7 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input maxLength={255} placeholder="Name" className="font" {...field} />
+                                    <Input maxLength={255} placeholder="Name" className="font bg-white text-black" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -147,7 +147,7 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input maxLength={255} placeholder="Password" type="password" className="font" {...field} />
+                                    <Input maxLength={255} placeholder="Password" type="password" className="font bg-white text-black" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -159,14 +159,14 @@ const Register = () => {
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <FormControl>
-                                    <Input maxLength={255} placeholder="Confirm Password" type="password" className="font" {...field} />
+                                    <Input maxLength={255} placeholder="Confirm Password" type="password" className="font bg-white text-black" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                         />
-                        <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
-                            {isPending ? <Loader2 className="animate-spin"></Loader2> :
+                        <Button type="submit" className="bg-purple-700 hover:bg-purple-600 text-white font">
+                            {isPending ? <Loader2 className="animate-spin text-white"></Loader2> :
                             "Register"}
                         </Button>
                     </form>
@@ -177,8 +177,8 @@ const Register = () => {
                     <div className="w-full h-px bg-neutral-400 mt-1"></div>
                 </div>
                 <a className="w-full h-fit" href="http://localhost:5000/signup-linkedin-link">
-                    <Button className="font w-full gap-3 bg-[#0a66c2]">
-                        <Linkedin className="h-5"></Linkedin>
+                    <Button className="font w-full gap-3 bg-[#0a5dc2] hover:bg-[rgb(30,112,214)] text-white">
+                        <Linkedin className="h-5 text-white"></Linkedin>
                         Continue with LinkedIn
                     </Button>
                 </a>

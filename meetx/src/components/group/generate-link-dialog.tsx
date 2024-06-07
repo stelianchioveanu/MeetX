@@ -37,18 +37,16 @@ export function GenerateLinkDialog() {
     <Dialog onOpenChange={() => setCopied(false)}>
       <DialogTrigger asChild>
             <Button onClick={() => {refetch()}} className="w-3/4
-                    dark:bg-neutral-900 dark:text-white
                     bg-neutral-100 text-neutral-900
-                    dark:hover:bg-neutral-100 dark:hover:text-neutral-900
-                    hover:bg-neutral-900 hover:text-white">
+                    hover:bg-neutral-600 hover:text-neutral-100">
                 Generate Link
             </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
+          <DialogTitle>Invite link</DialogTitle>
           <DialogDescription>
-            Anyone who has this link will be able to view this.
+            Anyone who has this link will be able to join the group. The invite is valid for 15 minutes or until a new one is created.
           </DialogDescription>
         </DialogHeader>
         <div className="flex items-center space-x-2">

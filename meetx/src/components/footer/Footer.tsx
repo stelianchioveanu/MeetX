@@ -16,9 +16,9 @@ const Footer = () => {
     return ( 
     <div className="w-full h-fit flex items-center justify-center flex-col bg box-border gap-8 p-8 shadow-[0_-10px_30px_#9B70D440]">
         <div className="flex justify-center items-center gap-5">
-            <Facebook className="h-10 w-10" color="white"></Facebook>
-            <Instagram className="h-10 w-10" color="white"></Instagram>
-            <Github className="h-10 w-10" color="white"></Github>
+            <Facebook className="h-10 w-10 text-white hover:cursor-pointer hover:text-[#ffffffaa] transition-all"></Facebook>
+            <Instagram className="h-10 w-10 text-white hover:cursor-pointer hover:text-[#ffffffaa] transition-all"></Instagram>
+            <Github className="h-10 w-10 text-white hover:cursor-pointer hover:text-[#ffffffaa] transition-all"></Github>
         </div>
         <div className="flex justify-center items-center gap-4 flex-wrap">
             <Button onClick={() => scrollToDestinations("section1")} variant="ghost" className="text-white">Home</Button>

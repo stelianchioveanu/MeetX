@@ -121,7 +121,7 @@ export const $ContactFormUpdateDTO = {
 } as const;
 
 export const $ErrorCodes = {
-    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAnAppAdmin', 'NotAMember', 'WrongName', 'WrongEmail', 'WrongIndustry', 'UserNotFound', 'BadCredentials', 'GroupNotFound', 'WrongTitle', 'WrongDescription', 'ConvNotFound', 'TopicNotFound', 'WrongMessage', 'ContactNotFound'],
+    enum: ['Unknown', 'TechnicalError', 'EntityNotFound', 'PhysicalFileNotFound', 'UserAlreadyExists', 'WrongPassword', 'CannotAdd', 'CannotUpdate', 'CannotDelete', 'MailSendFailed', 'TagAlreadyExists', 'WrongTag', 'WrongInputs', 'TokenExpired', 'GroupAlreadyExists', 'NotAnAdmin', 'NotAnAppAdmin', 'NotAMember', 'WrongName', 'WrongEmail', 'WrongIndustry', 'UserNotFound', 'BadCredentials', 'GroupNotFound', 'WrongTitle', 'WrongDescription', 'ConvNotFound', 'TopicNotFound', 'WrongMessage', 'ContactNotFound', 'NotFromStaff'],
     type: 'string'
 } as const;
 

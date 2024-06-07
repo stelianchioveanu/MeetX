@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "@/application/store";
 import ProfileFrame from "@/components/profile/profile-frame";
 import Connector from '../../signalRConnection/signalr-connection';
 import { setGroup, setTopic } from "@/application/state-slices";
-import { toast } from "react-toastify";
 import { ErrorCodes } from "../../../openapi/requests/types.gen";
 import { useEffect } from "react";
 import { showErrorToast } from "@/main";
@@ -41,7 +40,7 @@ const Dashboard = () => {
     connector.error(messageHandler);
 
     return (
-        <div className="w-full h-screen flex bg-[#272d3d] font">
+        <div className="w-full h-screen flex bg-[rgb(159,165,181)] dark:bg-[rgb(39,45,61)] font">
             <NavigationBar/>
             {
                 selectedGroupId === "0" ?

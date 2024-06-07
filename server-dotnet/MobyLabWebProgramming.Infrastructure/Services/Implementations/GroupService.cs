@@ -68,7 +68,17 @@ public class GroupService : IGroupService
         newGroup.Admins.Add(requestingUser);
         newGroup.Users.Add(requestingUser);
 
-        await _repository.AddAsync(newGroup, cancellationToken);
+        newGroup = await _repository.AddAsync(newGroup, cancellationToken);
+
+        var newTopic = new Topic
+        {
+            Title = "general",
+            Description = "Hello everyone!",
+            UserId = requestingUser.Id,
+            GroupId = newGroup.Id,
+        };
+
+        await _repository.AddAsync(newTopic, cancellationToken);
 
         return ServiceResponse.ForSuccess();
     }
@@ -508,18 +518,16 @@ public class GroupService : IGroupService
             }
         } else
         {
-            if (requestingUser.Role == UserRoleEnum.Client)
-            {
+
                 if (group.Admins.All(e => e.Id != requestingUser.Id))
                 {
                     return ServiceResponse.FromError(CommonErrors.NotAnAdmin);
                 }
 
-                if (group.Admins.Any(e => e.Id == group.FirstAdminId))
+                if (group.Admins.Any(e => e.Id == group.FirstAdminId) && requestingUser.Id != group.FirstAdminId)
                 {
                     return ServiceResponse.FromError(CommonErrors.NotCreator);
                 }
-            }
         }
 
         if (group.isPublic)

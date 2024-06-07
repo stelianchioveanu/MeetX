@@ -11,7 +11,7 @@ getPaginationRowModel,
 getSortedRowModel,
 useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, Loader2, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -80,7 +80,14 @@ export const columns: ColumnDef<ContactFormDTO>[] = [
 	),
 },
 {
-	id: "actions",
+	accessorKey: "date",
+	header: "Date",
+	cell: ({ row }) => (
+	<div className="capitalize">{row.getValue("date")}</div>
+	),
+},
+{
+	id: "checked",
     header: "Checked",
 	cell: ({ row }) => {
 	const contact = row.original
@@ -98,8 +105,8 @@ export const columns: ColumnDef<ContactFormDTO>[] = [
 
 	return (
 		updateChecked.isPending ? 
-		<Loader2 className="w-6 h-6 animate-spin"/> :
-		<Checkbox checked={contact.isChecked} onClick={() => {updateChecked.mutate({requestBody: sendData})}}/>
+		<Loader2 className="w-6 h-6 animate-spin text-white"/> :
+		<Checkbox className="border-white data-[state=checked]:bg-white data-[state=checked]:text-black" checked={contact.isChecked} onClick={() => {updateChecked.mutate({requestBody: sendData})}}/>
 	)
 	},
 },
@@ -156,15 +163,16 @@ return (
 		onChange={(event) =>
 			table.getColumn("email")?.setFilterValue(event.target.value)
 		}
-		className="max-w-sm"
+		className="max-w-sm bg-white text-black font"
 		/>
 		<DropdownMenu>
 		<DropdownMenuTrigger asChild>
-			<Button variant="outline" className="ml-auto">
+			<Button variant="outline" className="ml-auto bg-neutral-100 text-neutral-900
+                    hover:bg-neutral-600 hover:text-neutral-100">
 			Columns <ChevronDown className="ml-2 h-4 w-4" />
 			</Button>
 		</DropdownMenuTrigger>
-		<DropdownMenuContent align="end">
+		<DropdownMenuContent align="end" className="bg-white">
 			{table
 			.getAllColumns()
 			.filter((column) => column.getCanHide())
@@ -172,7 +180,7 @@ return (
 				return (
 				<DropdownMenuCheckboxItem
 					key={column.id}
-					className="capitalize"
+					className="capitalize text-black font"
 					checked={column.getIsVisible()}
 					onCheckedChange={(value) =>
 					column.toggleVisibility(!!value)
@@ -185,14 +193,14 @@ return (
 		</DropdownMenuContent>
 		</DropdownMenu>
 	</div>
-	<div className="rounded-md border">
+	<div className="rounded-md border [&>div]:overflow-x-scroll [&>div]:no-scrollbar border-white">
 		<Table>
-		<TableHeader>
+		<TableHeader className="border-white">
 			{table.getHeaderGroups().map((headerGroup) => (
-			<TableRow key={headerGroup.id}>
+			<TableRow key={headerGroup.id} className="border-white">
 				{headerGroup.headers.map((header) => {
 				return (
-					<TableHead key={header.id}>
+					<TableHead key={header.id} className="text-[#dddddd] font">
 					{header.isPlaceholder
 						? null
 						: flexRender(
@@ -211,9 +219,10 @@ return (
 				<TableRow
 				key={row.id}
 				data-state={row.getIsSelected() && "selected"}
+				className="border-white"
 				>
 				{row.getVisibleCells().map((cell) => (
-					<TableCell key={cell.id}>
+					<TableCell key={cell.id} className="text-white font">
 					{flexRender(
 						cell.column.columnDef.cell,
 						cell.getContext()
@@ -242,6 +251,8 @@ return (
 			size="sm"
 			onClick={() => {table.previousPage()}}
 			disabled={!table.getCanPreviousPage()}
+			className="bg-neutral-100 text-neutral-900
+                    hover:bg-neutral-600 hover:text-neutral-100"
 		>
 			Previous
 		</Button>
@@ -250,6 +261,8 @@ return (
 			size="sm"
 			onClick={() => {table.nextPage()}}
 			disabled={!table.getCanNextPage()}
+			className="bg-neutral-100 text-neutral-900
+                    hover:bg-neutral-600 hover:text-neutral-100"
 		>
 			Next
 		</Button>

@@ -32,19 +32,19 @@ const FileCard = (props: {file: File; type: "image" | "file", id: number, setIma
 
     return ( 
         <Card className="w-[140px] min-w-[140px] aspect-square flex flex-col
-        justify-between items-center p-4 bg-[#424b60] border-0 relative">
+        justify-between items-center p-4 bg-[rgb(185,191,205)] dark:bg-[#424b60] border-0 relative">
             <X className="absolute right-[2px] top-[2px] w-5 h-5
-            text-white hover:text-red-400 hover:cursor-pointer" onClick={() => deleteItem(props.id)}/>
+            text-white hover:text-red-400 hover:cursor-pointer transition-all" onClick={() => deleteItem(props.id)}/>
             <CardContent className="w-[85%] aspect-square p-0">
                 {
                     props.type === "image" ?
                     <img src={imageUrl} className="w-full
                     aspect-square object-contain"></img> :
-                    <File className="w-full h-full"/>
+                    <File className="w-full h-full text-white"/>
                 }
             </CardContent>
             <CardFooter className="p-0 w-full overflow-hidden h-7">
-                <p className="w-full text-sm truncate">{props.file.name}</p>
+                <p className="w-full text-sm truncate text-white">{props.file.name}</p>
             </CardFooter>
         </Card>
     );

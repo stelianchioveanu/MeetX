@@ -12,27 +12,26 @@ import { fetchQuery } from "@/App";
 import { GroupMemberDTO } from "openapi/requests/types.gen";
 
 const GroupUsers = () => {
-    const [page, setPage] = useState(1);
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
 
     const { data, isFetching } = useQuery({
         queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey],
         queryFn: () => {
-            return fetchQuery(GroupService.getApiGroupGetGroupMembers({page: page, groupId: selectedGroupId ? selectedGroupId : undefined}), dispatch);
+            return fetchQuery(GroupService.getApiGroupGetGroupMembers({page: 1, pageSize: 1000000, groupId: selectedGroupId ? selectedGroupId : undefined}), dispatch);
         },
         retry: false
     });
 
     return (
-    <div className="max-w-full float-right h-full flex justify-center bg-[#171b25] p-3">
-        <ScrollArea className="max-h-full bg-[#171b25] flex flex-col items-center py-6 px-2">
+    <div className="max-w-full float-right h-full flex justify-center bg-[rgb(119,125,141)] dark:bg-[#171b25] p-3">
+        <ScrollArea className="max-h-full flex flex-col items-center py-6 px-2">
             <ScrollBar className="flex"/>
             {
                 isFetching ?
                 <Skeleton className="w-52 h-16"/> :
                 <>
-                    <p className="w-52 min-h-12 flex items-center my-2">
+                    <p className="w-52 min-h-12 flex items-center my-2 text-white">
                         #Members
                     </p>
                     {
@@ -42,8 +41,8 @@ const GroupUsers = () => {
                                 <PopoverUser userId={user.user?.id} side="left" key={index} isGroup={true}>
                                     <UserButton variant={"ghost"}
                                     className="w-52 h-12 hover:bg-neutral-600 gap-2 flex justify-start group mt-1">
-                                        <UserAvatar user={user.user} className="w-10 h-10 text-xs" status="hidden"/>
-                                        <p className="w-[calc(100%-40px)] truncate text-left">
+                                        <UserAvatar user={user.user} className="w-10 min-w-10 h-10 text-xs" status="hidden"/>
+                                        <p className="w-[calc(100%-40px)] truncate text-left text-white">
                                             {user.user?.name}
                                         </p>
                                     </UserButton>

@@ -89,7 +89,7 @@ const AddGroup = () => {
             <DialogTrigger asChild>
                 <button className="group flex items-center relative">
                     <div className="group flex h-11 w-11 rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden">
-                        <div className={`h-full w-full grid place-content-center text-white bg-[rgb(39,45,61)] group-hover:bg-lime-600 transition-all`}>
+                        <div className={`h-full w-full grid place-content-center text-white bg-[rgb(79,85,101)] dark:bg-[rgb(39,45,61)] group-hover:bg-lime-600 transition-all`}>
                             <Plus className="text-lime-600 group-hover:text-[rgb(39,45,61)] w-full h-full transition-all"/>
                         </div>
                     </div>

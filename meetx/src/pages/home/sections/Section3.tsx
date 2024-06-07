@@ -26,10 +26,10 @@ function Section3() {
                 </div>
                 <div className='flex h-fit justify-center items-center
                 flex-col gap-10'>
-                    <Feature image={img} title={"Video Call"}
-                    description={"Connect visually with your peers using our platform's integrated video calls."} type={true}/>
-                    <Feature image={img} title={"Mobile Friendly"}
-                    description={"Stay connected on the go with mobile-friendly chat interface."} type={false}/>
+                    <Feature image={img} title={"Group Creation"}
+                    description={"Effortlessly create groups tailored to your needs and interests."} type={true}/>
+                    <Feature image={img} title={"Topic Posting"}
+                    description={"Initiate discussions by posting topics relevant to your group's interests."} type={false}/>
                 </div>
             </div>
         </div>

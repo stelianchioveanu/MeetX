@@ -59,7 +59,7 @@ const LeaveGroupDialog = () => {
           <AlertDialogTrigger asChild>
             <Button className="w-3/4
             bg-blue-950 text-white
-            hover:bg-blue-700 hover:text-neutral-100 mb-4">
+            hover:bg-blue-700 hover:text-neutral-100">
                 Leave Group
             </Button>
           </AlertDialogTrigger>
@@ -67,8 +67,7 @@ const LeaveGroupDialog = () => {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+              Leaving the group will revoke your access and you won't be able to access the group's data.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

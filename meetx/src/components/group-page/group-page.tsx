@@ -64,8 +64,8 @@ const GroupPage = () => {
             !isFetchedAfterMount ?
             null :
             <div className="flex flex-col gap-2">
-                <p className="text-xl font-bolt">Search Topic</p>
-                <Input className="bg-transparent" value={search} onChange={handleChange} onKeyDown={handleKeyPress} placeholder="Search topic"/>
+                <p className="text-xl font-bolt text-white">Search Topic</p>
+                <Input className="bg-transparent placeholder:text-white text-white border-white" value={search} onChange={handleChange} onKeyDown={handleKeyPress} placeholder="Search topic"/>
             </div>
         }
         <ScrollArea className="w-full h-full">
@@ -76,11 +76,11 @@ const GroupPage = () => {
                 <>
                 <div className="h-0" ref={chatRef}></div>
                 { searched !== "" ?
-                    <p className="mb-2">Results for "{searched}"</p> : 
+                    <p className="mb-2 text-white">Results for "{searched}"</p> : 
                     (
                         data?.response?.data?.length === 0 ?
-                        <p className="mb-2">No topics found</p> :
-                        <p className="mb-2">All Topics</p>
+                        <p className="mb-2 text-white">No topics found</p> :
+                        <p className="mb-2 text-white">All Topics</p>
                     )
                 }
                 {
@@ -95,7 +95,7 @@ const GroupPage = () => {
                     (
                         isRefetching ?
                         <div className="w-full h-fit flex items-center justify-center">
-                            <Loader2 className="h-8 w-8 animate-spin"/>
+                            <Loader2 className="h-8 w-8 animate-spin text-white"/>
                         </div> :
                         <Button variant={"link"} className="w-full text-blue-700" onClick={() => setPage(page + 1)}>Load more...</Button>
                     ) : null

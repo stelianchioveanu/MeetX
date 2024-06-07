@@ -81,7 +81,7 @@ const Login = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input placeholder="Email" className="font" {...field}/>
+                                <Input placeholder="Email" className="font bg-white text-black" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -93,14 +93,14 @@ const Login = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input placeholder="Password" type="password" className="font" {...field} />
+                                <Input placeholder="Password" type="password" className="font bg-white text-black" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                     />
-                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
-                        {isPending ? <Loader2 className="animate-spin"></Loader2> :
+                    <Button type="submit" className="bg-purple-700 hover:bg-purple-600 text-white font">
+                        {isPending ? <Loader2 className="animate-spin text-white"></Loader2> :
                         "Login"}
                     </Button>
                     <Link to="/requestResetPassword" className="text-white hover:text-purple-800 hover:cursor-pointer font text-xs -mt-3 w-fit justify-self-end">Forgot password?</Link>
@@ -112,8 +112,8 @@ const Login = () => {
                 <div className="w-full h-px bg-neutral-400 mt-1"></div>
             </div>
             <a className="w-full h-fit" href="http://localhost:5000/signin-linkedin-link">
-                <Button className="font w-full gap-3 bg-[#0a66c2]">
-                    <Linkedin className="h-5"></Linkedin>
+                <Button className="font w-full gap-3 bg-[#0a5dc2] hover:bg-[rgb(30,112,214)] text-white">
+                    <Linkedin className="h-5 text-white"></Linkedin>
                     Continue with LinkedIn
                 </Button>
             </a>

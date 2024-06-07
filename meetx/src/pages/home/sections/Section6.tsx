@@ -128,8 +128,8 @@ const Section6 = () => {
                         </FormItem>
                     )}
                     />
-					<Button type="submit" disabled={clicked ? true : false} className={success ? "col-span-2 px-3 bg-green-500 hover:bg-green-500" : "col-span-2 px-3"}>
-                            {isPending ? <Loader2 className="animate-spin h-4 w-4"></Loader2> :
+					          <Button type="submit" disabled={clicked ? true : false} className={success ? "col-span-2 px-3 bg-green-500 hover:bg-green-500" : "col-span-2 px-3 bg-white hover:bg-[#ffffffaa] text-black"}>
+                            {isPending ? <Loader2 className="animate-spin h-4 w-4 text-black"></Loader2> :
                             success ? <Check className="h-4 w-4"/> :
                             "Submit"}
                     </Button>

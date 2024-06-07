@@ -150,10 +150,9 @@ const AddTopic = () => {
         <Dialog onOpenChange={() => {setClicked(false); setSuccess(false); form.reset(); setImages([]), setFiles([])}}>
             <DialogTrigger asChild>
                 <Button className="w-3/4
-                    dark:bg-neutral-900 dark:text-white
                     bg-neutral-100 text-neutral-900
-                    dark:hover:bg-neutral-100 dark:hover:text-neutral-900
-                    hover:bg-neutral-900 hover:text-white">
+                    hover:bg-neutral-600 hover:text-neutral-100
+                    ">
                     Add Topic
                 </Button>
             </DialogTrigger>

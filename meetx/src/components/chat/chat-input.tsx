@@ -1,5 +1,5 @@
 import { PlusCircle, SmileIcon, X } from "lucide-react";
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FocusEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import data from '@emoji-mart/data'
 import Picker  from '@emoji-mart/react'
 import FilesUpload from "./files-upload";
@@ -13,13 +13,14 @@ import { toast } from "react-toastify";
 import { RequestResponse } from "../../../openapi/requests/types.gen";
 import { setGroup, setTopic } from "@/application/state-slices";
 import { ApiError } from "../../../openapi/requests/core/ApiError";
+import { useTheme } from "../themes/theme-provider";
 
 const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState<string>("");
     const [images, setImages] = useState<File[]>([]);
     const [files, setFiles] = useState<File[]>([]);
-    const [emojiOpened, setEmojiOpened] = useState(false);
-    const [uploaderOpened, setUploaderOpened] = useState(false);
+    const [emojiOpened, setEmojiOpened] = useState<boolean>(false);
+    const [uploaderOpened, setUploaderOpened] = useState<boolean>(false);
     const ref = useDetectClickOutside({ onTriggered: () => setUploaderOpened(false) });
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const { selectedTopicId } = useAppSelector(x => x.selectedReducer);
@@ -29,6 +30,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     const filesRef = useRef<HTMLInputElement>(null);
     const isSubmitting = useRef(false);
     const dispatch = useAppDispatch();
+    const { theme } = useTheme();
 
     useEffect(() => {
         setInput("");
@@ -177,7 +179,7 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
     };
 
     return (
-    <form className="max-h-full float-end bg-[#68738f] rounded-md flex flex-col
+    <form className="max-h-full float-end bg-[rgb(118,125,144)] dark:bg-[#68738f] rounded-md flex flex-col
     items-center px-3 gap-2 relative w-full justify-between" onSubmit={handleSubmit}>
         { images.length !==0 || files.length !== 0 ?
             <ScrollArea className="w-full h-fit">
@@ -205,12 +207,12 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
         <div className="flex items-center gap-2 relative w-full">
             {
                 uploaderOpened !== true ?
-                <PlusCircle fill="#68738f" className="w-7 h-7 text-[#d8ddeb]" onClick={openUploader}/> :
+                <PlusCircle fill="#00000000" className="w-7 h-7 text-[#d8ddeb] hover:cursor-pointer hover:text-[#ffffff90] transition-all" onClick={openUploader}/> :
                 <>
-                    <X className="w-7 h-7 text-[#d8ddeb]" onClick={closeUploader}/>
+                    <X className="w-7 h-7 text-[#d8ddeb] hover:cursor-pointer hover:text-[#ffffff90] transition-all" onClick={closeUploader}/>
                     <FilesUpload imagesRef={imagesRef} filesRef={filesRef} innerRef={ref}
                     className="h-fit w-[200px] absolute
-                    bg-[#151617] bottom-12 left-0 rounded-md flex items-center flex-col py-3 gap-2"
+                    dark:bg-[#151617] bg-[rgb(255,255,255)] bottom-12 left-0 rounded-md flex items-center flex-col py-3 gap-2"
                     classNameButtons="justify-start"/>
                 </>
             }
@@ -226,13 +228,13 @@ const ChatInput = (props: {isGroup: boolean, userId?: string}) => {
             ref={filesRef} onChange={(event) => fileHandleChange(event, false)}/>
             {
                 emojiOpened !== true ?
-                <SmileIcon id="slime" className="w-7 h-7 text-[#d8ddeb]"
+                <SmileIcon id="slime" className="w-7 h-7 text-[#d8ddeb] hover:cursor-pointer hover:text-[#ffffff90] transition-all"
                 onClick={openPicker}/>:
                 <>
-                    <X className="w-7 h-7 text-[#d8ddeb]"
+                    <X className="w-7 h-7 text-[#d8ddeb] hover:cursor-pointer hover:text-[#ffffff90] transition-all"
                     onClick={closePicker}/>
                     <div className="absolute right-0 bottom-12">
-                        <Picker data={data} onEmojiSelect={onEmojiClick}
+                        <Picker theme={theme} data={data} onEmojiSelect={onEmojiClick}
                         onClickOutside={closePicker}/>
                     </div>
                 </>

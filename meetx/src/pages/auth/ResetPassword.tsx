@@ -63,7 +63,7 @@ const ResetPassword = () => {
     <div className="w-full h-full bg flex justify-center items-center bg-auth">
         <div className="h-fit backdrop-blur-3xl auth-form-bg rounded-2xl box-border px-10 py-12 flex justify-center items-center flex-col gap-10 w-96 shadow-xl shadow-neutral-900">
             <div className="text-white text-4xl font-semibold font text-center">{isSuccess ? "Email sent" : "Reset Password"}</div>
-            <div className="text-white text-base text-center -my-4 font">{isSuccess ? <>A link to reset your password has been sent to you on <span className=" text-purple-400">{form.getValues("email")}</span></> : "Enter your email and we'll send you an link to reset your password."}</div>
+            <div className="text-white text-base text-center -my-4 font">{isSuccess ? <>A link to reset your password has been sent to you on <span className=" text-purple-400">{form.getValues("email")}</span></> : "Enter your email and we'll send you a link to reset your password."}</div>
             {!isSuccess ? <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 gap-6 w-full">
                     <FormField
@@ -72,14 +72,14 @@ const ResetPassword = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-1">
                             <FormControl>
-                                <Input placeholder="Email" className="font" {...field}/>
+                                <Input placeholder="Email" className="font bg-white text-black" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
                     )}
                     />
-                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800 font">
-                        {isPending ? <Loader2 className="animate-spin"></Loader2> :
+                    <Button type="submit" className="bg-purple-700 hover:bg-purple-600 text-white font">
+                        {isPending ? <Loader2 className="animate-spin text-white"></Loader2> :
                         "Submit"}
                     </Button>
                 </form>
