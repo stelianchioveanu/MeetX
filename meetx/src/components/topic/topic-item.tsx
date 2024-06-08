@@ -15,7 +15,7 @@ const TopicItem = (props: {topic?: TopicDTO, isFetching: boolean}) => {
 
     return (
     <div className="absolute top-0 left-0 bg-[rgb(189,195,211)] dark:bg-[#68738f]
-    h-[40%] w-full z-[50] shadow-lg p-4">
+    h-[40%] w-full z-[48] shadow-lg p-4">
         <ScrollArea className="w-full h-full">
             <ScrollBar orientation="vertical" className="flex"></ScrollBar>
             {

@@ -24,7 +24,7 @@ const GroupUsers = () => {
     });
 
     return (
-    <div className="max-w-full float-right h-full flex justify-center bg-[rgb(119,125,141)] dark:bg-[#171b25] p-3 absolute right-0 top-0 shadow-lg z-[51]">
+    <div className="max-w-full float-right h-full flex justify-center bg-[rgb(119,125,141)] dark:bg-[#171b25] p-3 absolute right-0 top-0 shadow-lg z-[49]">
         <ScrollArea className="max-h-full flex flex-col items-center py-6 px-2">
             <ScrollBar className="flex"/>
             {
