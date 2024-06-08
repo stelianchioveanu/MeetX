@@ -36,6 +36,9 @@ export const fetchQuery = async (call: Promise<any>, dispatch: any) => {
             useQueryClient().invalidateQueries({queryKey: [useUserServiceGetApiUserGetMeKey]});
             return error;
         }
+        if (body?.errorMessage?.code === "UserNotFound") {
+            window.location.replace("/login");
+        }
         return error;
     }
 };

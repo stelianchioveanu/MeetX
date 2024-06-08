@@ -125,8 +125,11 @@ const AddTopic = () => {
                 dispatch(setTopic("0"));
                 return;
             }
-
-            form.setError('title', { type: 'custom', message: body.errorMessage?.message || error.message });
+            if (body.errorMessage?.code === "WrongTitle") {
+                form.setError('title', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else {
+                form.setError('description', { type: 'custom', message: body.errorMessage?.message || error.message });
+            }
         },
         onSuccess: () => {
             setClicked(true);

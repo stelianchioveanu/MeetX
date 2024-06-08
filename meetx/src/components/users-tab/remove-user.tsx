@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "@/application/store";
 import { ApiError } from "../../../openapi/requests/core/ApiError";
 import { setGroup, setTopic } from "@/application/state-slices";
 
-const RemoveUser = (props: {userId?: string}) => {
+const RemoveUser = (props: {userId?: string, setOpened: any}) => {
     const queryClient = useQueryClient();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
 	const dispatch = useAppDispatch();
@@ -26,6 +26,7 @@ const RemoveUser = (props: {userId?: string}) => {
     const { mutate } = useGroupServicePutApiGroupRemoveMember({
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey]});
+            props.setOpened(false);
         },
 		onError: (error: ApiError) => {
 			const body: RequestResponse = error.body as RequestResponse;

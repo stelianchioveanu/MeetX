@@ -56,10 +56,14 @@ const Section6 = () => {
 	  const { mutate, isPending } = useContactFormServicePostApiContactFormAddContactForm({
         onError: (error : ApiError) => {
             const body: RequestResponse = error.body as RequestResponse;
-
-			setClicked(false);
-
-            form.setError('name', { type: 'custom', message: body?.errorMessage?.message || error.message });
+            setClicked(false);
+            if (body.errorMessage?.code === "WrongName") {
+                form.setError('name', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else if (body.errorMessage?.code === "WrongEmail") {
+                form.setError('email', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else {
+                form.setError('message', { type: 'custom', message: body.errorMessage?.message || error.message });
+            }
         },
         onSuccess: () => {
 			setClicked(true);

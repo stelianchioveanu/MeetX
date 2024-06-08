@@ -30,7 +30,7 @@ const loginFormSchema = z.object({
         .refine((value) => !/^\s.*/.test(value ?? ""), 'The name should not begin with a space!'),
     password: z
         .string()
-        .refine((value) => !/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(value ?? "") || value === "", 'Password is not valid!'),
+        .refine((value) => !/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(value ?? "") || value === "", 'Password must include at least 8 characters, a lowercase letter, an uppercase letter, a number, and a special character!'),
     confPassword: z
         .string(),
     email: z.string()

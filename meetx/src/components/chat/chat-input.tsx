@@ -1,5 +1,5 @@
 import { PlusCircle, SmileIcon, X } from "lucide-react";
-import { ChangeEvent, FocusEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import data from '@emoji-mart/data'
 import Picker  from '@emoji-mart/react'
 import FilesUpload from "./files-upload";

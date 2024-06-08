@@ -1,6 +1,8 @@
 import Feature from "@/components/features/feature";
-import img from "../sections/img/image8.jpg"
-import chat from"../sections/img/chat.png"
+import chat from "../sections/img/chat.png"
+import group from "../sections/img/add-group.png"
+import topic from "../sections/img/add-topic.png"
+import file from "../sections/img/file.png"
 
 function Section3() {
     return (
@@ -22,14 +24,14 @@ function Section3() {
                 flex-col gap-10'>
                     <Feature image={chat} title={"Live Chat"}
                     description={"Instantly connect, communicate, and solve problems together in real-time."} type={true}/>
-                    <Feature image={img} title={"File Sharing"}
+                    <Feature image={file} title={"File Sharing"}
                     description={"Seamlessly share documents, images, and other files within the chat interface."} type={false}/>
                 </div>
                 <div className='flex h-fit justify-center items-center
                 flex-col gap-10'>
-                    <Feature image={img} title={"Group Creation"}
+                    <Feature image={group} title={"Group Creation"}
                     description={"Effortlessly create groups tailored to your needs and interests."} type={true}/>
-                    <Feature image={img} title={"Topic Posting"}
+                    <Feature image={topic} title={"Topic Posting"}
                     description={"Initiate discussions by posting topics relevant to your group's interests."} type={false}/>
                 </div>
             </div>

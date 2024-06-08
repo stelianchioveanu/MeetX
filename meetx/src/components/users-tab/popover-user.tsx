@@ -70,7 +70,7 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
     };
 
     return ( 
-        <Popover onOpenChange={(open) => setOpened(open)}>
+        <Popover open={opened} onOpenChange={(open) => setOpened(open)}>
             <PopoverTrigger asChild>
                 {props.children}
             </PopoverTrigger>
@@ -116,9 +116,9 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
                 <div className="flex px-3 gap-2">
                     {
                         isPublic ? null :
-                        <ChangeRole userId={member.data?.response?.user?.id} isAdmin={member.data?.response?.isAdmin}/>
+                        <ChangeRole setOpened={setOpened} userId={member.data?.response?.user?.id} isAdmin={member.data?.response?.isAdmin}/>
                     }
-                    <RemoveUser userId={member.data?.response?.user?.id}/>
+                    <RemoveUser setOpened={setOpened} userId={member.data?.response?.user?.id}/>
                 </div> : null }
                 {(props.isGroup ? member.data?.response?.user?.id !== userId : user.data?.response?.id !== userId) ?
                     <div className="p-3">

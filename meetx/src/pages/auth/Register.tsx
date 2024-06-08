@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input"
 import { Linkedin, Loader2 } from "lucide-react"
 import { Link, useSearchParams } from "react-router-dom"
 import { useAuthorizationServicePostApiAuthorizationRegister } from "../../../openapi/queries/queries"
-import { RegisterDTO } from "../../../openapi/requests/types.gen"
+import { RegisterDTO, RequestResponse } from "../../../openapi/requests/types.gen"
 import { SelectIndustry } from "@/components/select-register/select-industry"
 import { useEffect, useState } from "react"
 import { NIL } from "uuid"
 import Connector from '../../signalRConnection/signalr-connection';
+import { ApiError } from "../../../openapi/requests/core/ApiError"
 
 const registerFormSchema = z.object({
     email: z
@@ -31,7 +32,7 @@ const registerFormSchema = z.object({
     password: z
         .string()
         .min(1, { message: "This field has to be filled." })
-        .refine((value) => !/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(value ?? ""), 'Password is not valid!'),
+        .refine((value) => !/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(value ?? ""), 'Password must include at least 8 characters, a lowercase letter, an uppercase letter, a number, and a special character!'),
     confirm: z
         .string()
         .min(1, { message: "This field has to be filled." }),
@@ -68,8 +69,19 @@ const Register = () => {
     }
 
     const { mutate, isPending, isSuccess } = useAuthorizationServicePostApiAuthorizationRegister({
-        onError: (error : any) => {
-            form.setError(error.body?.errorMessage?.code === 'UserAlreadyExists' ? 'email' : 'industry', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
+        onError: (error : ApiError) => {
+            const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "WrongName") {
+                form.setError('name', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else if (body.errorMessage?.code === "WrongEmail" || body.errorMessage?.code == "UserAlreadyExists") {
+                form.setError('email', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else if (body.errorMessage?.code === "WrongIndustry") {
+                form.setError('industry', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else if (body.errorMessage?.code === "WrongPassword") {
+                form.setError('password', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else {
+                form.setError('confirm', { type: 'custom', message: body.errorMessage?.message || error.message });
+            }
         },
         onSuccess: (response : any) => {
             console.log(response);

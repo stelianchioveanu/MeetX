@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link, useSearchParams } from "react-router-dom"
-import { ResetPasswordDTO } from "../../../openapi/requests/types.gen"
+import { RequestResponse, ResetPasswordDTO } from "../../../openapi/requests/types.gen"
 import { useAuthorizationServicePostApiAuthorizationResetPassword } from "../../../openapi/queries/queries"
 import { Loader2 } from "lucide-react"
 import Connector from '../../signalRConnection/signalr-connection';
 import { useEffect } from "react"
+import { ApiError } from "../../../openapi/requests/core/ApiError"
 
 const loginFormSchema = z.object({
     password: z
@@ -48,8 +49,13 @@ const Reset = () => {
       })
 
     const { mutate, isPending, isSuccess } = useAuthorizationServicePostApiAuthorizationResetPassword({
-        onError: (error : any) => {
-            form.setError('confirm', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
+        onError: (error : ApiError) => {
+            const body: RequestResponse = error.body as RequestResponse;
+            if (body.errorMessage?.code === "WrongPassword") {
+                form.setError('password', { type: 'custom', message: body.errorMessage?.message || error.message });
+            } else {
+                form.setError('confirm', { type: 'custom', message: body.errorMessage?.message || error.message });
+            }
         },
         onSuccess: (response : any) => {
             console.log(response);

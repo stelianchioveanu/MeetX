@@ -18,14 +18,15 @@ import { useAppDispatch, useAppSelector } from "@/application/store";
 import { ApiError } from "openapi/requests/core/ApiError";
 import { setGroup, setTopic } from "@/application/state-slices";
 
-const ChangeRole = (props: {userId?: string, isAdmin?: boolean}) => {
+const ChangeRole = (props: {userId?: string, isAdmin?: boolean, setOpened: any}) => {
     const queryClient = useQueryClient();
     const { selectedGroupId } = useAppSelector(x => x.selectedReducer);
     const dispatch = useAppDispatch();
     
     const { mutate } = useGroupServicePutApiGroupChangeRole({
-      onSuccess: () => {
+        onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupMembersKey]});
+            props.setOpened(false);
         },
         onError: (error: ApiError) => {
           const body: RequestResponse = error.body as RequestResponse;

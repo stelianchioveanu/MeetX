@@ -52,7 +52,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
 
     useEffect(() => {
         queryClient.invalidateQueries({queryKey: [useTopicServiceGetApiTopicGetRecentTopicsKey]});
-    }, [topic.data])
+    }, [topic.dataUpdatedAt])
 
     return (
         <div className="w-[calc(100%-304px)] h-full flex flex-col">

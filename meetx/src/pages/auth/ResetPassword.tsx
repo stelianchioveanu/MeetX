@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
-import { RequestResetDTO } from "../../../openapi/requests/types.gen"
+import { RequestResetDTO, RequestResponse } from "../../../openapi/requests/types.gen"
 import { useAuthorizationServicePostApiAuthorizationRequestReset } from "../../../openapi/queries/queries"
 import { Loader2 } from "lucide-react"
 import Connector from '../../signalRConnection/signalr-connection';
 import { useEffect } from "react"
+import { ApiError } from "../../../openapi/requests/core/ApiError"
 
 const loginFormSchema = z.object({
     email: z
@@ -40,8 +41,9 @@ const ResetPassword = () => {
       })
 
     const { mutate, isPending, isSuccess } = useAuthorizationServicePostApiAuthorizationRequestReset({
-        onError: (error : any) => {
-            form.setError('email', { type: 'custom', message: error.body?.errorMessage?.message || error.message });
+        onError: (error : ApiError) => {
+            const body: RequestResponse = error.body as RequestResponse;
+            form.setError('email', { type: 'custom', message: body.errorMessage?.message || error.message });
         },
         onSuccess: (response : any) => {
             console.log(response);
