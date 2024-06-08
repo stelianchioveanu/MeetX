@@ -59,7 +59,7 @@ const ChatFrame = (props:{isGroup: boolean}) => {
             <ChatTopBar topic={topic.data?.response} conv={conv.data?.response} setUsersOpened={setUsersOpened}
             usersOpened={usersOpened} topicOpened={topicOpened} setTopicOpened={setTopicOpened}
             isGroup={props.isGroup} isFetching={props.isGroup ? topic.isFetching : conv.isFetching} />
-            <div className="flex w-full h-[calc(100%-48px)]">
+            <div className="flex w-full h-[calc(100%-48px)] relative">
                 <div className="flex grow p-4 flex-col gap-8 relative justify-end overflow-hidden">
                     {
                         topicOpened && props.isGroup ?

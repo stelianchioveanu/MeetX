@@ -1,5 +1,6 @@
 import Feature from "@/components/features/feature";
 import img from "../sections/img/image8.jpg"
+import chat from"../sections/img/chat.png"
 
 function Section3() {
     return (
@@ -19,7 +20,7 @@ function Section3() {
             <div className='flex w-full justify-center items-center h-fit flex-wrap gap-y-10'>
                 <div className='flex h-fit justify-center items-center
                 flex-col gap-10'>
-                    <Feature image={img} title={"Live Chat"}
+                    <Feature image={chat} title={"Live Chat"}
                     description={"Instantly connect, communicate, and solve problems together in real-time."} type={true}/>
                     <Feature image={img} title={"File Sharing"}
                     description={"Seamlessly share documents, images, and other files within the chat interface."} type={false}/>

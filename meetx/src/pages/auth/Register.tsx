@@ -99,7 +99,7 @@ const Register = () => {
     
     return (
     <div className="w-full h-fit min-h-full bg flex justify-center items-center bg-auth py-10">
-        <div className="h-fit backdrop-blur-3xl auth-form-bg rounded-2xl box-border px-10 py-12 flex justify-center items-center flex-col gap-10 w-96 shadow-xl shadow-neutral-900">
+        <div className="h-fit backdrop-blur-3xl auth-form-bg rounded-2xl box-border px-10 py-10 flex justify-center items-center flex-col gap-6 w-96 shadow-xl shadow-neutral-900">
             <div className="text-white text-4xl font-semibold text-center">{isSuccess ? "Success" : "Register"}</div>
             {!isSuccess ?
             <>
