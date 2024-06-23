@@ -704,6 +704,10 @@ export const $RegisterDTO = {
         groupId: {
             type: 'string',
             format: 'uuid'
+        },
+        position: {
+            type: 'string',
+            nullable: true
         }
     },
     additionalProperties: false
@@ -909,6 +913,10 @@ export const $UserDTO = {
         },
         status: {
             type: 'boolean'
+        },
+        position: {
+            type: 'string',
+            nullable: true
         }
     },
     additionalProperties: false

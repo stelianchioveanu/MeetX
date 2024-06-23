@@ -234,6 +234,7 @@ export type RegisterDTO = {
     email?: string | null;
     password?: string | null;
     groupId?: string;
+    position?: string | null;
 };
 
 export type RemoveMemberDTO = {
@@ -298,6 +299,7 @@ export type UserDTO = {
     color?: string | null;
     avatarPath?: string | null;
     status?: boolean;
+    position?: string | null;
 };
 
 export type UserDTOPagedResponse = {

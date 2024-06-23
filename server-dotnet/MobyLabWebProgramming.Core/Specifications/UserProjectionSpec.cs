@@ -27,6 +27,7 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Status = e.Status,
         Color = e.Color,
         AvatarPath = e.AvatarPath,
+        Position = e.Position,
     };
 
     public UserProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

@@ -1,4 +1,4 @@
-// generated with @7nohe/openapi-react-query-codegen@1.4.0 
+// generated with @7nohe/openapi-react-query-codegen@1.4.1 
 
 import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ContactFormService, GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";

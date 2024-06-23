@@ -16,6 +16,7 @@
     <PackageReference Include="AspNet.Security.OAuth.LinkedIn" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.6" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+    <PackageReference Include="Python.Runtime" Version="2.7.9" />
     <PackageReference Include="RestSharp" Version="111.2.0" />
   </ItemGroup>
 </Project>

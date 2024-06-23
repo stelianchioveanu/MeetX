@@ -103,6 +103,7 @@ public class UserService : IUserService
             Color = result.Color,
             AvatarPath = result.AvatarPath,
             Status = result.Status,
+            Position = result.Position,
         };
 
         var entity = await _repository.GetAsync(new RefreshTokenSpec(user.Id), cancellationToken);
@@ -495,6 +496,7 @@ public class UserService : IUserService
                                 Color = user.Color,
                                 Status = user.Status,
                                 AvatarPath = user.AvatarPath,
+                                Position = user.Position,
                             };
 
                             entity.Token = _loginService.GetToken(userDTO, DateTime.UtcNow, new(7, 0, 0, 0), TokenTypeEnum.Refresh);

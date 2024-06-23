@@ -17,4 +17,5 @@ public class UserDTO
     public string Color { get; set; } = default!;
     public string AvatarPath { get; set; } = default!;
     public bool Status { get; set; } = default!;
+    public string Position { get; set; } = default!;
 }

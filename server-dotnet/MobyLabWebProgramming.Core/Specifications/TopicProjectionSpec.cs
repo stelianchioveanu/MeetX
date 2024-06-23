@@ -29,6 +29,7 @@ public sealed class TopicProjectionSpec : BaseSpec<TopicProjectionSpec, Topic, T
                 ShortName = e.User.ShortName,
                 AvatarPath = e.User.AvatarPath,
                 Color = e.User.Color,
+                Position = e.User.Position,
             },
             isAdmin = e.Group.Admins.Any(x => x.Id == e.User.Id),
             isMember = e.Group.Users.Any(x => x.Id == e.User.Id)

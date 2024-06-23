@@ -101,6 +101,11 @@ const PopoverUser = (props: {children: ReactNode, userId?: string, side: any, is
                         user.data?.response?.name}
                     </p>
 
+                    <p className="text-[rgba(106,201,191,0.82)] dark:text-[#24837ab8] text-lg font-medium truncate">
+                        {props.isGroup ? member.data?.response?.user?.position :
+                        user.data?.response?.position}
+                    </p>
+
                     <p className="text-sm truncate text-white">
                         {props.isGroup ? member.data?.response?.user?.email :
                         user.data?.response?.email}

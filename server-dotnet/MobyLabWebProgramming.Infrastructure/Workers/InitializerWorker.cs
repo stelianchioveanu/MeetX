@@ -88,20 +88,25 @@ public class InitializerWorker : BackgroundService
                 await repositoryService.AddAsync(newTopic, cancellationToken);
             }
 
-            using var package = new ExcelPackage(new FileInfo("../MobyLabWebProgramming.Infrastructure/Workers/public-groups.xlsx"));
+            using var package1 = new ExcelPackage(new FileInfo("../MobyLabWebProgramming.Infrastructure/Workers/public-groups.xlsx"));
+            using var package2 = new ExcelPackage(new FileInfo("../MobyLabWebProgramming.Infrastructure/Workers/jobs.xlsx"));
 
-            var worksheet = package.Workbook.Worksheets[0];
+            var worksheet1 = package1.Workbook.Worksheets[0];
+            var worksheet2 = package2.Workbook.Worksheets[0];
 
-            int rowCount = worksheet.Dimension.Rows;
-            int colCount = worksheet.Dimension.Columns;
+            int rowCount1 = worksheet1.Dimension.Rows;
+            int colCount1 = worksheet1.Dimension.Columns;
+
+            int rowCount2 = worksheet2.Dimension.Rows;
+            int colCount2 = worksheet2.Dimension.Columns;
 
             List<string> groupsNames = new List<string>();
             List<string> groupsParents = new List<string>();
 
-            for (int row = 2; row <= rowCount; row++)
+            for (int row = 2; row <= rowCount1; row++)
             {
-                var column1Value = worksheet.Cells[row, 1].Text;
-                var column2Value = worksheet.Cells[row, 2].Text;
+                var column1Value = worksheet1.Cells[row, 1].Text;
+                var column2Value = worksheet1.Cells[row, 2].Text;
 
                 if (string.IsNullOrEmpty(column1Value) && string.IsNullOrEmpty(column2Value))
                 {
@@ -157,7 +162,52 @@ public class InitializerWorker : BackgroundService
                     }
                 }
             }
+
+            groupsNames = new List<string>();
+
+            for (int row = 1; row <= rowCount2; row++)
+            {
+                var column1Value = worksheet2.Cells[row, 1].Text;
+
+                if (string.IsNullOrEmpty(column1Value))
+                {
+                    break;
+                }
+
+                groupsNames.Add(column1Value);
+            }
+
+            for (int i = 0; i < groupsNames.Count; i++)
+            {
+                var newGroup = await repositoryService.GetAsync(new PublicGroupSpec(groupsNames[i].Trim(), true), cancellationToken);
+                if (newGroup == null)
+                {
+                    newGroup = new Core.Entities.Group()
+                    {
+                        Name = groupsNames[i].Trim(),
+                        FirstAdminId = user.Id,
+                        Admins = new List<User>(),
+                        Users = new List<User>(),
+                        ShortName = groupsNames[i].Trim().Split(' ').Length > 1 ? $"{groupsNames[i].Trim().Split(' ')[0][0]}{groupsNames[i].Trim().Split(' ')[1][0]}" : groupsNames[i].Trim().Substring(0, 2),
+                        Color = colors[random.Next(0, colors.Count)],
+                        isPublic = true,
+                    };
+                    newGroup.Admins.Add(user);
+                    newGroup = await repositoryService.AddAsync(newGroup, cancellationToken);
+
+                    var newTopic = new Topic
+                    {
+                        Title = "general",
+                        Description = "Hello everyone!",
+                        UserId = user.Id,
+                        GroupId = newGroup.Id,
+                    };
+
+                    await repositoryService.AddAsync(newTopic, cancellationToken);
+                }
+            }
             _logger.LogInformation("All public groups added!");
+            //var res = await JobRecommendation.RecommendJobs("App engineer");
         }
         catch (Exception ex)
         {

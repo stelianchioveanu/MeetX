@@ -34,6 +34,7 @@ public sealed class UserRecentTopicsProjectionSpec : BaseSpec<UserRecentTopicsPr
                 ShortName = e.User.ShortName,
                 AvatarPath = e.User.AvatarPath,
                 Color = e.User.Color,
+                Position = e.User.Position,
             },
             isAdmin = e.Topic.Group.Admins.Any(x => x.Id == e.User.Id),
             isMember = e.Topic.Group.Users.Any(x => x.Id == e.User.Id),

@@ -31,6 +31,7 @@ public sealed class MessageProjectionSpec : BaseSpec<MessageProjectionSpec, Mess
                 Status = e.User.Status,
                 Color = e.User.Color,
                 AvatarPath = e.User.AvatarPath,
+                Position = e.User.Position,
             },
             isAdmin = e.Topic != null && e.Topic.Group.Admins.Any(x => x.Id == e.User.Id),
             isMember = e.Topic != null && e.Topic.Group.Users.Any(x => x.Id == e.User.Id)

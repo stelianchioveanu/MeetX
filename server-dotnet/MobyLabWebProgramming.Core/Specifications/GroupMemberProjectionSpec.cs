@@ -22,6 +22,7 @@ public sealed class GroupMemberProjectionSpec : BaseSpec<GroupMemberProjectionSp
             ShortName = e.ShortName,
             AvatarPath = e.AvatarPath,
             Color = e.Color,
+            Position = e.Position,
         },
     };
 

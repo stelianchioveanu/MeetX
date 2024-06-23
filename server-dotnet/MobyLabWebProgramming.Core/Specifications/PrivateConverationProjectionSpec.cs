@@ -24,6 +24,7 @@ public sealed class PrivateConversationProjectionSpec : BaseSpec<PrivateConversa
             Status = e.User1.Status,
             Color = e.User1.Color,
             AvatarPath = e.User1.AvatarPath,
+            Position = e.User1.Position,
         },
         User2 = new UserDTO
         {
@@ -35,7 +36,8 @@ public sealed class PrivateConversationProjectionSpec : BaseSpec<PrivateConversa
             ShortName = e.User2.ShortName,
             Status = e.User2.Status,
             Color = e.User2.Color,
-            AvatarPath = e.User2.AvatarPath
+            AvatarPath = e.User2.AvatarPath,
+            Position= e.User2.Position,
         },
     };
 

@@ -29,6 +29,9 @@ const registerFormSchema = z.object({
     name: z
         .string()
         .min(1, { message: "This field has to be filled." }),
+    position: z
+        .string()
+        .min(1, { message: "This field has to be filled." }),
     password: z
         .string()
         .min(1, { message: "This field has to be filled." })
@@ -59,7 +62,8 @@ const Register = () => {
           password: "",
           name: "",
           confirm: "",
-          industry: ""
+          industry: "",
+          position: ""
         },
     })
 
@@ -88,13 +92,14 @@ const Register = () => {
         }
     });
 
-    const handleSubmit = (user : { email: string, password: string, name: string }) => {
-        const { email, name, password } = user;
+    const handleSubmit = (user : { email: string, password: string, name: string, position: string }) => {
+        const { email, name, password, position } = user;
         const registerData: RegisterDTO = {
             email,
             name,
             password,
-            groupId
+            groupId,
+            position
         };
         const dataToSend = {
             requestBody: registerData
@@ -148,6 +153,18 @@ const Register = () => {
                             <FormItem className="space-y-1">
                                 <FormControl>
                                     <SelectIndustry groupId={groupId} setGroupId={setGroup}/>
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                        />
+                        <FormField
+                        control={form.control}
+                        name="position"
+                        render={({ field }) => (
+                            <FormItem className="space-y-1">
+                                <FormControl>
+                                    <Input maxLength={255} placeholder="Position" className="font bg-white text-black" {...field}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>

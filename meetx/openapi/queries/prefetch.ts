@@ -1,4 +1,4 @@
-// generated with @7nohe/openapi-react-query-codegen@1.4.0 
+// generated with @7nohe/openapi-react-query-codegen@1.4.1 
 
 import { type QueryClient } from "@tanstack/react-query";
 import { ContactFormService, GroupService, LinkedInService, MessageService, PrivateConversationService, TopicService, UserService } from "../requests/services.gen";
@@ -15,7 +15,7 @@ export const prefetchUseContactFormServiceGetApiContactFormGetContactForms = (qu
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useContactFormServiceGetApiContactFormGetContactFormsKey, [{ page, pageSize, search }]], queryFn: () => ContactFormService.getApiContactFormGetContactForms({ page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseContactFormServiceGetApiContactFormGetContactFormsKeyFn({ page, pageSize, search }), queryFn: () => ContactFormService.getApiContactFormGetContactForms({ page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -28,7 +28,7 @@ export const prefetchUseGroupServiceGetApiGroupGetGroups = (queryClient: QueryCl
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupsKey, [{ page, pageSize, search }]], queryFn: () => GroupService.getApiGroupGetGroups({ page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupsKeyFn({ page, pageSize, search }), queryFn: () => GroupService.getApiGroupGetGroups({ page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -41,7 +41,7 @@ export const prefetchUseGroupServiceGetApiGroupGetPublicGroups = (queryClient: Q
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetPublicGroupsKey, [{ page, pageSize, search }]], queryFn: () => GroupService.getApiGroupGetPublicGroups({ page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetPublicGroupsKeyFn({ page, pageSize, search }), queryFn: () => GroupService.getApiGroupGetPublicGroups({ page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.id
@@ -50,7 +50,7 @@ export const prefetchUseGroupServiceGetApiGroupGetPublicGroups = (queryClient: Q
 */
 export const prefetchUseGroupServiceGetApiGroupGetInviteLink = (queryClient: QueryClient, { id }: {
   id?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetInviteLinkKey, [{ id }]], queryFn: () => GroupService.getApiGroupGetInviteLink({ id }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetInviteLinkKeyFn({ id }), queryFn: () => GroupService.getApiGroupGetInviteLink({ id }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -65,7 +65,7 @@ export const prefetchUseGroupServiceGetApiGroupGetGroupMembers = (queryClient: Q
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupMembersKey, [{ groupId, page, pageSize, search }]], queryFn: () => GroupService.getApiGroupGetGroupMembers({ groupId, page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupMembersKeyFn({ groupId, page, pageSize, search }), queryFn: () => GroupService.getApiGroupGetGroupMembers({ groupId, page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.groupId
@@ -74,7 +74,7 @@ export const prefetchUseGroupServiceGetApiGroupGetGroupMembers = (queryClient: Q
 */
 export const prefetchUseGroupServiceGetApiGroupGetGroup = (queryClient: QueryClient, { groupId }: {
   groupId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupKey, [{ groupId }]], queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupKeyFn({ groupId }), queryFn: () => GroupService.getApiGroupGetGroup({ groupId }) });
 /**
 * @param data The data for the request.
 * @param data.groupId
@@ -85,7 +85,7 @@ export const prefetchUseGroupServiceGetApiGroupGetGroup = (queryClient: QueryCli
 export const prefetchUseGroupServiceGetApiGroupGetMember = (queryClient: QueryClient, { groupId, userId }: {
   groupId?: string;
   userId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetMemberKey, [{ groupId, userId }]], queryFn: () => GroupService.getApiGroupGetMember({ groupId, userId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetMemberKeyFn({ groupId, userId }), queryFn: () => GroupService.getApiGroupGetMember({ groupId, userId }) });
 /**
 * @param data The data for the request.
 * @param data.groupId
@@ -94,27 +94,27 @@ export const prefetchUseGroupServiceGetApiGroupGetMember = (queryClient: QueryCl
 */
 export const prefetchUseGroupServiceGetApiGroupGetGroupDetails = (queryClient: QueryClient, { groupId }: {
   groupId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useGroupServiceGetApiGroupGetGroupDetailsKey, [{ groupId }]], queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseGroupServiceGetApiGroupGetGroupDetailsKeyFn({ groupId }), queryFn: () => GroupService.getApiGroupGetGroupDetails({ groupId }) });
 /**
 * @returns unknown Success
 * @throws ApiError
 */
-export const prefetchUseLinkedInServiceGetSigninLinkedinLink = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSigninLinkedinLinkKey, []], queryFn: () => LinkedInService.getSigninLinkedinLink() });
+export const prefetchUseLinkedInServiceGetSigninLinkedinLink = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseLinkedInServiceGetSigninLinkedinLinkKeyFn(), queryFn: () => LinkedInService.getSigninLinkedinLink() });
 /**
 * @returns unknown Success
 * @throws ApiError
 */
-export const prefetchUseLinkedInServiceGetSignupLinkedinLink = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSignupLinkedinLinkKey, []], queryFn: () => LinkedInService.getSignupLinkedinLink() });
+export const prefetchUseLinkedInServiceGetSignupLinkedinLink = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseLinkedInServiceGetSignupLinkedinLinkKeyFn(), queryFn: () => LinkedInService.getSignupLinkedinLink() });
 /**
 * @returns unknown Success
 * @throws ApiError
 */
-export const prefetchUseLinkedInServiceGetSigninLinkedin = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSigninLinkedinKey, []], queryFn: () => LinkedInService.getSigninLinkedin() });
+export const prefetchUseLinkedInServiceGetSigninLinkedin = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseLinkedInServiceGetSigninLinkedinKeyFn(), queryFn: () => LinkedInService.getSigninLinkedin() });
 /**
 * @returns unknown Success
 * @throws ApiError
 */
-export const prefetchUseLinkedInServiceGetSignupLinkedin = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useLinkedInServiceGetSignupLinkedinKey, []], queryFn: () => LinkedInService.getSignupLinkedin() });
+export const prefetchUseLinkedInServiceGetSignupLinkedin = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseLinkedInServiceGetSignupLinkedinKeyFn(), queryFn: () => LinkedInService.getSignupLinkedin() });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -135,7 +135,7 @@ export const prefetchUseMessageServiceGetApiMessageGetTopicMessages = (queryClie
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useMessageServiceGetApiMessageGetTopicMessagesKey, [{ convId, groupId, lastMessageId, page, pageSize, search, topicId }]], queryFn: () => MessageService.getApiMessageGetTopicMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseMessageServiceGetApiMessageGetTopicMessagesKeyFn({ convId, groupId, lastMessageId, page, pageSize, search, topicId }), queryFn: () => MessageService.getApiMessageGetTopicMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -156,7 +156,7 @@ export const prefetchUseMessageServiceGetApiMessageGetPrivateMessages = (queryCl
   pageSize?: number;
   search?: string;
   topicId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useMessageServiceGetApiMessageGetPrivateMessagesKey, [{ convId, groupId, lastMessageId, page, pageSize, search, topicId }]], queryFn: () => MessageService.getApiMessageGetPrivateMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseMessageServiceGetApiMessageGetPrivateMessagesKeyFn({ convId, groupId, lastMessageId, page, pageSize, search, topicId }), queryFn: () => MessageService.getApiMessageGetPrivateMessages({ convId, groupId, lastMessageId, page, pageSize, search, topicId }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -169,7 +169,7 @@ export const prefetchUsePrivateConversationServiceGetApiPrivateConversationGetPr
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKey, [{ page, pageSize, search }]], queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversations({ page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationsKeyFn({ page, pageSize, search }), queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversations({ page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.convId
@@ -178,7 +178,7 @@ export const prefetchUsePrivateConversationServiceGetApiPrivateConversationGetPr
 */
 export const prefetchUsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversation = (queryClient: QueryClient, { convId }: {
   convId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.usePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKey, [{ convId }]], queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversation({ convId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UsePrivateConversationServiceGetApiPrivateConversationGetPrivateConversationKeyFn({ convId }), queryFn: () => PrivateConversationService.getApiPrivateConversationGetPrivateConversation({ convId }) });
 /**
 * @param data The data for the request.
 * @param data.groupId
@@ -189,7 +189,7 @@ export const prefetchUsePrivateConversationServiceGetApiPrivateConversationGetPr
 export const prefetchUseTopicServiceGetApiTopicGetTopic = (queryClient: QueryClient, { groupId, topicId }: {
   groupId?: string;
   topicId?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useTopicServiceGetApiTopicGetTopicKey, [{ groupId, topicId }]], queryFn: () => TopicService.getApiTopicGetTopic({ groupId, topicId }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseTopicServiceGetApiTopicGetTopicKeyFn({ groupId, topicId }), queryFn: () => TopicService.getApiTopicGetTopic({ groupId, topicId }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -204,7 +204,7 @@ export const prefetchUseTopicServiceGetApiTopicGetTopics = (queryClient: QueryCl
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useTopicServiceGetApiTopicGetTopicsKey, [{ groupId, page, pageSize, search }]], queryFn: () => TopicService.getApiTopicGetTopics({ groupId, page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseTopicServiceGetApiTopicGetTopicsKeyFn({ groupId, page, pageSize, search }), queryFn: () => TopicService.getApiTopicGetTopics({ groupId, page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -219,7 +219,7 @@ export const prefetchUseTopicServiceGetApiTopicGetMyTopics = (queryClient: Query
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useTopicServiceGetApiTopicGetMyTopicsKey, [{ groupId, page, pageSize, search }]], queryFn: () => TopicService.getApiTopicGetMyTopics({ groupId, page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseTopicServiceGetApiTopicGetMyTopicsKeyFn({ groupId, page, pageSize, search }), queryFn: () => TopicService.getApiTopicGetMyTopics({ groupId, page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -234,7 +234,7 @@ export const prefetchUseTopicServiceGetApiTopicGetRecentTopics = (queryClient: Q
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useTopicServiceGetApiTopicGetRecentTopicsKey, [{ groupId, page, pageSize, search }]], queryFn: () => TopicService.getApiTopicGetRecentTopics({ groupId, page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseTopicServiceGetApiTopicGetRecentTopicsKeyFn({ groupId, page, pageSize, search }), queryFn: () => TopicService.getApiTopicGetRecentTopics({ groupId, page, pageSize, search }) });
 /**
 * @param data The data for the request.
 * @param data.id
@@ -243,12 +243,12 @@ export const prefetchUseTopicServiceGetApiTopicGetRecentTopics = (queryClient: Q
 */
 export const prefetchUseUserServiceGetApiUserGetByIdById = (queryClient: QueryClient, { id }: {
   id: string;
-}) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetByIdByIdKey, [{ id }]], queryFn: () => UserService.getApiUserGetByIdById({ id }) });
+}) => queryClient.prefetchQuery({ queryKey: Common.UseUserServiceGetApiUserGetByIdByIdKeyFn({ id }), queryFn: () => UserService.getApiUserGetByIdById({ id }) });
 /**
 * @returns UserDTORequestResponse Success
 * @throws ApiError
 */
-export const prefetchUseUserServiceGetApiUserGetMe = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetMeKey, []], queryFn: () => UserService.getApiUserGetMe() });
+export const prefetchUseUserServiceGetApiUserGetMe = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseUserServiceGetApiUserGetMeKeyFn(), queryFn: () => UserService.getApiUserGetMe() });
 /**
 * @param data The data for the request.
 * @param data.search
@@ -261,4 +261,4 @@ export const prefetchUseUserServiceGetApiUserGetUsers = (queryClient: QueryClien
   page?: number;
   pageSize?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: [Common.useUserServiceGetApiUserGetUsersKey, [{ page, pageSize, search }]], queryFn: () => UserService.getApiUserGetUsers({ page, pageSize, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseUserServiceGetApiUserGetUsersKeyFn({ page, pageSize, search }), queryFn: () => UserService.getApiUserGetUsers({ page, pageSize, search }) });

@@ -111,6 +111,7 @@ public class MessageService : IMessageService
                     Color = newMessage.User.Color,
                     Status = newMessage.User.Status,
                     AvatarPath = newMessage.User.AvatarPath,
+                    Position = newMessage.User.Position,
                 },
                 isAdmin = entity.Admins.Any(e => e.Id == newMessage.User.Id),
                 isMember = entity.Users.Any(e => e.Id == newMessage.User.Id),
@@ -214,6 +215,7 @@ public class MessageService : IMessageService
                         Color = user.Color,
                         AvatarPath = user.AvatarPath,
                         Status = user.Status,
+                        Position = user.Position,
                     },
                     isAdmin = false,
                     isMember = false

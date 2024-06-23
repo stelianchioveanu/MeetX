@@ -19,6 +19,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.Name)
             .HasMaxLength(255)
             .IsRequired();
+        builder.Property(e => e.Position)
+            .HasMaxLength(255)
+            .IsRequired(false);
         builder.Property(e => e.ShortName)
             .HasMaxLength(2)
             .IsRequired();
