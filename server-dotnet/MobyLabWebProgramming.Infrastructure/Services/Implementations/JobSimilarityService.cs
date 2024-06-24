@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 public class JobSimilarityService
 {
     private static readonly HttpClient client = new HttpClient();
@@ -29,6 +30,7 @@ public class JobSimilarityService
             .Select(j => new { JobTitle = j.Key, Similarity = CosineSimilarity(j.Value, userEmbeddings) })
             .OrderByDescending(j => j.Similarity)
             .ToList();
+        Console.WriteLine(sortedJobs.First());
         var list = sortedJobs.Where(e => e.Similarity >= 0.99978).Select(j => j.JobTitle).ToList();
         if (list.Count == 0)
         {
@@ -85,7 +87,6 @@ public class JobSimilarityService
 
         Data data = JsonConvert.DeserializeObject<Data>(jsonResponse);
         float[] embeddings = data.embeddings[0].ToArray();
-        Console.WriteLine(embeddings.Length);
         return embeddings;
     }
 

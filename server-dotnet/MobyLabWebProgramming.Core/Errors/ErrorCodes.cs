@@ -33,6 +33,7 @@ public enum ErrorCodes
     BadCredentials,
     GroupNotFound,
     WrongTitle,
+    WrongPosition,
     WrongDescription,
     ConvNotFound,
     TopicNotFound,

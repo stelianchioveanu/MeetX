@@ -434,9 +434,9 @@ export const useGroupServicePutApiGroupUpdateGroupName = <TData = Common.GroupSe
 * @throws ApiError
 */
 export const useUserServicePutApiUserUpdate = <TData = Common.UserServicePutApiUserUpdateMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  formData?: { Name?: string; Password?: string; Avatar?: Blob | File; AvatarRemoved?: boolean; };
+  formData?: { Name?: string; Password?: string; Avatar?: Blob | File; AvatarRemoved?: boolean; Position?: string; };
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  formData?: { Name?: string; Password?: string; Avatar?: Blob | File; AvatarRemoved?: boolean; };
+  formData?: { Name?: string; Password?: string; Avatar?: Blob | File; AvatarRemoved?: boolean; Position?: string; };
 }, TContext>({ mutationFn: ({ formData }) => UserService.putApiUserUpdate({ formData }) as unknown as Promise<TData>, ...options });
 /**
 * @param data The data for the request.

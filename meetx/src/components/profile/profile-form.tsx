@@ -16,9 +16,9 @@ import { Loader2 } from "lucide-react"
 import { useEffect } from "react"
 import { useUserServicePutApiUserUpdate } from "../../../openapi/queries/queries"
 import { useQueryClient } from "@tanstack/react-query"
-import { useUserServiceGetApiUserGetMeKey } from "../../../openapi/queries/common"
+import { useGroupServiceGetApiGroupGetGroupsKey, useUserServiceGetApiUserGetMeKey } from "../../../openapi/queries/common"
 import { toast } from "react-toastify"
-import { ErrorCodes, RequestResponse } from "../../../openapi/requests/types.gen"
+import { RequestResponse } from "../../../openapi/requests/types.gen"
 import { ApiError } from "../../../openapi/requests/core/ApiError"
 import { Skeleton } from "../ui/skeleton"
 import { LogoutButtonAlert } from "./logout-button-alert"
@@ -56,7 +56,7 @@ const ProfileForm = (props :  {position: string, name: string, email: string, im
         },
     })
 
-    const { mutate } = useUserServicePutApiUserUpdate({
+    const { mutate, isPending } = useUserServicePutApiUserUpdate({
         onError: (error : ApiError) => {
             const body: RequestResponse = error.body as RequestResponse;
             if (body.errorMessage?.code === "NotAMember" || body.errorMessage?.code === "GroupNotFound" || body.errorMessage?.code === "ConvNotFound") {
@@ -81,8 +81,9 @@ const ProfileForm = (props :  {position: string, name: string, email: string, im
         },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: [useUserServiceGetApiUserGetMeKey]});
+            queryClient.invalidateQueries({queryKey: [useGroupServiceGetApiGroupGetGroupsKey]});
             toast.success("Profile updated successfully");
-        }
+        },
     });
 
     function dataURItoFile(dataURI: string) {
@@ -107,13 +108,14 @@ const ProfileForm = (props :  {position: string, name: string, email: string, im
         return file;
     }
 
-    const handleSubmit = (user : { name: string, password: string, email: string, confPassword: string }) => {
+    const handleSubmit = (user : { name: string, password: string, email: string, confPassword: string, position: string }) => {
         const avatar = props.image === null ? undefined : !props.imageChanged ? undefined : dataURItoFile(props.image);
         const data = {
             Avatar: avatar,
             Name: user.name ? user.name : "",
             Password: user.password ? user.password : "",
-            AvatarRemoved: props.imageRemoved
+            AvatarRemoved: props.imageRemoved,
+            Position: user.position ? user.position : ""
         };
         mutate({formData: data})
     };
@@ -215,7 +217,7 @@ const ProfileForm = (props :  {position: string, name: string, email: string, im
                 <>
                     <Button type="submit" className="bg-neutral-100 text-neutral-900
                     hover:bg-neutral-600 hover:text-neutral-100">
-                        {props.isFetching ? <Loader2 className="animate-spin"></Loader2> :
+                        {isPending ? <Loader2 className="animate-spin"></Loader2> :
                         "Save"}
                     </Button>
                     <LogoutButtonAlert/>

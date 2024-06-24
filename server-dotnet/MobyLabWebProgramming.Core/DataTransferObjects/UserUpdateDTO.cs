@@ -10,4 +10,5 @@ public class UserUpdateDTO {
     public string? Password { get; set; } = default!;
     public IFormFile? Avatar { get; set; } = default!;
     public bool AvatarRemoved { get; set; } = false;
+    public string Position { get; set; } = default!;
 };

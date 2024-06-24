@@ -207,7 +207,6 @@ public class InitializerWorker : BackgroundService
                 }
             }
             _logger.LogInformation("All public groups added!");
-            //var res = await JobRecommendation.RecommendJobs("App engineer");
         }
         catch (Exception ex)
         {

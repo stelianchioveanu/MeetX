@@ -149,6 +149,7 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> UpdateUser(UserUpdateDTO user, User? requestingUser, CancellationToken cancellationToken = default)
     {
+        bool positionChanged = false;
         if (requestingUser == null)
         {
             return ServiceResponse.FromError(CommonErrors.UserNotFound);
@@ -169,6 +170,20 @@ public class UserService : IUserService
             }
             requestingUser.Name = name;
             requestingUser.ShortName = name.Split(' ').Length > 1 ? $"{name.Split(' ')[0][0]}{name.Split(' ')[1][0]}" : name.Substring(0, 2);
+        }
+
+        if (user.Position != null)
+        {
+            var position = user.Position.Trim();
+            if (position.Length < 1 || position.Length > 255)
+            {
+                return ServiceResponse.FromError(CommonErrors.BadPosition);
+            }
+            if (position != requestingUser.Position)
+            {
+                requestingUser.Position = position;
+                positionChanged = true;
+            }
         }
 
         if (user.Password != null && user.Password != "")
@@ -206,21 +221,43 @@ public class UserService : IUserService
 
         await _repository.UpdateAsync(requestingUser, cancellationToken);
 
+        if (positionChanged)
+        {
+            var res = await JobSimilarityService.RecommendJobs(requestingUser.Position);
+
+            if (res != null && res != "")
+            {
+                Console.WriteLine(res);
+                var groupPos = await _repository.GetAsync(new GroupSpec(true, res), cancellationToken);
+                if (groupPos != null)
+                {
+                    groupPos.Users.Add(requestingUser);
+                    await _repository.UpdateAsync(groupPos, cancellationToken);
+                }
+            }
+        }
+
         return ServiceResponse.ForSuccess();
     }
 
     public async Task<ServiceResponse> Register(RegisterDTO register, CancellationToken cancellationToken = default)
     {
-        if (register == null || register.Email.IsNullOrEmpty() || register.Name.IsNullOrEmpty() || register.Password.IsNullOrEmpty())
+        if (register == null || register.Email.IsNullOrEmpty() || register.Name.IsNullOrEmpty() || register.Password.IsNullOrEmpty() || register.Position.IsNullOrEmpty())
         {
             return ServiceResponse.FromError(CommonErrors.BadRequets);
         }
 
         var name = register.Name.Trim();
+        var position = register.Position.Trim();
 
         if (name.Length < 2 || name.Length > 255)
         {
             return ServiceResponse.FromError(CommonErrors.BadName);
+        }
+
+        if (position.Length < 1 || position.Length > 255)
+        {
+            return ServiceResponse.FromError(CommonErrors.BadPosition);
         }
 
         if (!_validationService.VerifyEmail(register.Email) || register.Email.Length > 255)
@@ -259,7 +296,8 @@ public class UserService : IUserService
         var user = await _repository.AddAsync(new User
         {
             Email = register.Email,
-            Name = register.Name,
+            Name = name,
+            Position = position,
             Role = UserRoleEnum.Client,
             Password = PasswordUtils.HashPassword(register.Password),
             ShortName = name.Split(' ').Length > 1 ? $"{name.Split(' ')[0][0]}{name.Split(' ')[1][0]}" : name.Substring(0, 2),
@@ -272,6 +310,19 @@ public class UserService : IUserService
             group = await _repository.UpdateAsync(group, cancellationToken);
             Guid parentGroupId = group.ParentGroupId ?? Guid.Empty;
             group = await _repository.GetAsync(new GroupSpec(parentGroupId), cancellationToken);
+        }
+
+        var res = await JobSimilarityService.RecommendJobs(position);
+
+        if (res != null && res != "")
+        {
+            Console.WriteLine(res);
+            var groupPos = await _repository.GetAsync(new GroupSpec(true, res), cancellationToken);
+            if (groupPos != null)
+            {
+                groupPos.Users.Add(user);
+                await _repository.UpdateAsync(groupPos, cancellationToken);
+            }
         }
 
         _mailService.SendMail(register.Email, "Welcome!", MobyLabWebProgramming.Core.Constants.MailTemplates.Register(register.Name), true, "MeetX", cancellationToken);

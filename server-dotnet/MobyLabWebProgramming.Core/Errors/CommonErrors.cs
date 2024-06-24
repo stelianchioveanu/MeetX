@@ -18,7 +18,8 @@ public static class CommonErrors
     public static ErrorMessage BadCredentials => new(HttpStatusCode.BadRequest, "Invalid email or password!", ErrorCodes.BadCredentials);
     public static ErrorMessage BadRequets => new(HttpStatusCode.BadRequest, "You need to fill every field!", ErrorCodes.WrongInputs);
     public static ErrorMessage BadMessage => new(HttpStatusCode.BadRequest, "The message should have at least one character other than space or some files!", ErrorCodes.WrongMessage);
-    public static ErrorMessage BadName => new(HttpStatusCode.BadRequest, "The name should have at least two different characters other than space!", ErrorCodes.WrongName);
+    public static ErrorMessage BadName => new(HttpStatusCode.BadRequest, "The name should have at least two characters other than space!", ErrorCodes.WrongName);
+    public static ErrorMessage BadPosition => new(HttpStatusCode.BadRequest, "The position should have at least one character other than space!", ErrorCodes.WrongPosition);
     public static ErrorMessage BadTitle => new(HttpStatusCode.BadRequest, "The title should have at least one character other than space!", ErrorCodes.WrongTitle);
     public static ErrorMessage BadDescription => new(HttpStatusCode.BadRequest, "The description should have at least one character other than space!", ErrorCodes.WrongDescription);
     public static ErrorMessage BadPassword => new(HttpStatusCode.BadRequest, "Password must include an uppercase letter, a lowercase letter, a number, and a special character.", ErrorCodes.WrongPassword);

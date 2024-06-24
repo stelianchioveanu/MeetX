@@ -20,4 +20,9 @@ public sealed class GroupSpec : BaseSpec<GroupSpec, Group>
     {
         Query.Where(e => e.isPublic == isPublic).Include(e => e.Admins);
     }
+
+    public GroupSpec(bool isPublic, string Name)
+    {
+        Query.Where(e => e.isPublic == isPublic && e.Name == Name).Include(e  => e.Users);
+    }
 }

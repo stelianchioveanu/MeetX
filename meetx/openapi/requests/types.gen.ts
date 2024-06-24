@@ -38,7 +38,7 @@ export type ContactFormUpdateDTO = {
     check?: boolean;
 };
 
-export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAnAppAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail' | 'WrongIndustry' | 'UserNotFound' | 'BadCredentials' | 'GroupNotFound' | 'WrongTitle' | 'WrongDescription' | 'ConvNotFound' | 'TopicNotFound' | 'WrongMessage' | 'ContactNotFound' | 'NotFromStaff';
+export type ErrorCodes = 'Unknown' | 'TechnicalError' | 'EntityNotFound' | 'PhysicalFileNotFound' | 'UserAlreadyExists' | 'WrongPassword' | 'CannotAdd' | 'CannotUpdate' | 'CannotDelete' | 'MailSendFailed' | 'TagAlreadyExists' | 'WrongTag' | 'WrongInputs' | 'TokenExpired' | 'GroupAlreadyExists' | 'NotAnAdmin' | 'NotAnAppAdmin' | 'NotAMember' | 'WrongName' | 'WrongEmail' | 'WrongIndustry' | 'UserNotFound' | 'BadCredentials' | 'GroupNotFound' | 'WrongTitle' | 'WrongPosition' | 'WrongDescription' | 'ConvNotFound' | 'TopicNotFound' | 'WrongMessage' | 'ContactNotFound' | 'NotFromStaff';
 
 export type ErrorMessage = {
     message?: string | null;
@@ -592,6 +592,7 @@ export type PutApiUserUpdateData = {
         Password?: string;
         Avatar?: (Blob | File);
         AvatarRemoved?: boolean;
+        Position?: string;
     };
 };
 
