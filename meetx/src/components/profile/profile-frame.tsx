@@ -16,6 +16,7 @@ const ProfileFrame = () => {
     const [image, setImage] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
+    const [position, setPosition] = useState<string>("");
     const [imageChanged, setImageChanged] = useState<boolean>(false);
     const [imageRemoved, setImageRemoved] = useState<boolean>(false);
     const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ const ProfileFrame = () => {
                 setImage(null);
             setEmail(data.response?.email === null || data.response?.email === undefined ? "" : data.response?.email);
             setName(data.response?.name === null || data.response?.name === undefined ? "" : data.response?.name);
+            setPosition(data.response?.position === null || data.response?.position === undefined ? "" : data.response?.position)
             dispatch(setAppRole(data?.response?.role === "Admin" ? true : false));
             dispatch(setUserId(data.response?.id));
         }
@@ -60,7 +62,7 @@ const ProfileFrame = () => {
                     </>
                 }
             </div>
-            <ProfileForm name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}
+            <ProfileForm position={position} name={name} email={email} image={image} imageChanged={imageChanged} imageRemoved={imageRemoved}
             isFetching={isFetching} isLoading={isLoading}/>
         </div>
         {

@@ -33,14 +33,15 @@ const loginFormSchema = z.object({
         .refine((value) => !/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(value ?? "") || value === "", 'Password must include at least 8 characters, a lowercase letter, an uppercase letter, a number, and a special character!'),
     confPassword: z
         .string(),
-    email: z.string()
+    email: z.string(),
+    position: z.string().min(1, { message: "This field has to be filled." }),
   })
   .refine((data) => data.password === data.confPassword, {
     message: "Passwords don't match",
     path: ["confPassword"],
 });
 
-const ProfileForm = (props :  {name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean, isFetching: boolean, isLoading: boolean}) => {
+const ProfileForm = (props :  {position: string, name: string, email: string, image: string | null, imageChanged: boolean, imageRemoved: boolean, isFetching: boolean, isLoading: boolean}) => {
     const queryClient = useQueryClient();
     const dispatch = useAppDispatch();
 
@@ -50,7 +51,8 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
           name: props.name || "",
           password: "",
           confPassword: "",
-          email: props.email || ""
+          email: props.email || "",
+          position: props.position || ""
         },
     })
 
@@ -119,7 +121,8 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
     useEffect(() => {
         form.setValue("name", props.name);
         form.setValue("email", props.email);
-    }, [props.name, props.email, form]);
+        form.setValue("position", props.position);
+    }, [props.name, props.email, props.position, form]);
 
     return ( <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 gap-6 w-[80%] max-w-xl">
@@ -151,6 +154,23 @@ const ProfileForm = (props :  {name: string, email: string, image: string | null
                         <FormLabel className="text-white">Name</FormLabel>
                         <FormControl>
                             <Input maxLength={255} placeholder="Name" className="font bg-transparent text-white border-white" {...field}/>
+                        </FormControl>
+                        <FormMessage/>
+                    </FormItem>
+                )}
+                />
+            }
+            {
+                props.isLoading ?
+                <Skeleton className="w-full h-10"/> :
+                <FormField
+                control={form.control}
+                name="position"
+                render={({ field }) => (
+                    <FormItem className="space-y-1">
+                        <FormLabel className="text-white">Position</FormLabel>
+                        <FormControl>
+                            <Input maxLength={255} placeholder="Position" className="font bg-transparent text-white border-white" {...field}/>
                         </FormControl>
                         <FormMessage/>
                     </FormItem>
